@@ -7,6 +7,13 @@
 #define GPin 6
 #define BPin 3
 
+int red = 0;
+int green = 0;
+int blue = 125;
+
+String inputString = ""; // for incoming data
+boolean stringComplete = false;
+
 SoftwareSerial bluetooth(rxPin, txPin);
 
 void setup() {
@@ -29,7 +36,58 @@ void setup() {
 }
 
 void loop() {
-  analogWrite(RPin, 0);
-  analogWrite(GPin, 0);
-  analogWrite(BPin, 255);
+  
+  if(stringComplete) {
+    //Serial.println(inputString);
+    inputString = "";
+    stringComplete = false;
+  }
+  
+  analogWrite(RPin, red);
+  analogWrite(GPin, green);
+  analogWrite(BPin, blue);
+}
+
+/*
+  SerialEvent occurs whenever a new data comes in the
+ hardware serial RX.  This routine is run between each
+ time loop() runs, so using delay inside loop can delay
+ response.  Multiple bytes of data may be available.
+ */
+void serialEvent() {
+  String redString;
+  String greenString;
+  String blueString;
+  
+  while(Serial.available()) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if(inChar == '\n') {
+      stringComplete = true;
+      // protocol is "rrr ggg bbb", so check length and syntax
+      if(inputString.length() != 12){
+        Serial.println("Error! Wrong String length!");
+        //Serial.println(inputString.length());
+      }
+      else { // decompose
+        redString = String(inputString[0]) + String(inputString[1]) + String(inputString[2]);
+        greenString = String(inputString[4]) + String(inputString[5]) + String(inputString[6]);
+        blueString = String(inputString[8]) + String(inputString[9]) + String(inputString[10]);
+        
+        // convert
+        red = redString.toInt();
+        green = greenString.toInt();
+        blue = blueString.toInt();
+        
+        // sanity check
+        if(
+        //Serial.print("R: ");
+        //Serial.print(red);
+        //Serial.print(" G: ");
+        //Serial.print(green);
+        //Serial.print(" B: ");
+        //Serial.println(blue);
+      }
+    }
+  }
 }
