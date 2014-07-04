@@ -64,23 +64,21 @@ void serialEvent() {
     inputString += inChar;
     if(inChar == '\n') {
       stringComplete = true;
-      // protocol is "rrr ggg bbb", so check length and syntax
-      if(inputString.length() != 12){
+      // protocol is "rrrgggbbb", so check length and syntax
+      if(inputString.length() != 10){
         Serial.println("Error! Wrong String length!");
         //Serial.println(inputString.length());
       }
       else { // decompose
         redString = String(inputString[0]) + String(inputString[1]) + String(inputString[2]);
-        greenString = String(inputString[4]) + String(inputString[5]) + String(inputString[6]);
-        blueString = String(inputString[8]) + String(inputString[9]) + String(inputString[10]);
+        greenString = String(inputString[3]) + String(inputString[4]) + String(inputString[5]);
+        blueString = String(inputString[6]) + String(inputString[7]) + String(inputString[8]);
         
         // convert
         red = redString.toInt();
         green = greenString.toInt();
         blue = blueString.toInt();
         
-        // sanity check
-        if(
         //Serial.print("R: ");
         //Serial.print(red);
         //Serial.print(" G: ");
