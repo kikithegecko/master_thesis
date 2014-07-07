@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-#define rxPin 0
-#define txPin 1
+#define rxPin 2
+#define txPin 4
 
 #define RPin 5
 #define GPin 6
@@ -79,12 +79,12 @@ void serialEvent() {
         green = greenString.toInt();
         blue = blueString.toInt();
         
-        //Serial.print("R: ");
-        //Serial.print(red);
-        //Serial.print(" G: ");
-        //Serial.print(green);
-        //Serial.print(" B: ");
-        //Serial.println(blue);
+        bluetooth.print("R: ");
+        bluetooth.print(red);
+        bluetooth.print(" G: ");
+        bluetooth.print(green);
+        bluetooth.print(" B: ");
+        bluetooth.println(blue);
       }
     }
   }
