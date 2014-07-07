@@ -1,0 +1,43 @@
+\chapter{Hardware}
+
+\section{The Bracelet}
+
+The bracelet consists mainly of an electronic ink display and several touch sensors for conscious interaction and a motion sensor for gesture recognition. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
+
+\subsection{Design Process and Prototype Manufacturing}
+
+The design process for the interactive bracelet presented in this thesis went through different stages. At first, a 3D-printed casing was favored, but later on a cast silicone bracelet turned out to be very comfortable for the user. The different prototypes are explained in detail in the following sections.
+
+\subsubsection{Constant Thickness}
+
+This very simple first approach is basically a rectangular profile rotated around a curve. It has the same magnitude at any point, which makes it quite uncomfortable to wear, especially under a layer of clothing.
+
+\subsubsection{Tapered Shape}
+
+With a tapered shape and non-uniform thickness, this looks more appealing. The reduced wall strength (0.7mm) made it very fragile in fabrication, two (out of two) prints broke during post-processing. Wearing the cuff while working on a PC feels only a little uncomfortable, but twisting the hand is encumbered by the tight-fitting bracelet. Future prototypes sould allow more space between the arm and the bracelet to ensure better comfort.
+
+\subsubsection{Tapered Shape with Lid}
+
+A modified design of Prototype 2 with a removable lid. The structure of the lid turned out to be too fine, especially the flexible part was too thin to work as intended. The size of the bracelet was increased a little so it is more comfortable to wear. Still, the rigid shape leads to clumsiness.
+
+\subsubsection{Amico Bracelet Print-out}
+
+Just a print of the tri-part design by Daniel Muschke on GrabCAD. It turned out to be a little too small, but the style felt more comfortable than the previous prototypes.
+
+\subsubsection{Modified Tri-Part Design}
+
+A re-work of Prototype 3, involving hinge research. The first draft turned out way too small, the second iteration was too big. Further research into this shape was paused because a long, bracelet-like display was considered instead of a small one.
+
+\subsubsection{Silicone Bracelets}
+
+After some consideration on a flexible, bracelet-shaped e-ink display, a prototype from silicone was considered. Mold design turned out a little tricky but finally succeeded. I printed a two-piece mold which only needed a little post-processing to fit properly together. The mold was coated with black spray paint to make the inside a little smoother, but this didn't work as intended so the paining step can be omitted in future mold making processes. The filling holes for the silicone were too small, and the silicone was more viscous than expected.
+
+The first cast with a closed mold and filling through the holes was very unsuccessful, it produced two small end pieces and nothing in between. For following casts, one part of the mold was filled with silicone and closed afterwards, this turned out way better. It is also important in what orientation the mold is placed during dry period, because air bubbles will float towards the ``top'' of the mold, leading to instabilities. Getting the silicone part out of the mold was no problem.
+
+The bracelet design involved a magnet clasp and it turned out as almost impossible to strongly attach magnets to silicone with anything but silicone itself and they will likely jump out of place and snap together if you place them too close in your design.
+
+Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a disappealing color. No tests were made yet regarding the tightness of the diplay inside the bracelet.
+
+\section{Interactive Light Source}
+
+The examplary light source for the scenario mentioned at the beginning of this page will be an Arduino-controlled LED strip. Communication with the bracelet will take place via Bluetooth. An Arduino-controlled RGB LED strip with a Bluetooth module. For a color change, the RGB color code is transmitted in a RRRGGGBBB string. Note that all values must have 3 digits, leading zeroes must not be omitted. 
