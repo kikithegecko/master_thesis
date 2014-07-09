@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-#define rxPin 2
-#define txPin 4
+#define rxPin 4
+#define txPin 2
 
 #define RPin 5
 #define GPin 6
@@ -10,6 +10,8 @@
 int red = 0;
 int green = 0;
 int blue = 125;
+
+int newRed, newGreen, newBlue;
 
 String inputString = ""; // for incoming data
 boolean stringComplete = false;
@@ -35,6 +37,34 @@ void setup() {
   bluetooth.println("Bluetooth ready");
 }
 
+void fade(int newR, int newG, int newB){
+  int stepR, stepG, stepB;
+
+  while(red != newR || green != newG || blue != newB){
+    if(newR > red){
+      red++;}
+    else if(newR < red){
+      red--;}
+    if(newG > green)
+      green++;
+    else if(newG < green){
+      green--;}
+    if(newB > blue){
+      blue++;}
+    else if(newB < blue){
+      blue--;}
+    
+    analogWrite(RPin, red);
+    analogWrite(GPin, green);
+    analogWrite(BPin, blue);
+    delay(10);
+  }
+
+  red = newR;
+  green = newG;
+  blue = newB;
+}
+
 void loop() {
   
   if(stringComplete) {
@@ -43,9 +73,15 @@ void loop() {
         bluetooth.println("Error! Wrong String length!");
     }
     else { // decompose and convert
-      red = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
-      green = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
-      blue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
+      //red = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
+      //green = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
+      //blue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
+      
+      newRed = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
+      newGreen = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
+      newBlue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
+      
+      fade(newRed, newGreen, newBlue);
         
       Serial.print("R: ");
       Serial.print(red);
