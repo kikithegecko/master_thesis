@@ -38,7 +38,22 @@ void setup() {
 void loop() {
   
   if(stringComplete) {
-    //Serial.println(inputString);
+    // protocol is "rrrgggbbb", so check length and syntax
+    if(inputString.length() != 10){
+        bluetooth.println("Error! Wrong String length!");
+    }
+    else { // decompose and convert
+      red = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
+      green = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
+      blue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
+        
+      Serial.print("R: ");
+      Serial.print(red);
+      Serial.print(" G: ");
+      Serial.print(green);
+      Serial.print(" B: ");
+      Serial.println(blue);
+    }
     inputString = "";
     stringComplete = false;
   }
@@ -46,46 +61,12 @@ void loop() {
   analogWrite(RPin, red);
   analogWrite(GPin, green);
   analogWrite(BPin, blue);
-}
-
-/*
-  SerialEvent occurs whenever a new data comes in the
- hardware serial RX.  This routine is run between each
- time loop() runs, so using delay inside loop can delay
- response.  Multiple bytes of data may be available.
- */
-void serialEvent() {
-  String redString;
-  String greenString;
-  String blueString;
   
-  while(Serial.available()) {
-    char inChar = (char)Serial.read();
+  if(bluetooth.available()) {
+    char inChar = bluetooth.read();
     inputString += inChar;
     if(inChar == '\n') {
       stringComplete = true;
-      // protocol is "rrrgggbbb", so check length and syntax
-      if(inputString.length() != 10){
-        Serial.println("Error! Wrong String length!");
-        //Serial.println(inputString.length());
-      }
-      else { // decompose
-        redString = String(inputString[0]) + String(inputString[1]) + String(inputString[2]);
-        greenString = String(inputString[3]) + String(inputString[4]) + String(inputString[5]);
-        blueString = String(inputString[6]) + String(inputString[7]) + String(inputString[8]);
-        
-        // convert
-        red = redString.toInt();
-        green = greenString.toInt();
-        blue = blueString.toInt();
-        
-        bluetooth.print("R: ");
-        bluetooth.print(red);
-        bluetooth.print(" G: ");
-        bluetooth.print(green);
-        bluetooth.print(" B: ");
-        bluetooth.println(blue);
-      }
     }
   }
 }
