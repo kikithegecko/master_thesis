@@ -1,34 +1,50 @@
-\chapter{Hardware}
+\chapter{The Bracelet}
 
-\section{The Bracelet}
+The interactive bracelet consists mainly of an electronic ink display and several touch sensors for conscious interaction and a motion sensor for gesture recognition. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
 
-The bracelet consists mainly of an electronic ink display and several touch sensors for conscious interaction and a motion sensor for gesture recognition. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
+\section{Manufacturing Techniques}
 
-\subsection{Design Process and Prototype Manufacturing}
+In this section, the various methods and tools used for designing and manufacturing the bracelet prototypes will be explained in detail.
+
+\subsection{Computer Aided Design}
+%Protip: Lots of references!
+The finished designs are then exported as meshes (usually in \ac{STL} format) for printing.
+
+\subsection{3D Printing}
+%TODO cite manufacturer website
+%TODO a little more about the powder technique, maybe historical background? -> Wikipedia
+The \ac{HCI} group's workshop includes a plaster-based 3D printer, a ProJet 360 from 3DSystems, Inc. The print bed is filled with Visijet PXL material, a plaster-like powder. The model is then created by printing the binder fluid with an inkjet printhead onto the plaster. After each printed layer, a new thin layer of plaster is added to the print. This allows even delicate structures without adding supports in any way, since the printed object is surrounded by plaster powder. The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid. This step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load might break them easily. Wall strengths of 1.5 mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the bracelet's shape.
+
+\subsection{Silicone Casting}
+%TODO explain shore
+%TODO mold making
+Another manufacturing process for bracelet prototypes used in this thesis is liquid silicone casting. A mold is printed and then filled with a two compound mix.
+
+\section{Design Process and Prototype Manufacturing}
 
 The design process for the interactive bracelet presented in this thesis went through different stages. At first, a 3D-printed casing was favored, but later on a cast silicone bracelet turned out to be very comfortable for the user. The different prototypes are explained in detail in the following sections.
 
-\subsubsection{Constant Thickness}
+\subsection{Constant Thickness}
 
 This very simple first approach is basically a rectangular profile rotated around a curve. It has the same magnitude at any point, which makes it quite uncomfortable to wear, especially under a layer of clothing.
 
-\subsubsection{Tapered Shape}
+\subsection{Tapered Shape}
 
 With a tapered shape and non-uniform thickness, this looks more appealing. The reduced wall strength (0.7mm) made it very fragile in fabrication, two (out of two) prints broke during post-processing. Wearing the cuff while working on a PC feels only a little uncomfortable, but twisting the hand is encumbered by the tight-fitting bracelet. Future prototypes sould allow more space between the arm and the bracelet to ensure better comfort.
 
-\subsubsection{Tapered Shape with Lid}
+\subsection{Tapered Shape with Lid}
 
 A modified design of Prototype 2 with a removable lid. The structure of the lid turned out to be too fine, especially the flexible part was too thin to work as intended. The size of the bracelet was increased a little so it is more comfortable to wear. Still, the rigid shape leads to clumsiness.
 
-\subsubsection{Amico Bracelet Print-out}
+\subsection{Amico Bracelet Print-out}
 
 Just a print of the tri-part design by Daniel Muschke on GrabCAD. It turned out to be a little too small, but the style felt more comfortable than the previous prototypes.
 
-\subsubsection{Modified Tri-Part Design}
+\subsection{Modified Tri-Part Design}
 
 A re-work of Prototype 3, involving hinge research. The first draft turned out way too small, the second iteration was too big. Further research into this shape was paused because a long, bracelet-like display was considered instead of a small one.
 
-\subsubsection{Silicone Bracelets}
+\subsection{Silicone Bracelet}
 
 After some consideration on a flexible, bracelet-shaped e-ink display, a prototype from silicone was considered. Mold design turned out a little tricky but finally succeeded. I printed a two-piece mold which only needed a little post-processing to fit properly together. The mold was coated with black spray paint to make the inside a little smoother, but this didn't work as intended so the paining step can be omitted in future mold making processes. The filling holes for the silicone were too small, and the silicone was more viscous than expected.
 
@@ -38,6 +54,7 @@ The bracelet design involved a magnet clasp and it turned out as almost impossib
 
 Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a disappealing color. No tests were made yet regarding the tightness of the diplay inside the bracelet.
 
-\section{Interactive Light Source}
+\subsection{One-Piece Silicone Bracelet}
+The next step was to cast a ring-like bracelet in one piece, so the issue with the clasp was no concern. The mold for this prototype consists of three pieces, two rings and a bottom plate. Unfortunately, the molds can not be recovered after the cast and need to be destroyed. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive the cast. On the other side, one-time molds allowed for tunnels in the display area.
 
-The examplary light source for the scenario mentioned at the beginning of this page will be an Arduino-controlled LED strip. Communication with the bracelet will take place via Bluetooth. An Arduino-controlled RGB LED strip with a Bluetooth module. For a color change, the RGB color code is transmitted in a RRRGGGBBB string. Note that all values must have 3 digits, leading zeroes must not be omitted. 
+This mold was much harder to fill with silicone than the previous one. Especially the Sortaclear silicone was too viscous to fill the complete mold which resulted in broken casts. The green Mold Star silicone however turned out to work quite well.
