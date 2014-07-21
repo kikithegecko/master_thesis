@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-#define rxPin 4
-#define txPin 2
+#define rxPin 2
+#define txPin 1
 
 #define RPin 5
 #define GPin 6
@@ -16,25 +16,30 @@ int newRed, newGreen, newBlue;
 String inputString = ""; // for incoming data
 boolean stringComplete = false;
 
-SoftwareSerial bluetooth(rxPin, txPin);
+//SoftwareSerial bluetooth(rxPin, txPin);
 
 void setup() {
   pinMode(RPin, OUTPUT);
   pinMode(GPin, OUTPUT);
   pinMode(BPin, OUTPUT);
   
-  Serial.begin(9600);
-  Serial.println("Serial ready");
+  //Serial.begin(9600);
+  //Serial.println("Serial ready");
   
   //taken from https://wiki.hci.uni-hannover.de/doku.php?id=research:thesis:ems-navigation:prototyping
-  bluetooth.begin(115200);        // The Bluetooth Mate defaults to 115200bps
+  //bluetooth.begin(115200);        // The Bluetooth Mate defaults to 115200bps
+  Serial.begin(115200);
   delay(320);                     // IMPORTANT DELAY! (Minimum ~276ms)
-  bluetooth.print("$$$");         // Enter command mode
+  //bluetooth.print("$$$");         // Enter command mode
+  Serial.print("$$$");
   delay(15);                      // IMPORTANT DELAY! (Minimum ~10ms)
-  bluetooth.println("U,9600,N");  // Temporarily Change the baudrate to 9600, no parity
-  bluetooth.begin(9600);          // Start bluetooth serial at 9600
+  //bluetooth.println("U,9600,N");  // Temporarily Change the baudrate to 9600, no parity
+  Serial.println("U,9600,N");
+  //bluetooth.begin(9600);          // Start bluetooth serial at 9600
+  Serial.begin(9600);
   
-  bluetooth.println("Bluetooth ready");
+  //bluetooth.println("Bluetooth ready");
+  Serial.println("Bluetooth ready");
 }
 
 void fade(int newR, int newG, int newB){
@@ -70,7 +75,8 @@ void loop() {
   if(stringComplete) {
     // protocol is "rrrgggbbb", so check length and syntax
     if(inputString.length() != 10){
-        bluetooth.println("Error! Wrong String length!");
+        //bluetooth.println("Error! Wrong String length!");
+        Serial.println("Error! Wrong String length!");
     }
     else { // decompose and convert
       //red = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
@@ -83,12 +89,12 @@ void loop() {
       
       fade(newRed, newGreen, newBlue);
         
-      Serial.print("R: ");
-      Serial.print(red);
-      Serial.print(" G: ");
-      Serial.print(green);
-      Serial.print(" B: ");
-      Serial.println(blue);
+      //Serial.print("R: ");
+      //Serial.print(red);
+      //Serial.print(" G: ");
+      //Serial.print(green);
+      //Serial.print(" B: ");
+      //Serial.println(blue);
     }
     inputString = "";
     stringComplete = false;
@@ -98,8 +104,10 @@ void loop() {
   analogWrite(GPin, green);
   analogWrite(BPin, blue);
   
-  if(bluetooth.available()) {
-    char inChar = bluetooth.read();
+  //if(bluetooth.available()) {
+  if(Serial.available()){
+    //char inChar = bluetooth.read();
+    char inChar = Serial.read();
     inputString += inChar;
     if(inChar == '\n') {
       stringComplete = true;
