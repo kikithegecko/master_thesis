@@ -72,16 +72,15 @@ void loop() {
     if(inputString.length() != 10){
         bluetooth.println("Error! Wrong String length!");
     }
-    else { // decompose and convert
-      //red = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
-      //green = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
-      //blue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
-      
+    else { // decompose and convert      
       newRed = (String(inputString[0]) + String(inputString[1]) + String(inputString[2])).toInt();
       newGreen = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
       newBlue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
       
-      fade(newRed, newGreen, newBlue);
+      //fade(newRed, newGreen, newBlue);
+      red = newRed;
+      green = newGreen;
+      blue = newBlue;
         
       Serial.print("R: ");
       Serial.print(red);
