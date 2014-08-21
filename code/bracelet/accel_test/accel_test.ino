@@ -8,9 +8,16 @@
 
 //application configurations
 #define SIXGMODE 0
-#define SAMPLE_SIZE 50 //number of samples per Gesture
-#define DELAY_SIZE 20 //delay betweeen two samples
+#define SAMPLE_SIZE 100 //number of samples per Gesture
+#define DELAY_SIZE 10 //delay betweeen two samples
 
+typedef struct {
+  float x;
+  float y;
+  float z;
+} AccelData;
+
+AccelData gesture[SAMPLE_SIZE];
 float x, y, z;
 float mVperG;
 int buttonstate = 0;
@@ -51,13 +58,20 @@ void readAccel(){
     y = ((analogRead(YPin) * 0.0049) - 1.65) / mVperG;
     z = ((analogRead(ZPin) * 0.0049) - 1.65) / mVperG;
   
-    Serial.print("X: ");
+    //Serial.print("X: ");
     Serial.print(x);
-    Serial.print(" Y: ");
+    //Serial.print(" Y: ");
+    Serial.print(" ");
     Serial.print(y);
-    Serial.print(" Z: ");
+    //Serial.print(" Z: ");
+    Serial.print(" ");
     Serial.println(z);
     //Serial.println(((analogRead(ZPin) * 0.0049) - 1.65) / 0.8);
+    
+    gesture[i].x = x;
+    gesture[i].y = y;
+    gesture[i].z = z;
+    
     delay(DELAY_SIZE);
   }
 }
