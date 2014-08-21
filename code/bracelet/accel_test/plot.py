@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-f = open("c:\\Users\\kb\\Documents\\master_thesis\\code\\bracelet\\accel_test\\sample_output.txt","r")
+f = open("c:\\Users\\kb\\Documents\\master_thesis\\code\\bracelet\\accel_test\\sample_gesture3.txt","r")
 lines = f.readlines()
 
 xs = []
