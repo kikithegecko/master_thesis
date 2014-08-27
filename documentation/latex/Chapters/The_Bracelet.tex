@@ -7,8 +7,18 @@ The interactive bracelet consists mainly of an electronic ink display and severa
 In this section, the various methods and tools used for designing and manufacturing the bracelet prototypes will be explained in detail.
 
 \subsection{Computer Aided Design}
-%Protip: Lots of references!
-The finished designs are then exported as meshes (usually in \ac{STL} format) for printing.
+%TODO: references
+In the beginning of a design iteration, a virtual model of the desired object is built with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
+
+The model's basis is a circumference sketch for the bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints. The sketch should be fully constrained (i.e. leaving no degrees of freedom) before moving on to the next step, also with respect to the printing of the finished design.
+
+In the next step one or more profile cuts are added to the circumference. They define the thickness and shape of the bracelet at different points along the oval circumference. For increased comfort, the bracelet should be as slim as possible, especially on the "backside" below the palm. In more complicated designs, for example with overlaying edges, an alternative to complex sketches for the profiles is the creation of multiple, overlaid sketches as a preparation for a subtraction operation in the later process. All those profiles need to be fully constrained as well.
+
+After the circumference as well as one or more profiles are added to the design, a first solid is created by sweeping the profile(s) around the circumference curve. This operation creates a basic shape that can be refined further on, typically by chamfering or filleting the edges with respect to increased wearing comfort. If a complex shape is desired, multiple sweeps can be generated and used in boolean operations such as union or subtraction. This is the usual approach for most bracelet designs.
+
+The last step in the design process is usually the finishing of the \ac{CAD} model. In the bracelet case, this translates to edge smoothing with chamfer or fillet tools. Smoothed edges increase the overall wearing comfort of a bracelet, so they are very desired on edges that contact with the skin.
+
+The finished designs are then exported as mesh files (usually in \ac{STL} format) for printing.
 
 \subsection{3D Printing}
 %TODO cite manufacturer website
