@@ -8,6 +8,8 @@ In this section, the various methods and tools used for designing and manufactur
 
 \subsection{Computer Aided Design}
 %TODO: references
+% http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
+%TODO pictures
 In the beginning of a design iteration, a virtual model of the desired object is built with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
 The model's basis is a circumference sketch for the bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints. The sketch should be fully constrained (i.e. leaving no degrees of freedom) before moving on to the next step, also with respect to the printing of the finished design.
@@ -23,12 +25,27 @@ The finished designs are then exported as mesh files (usually in \ac{STL} format
 \subsection{3D Printing}
 %TODO cite manufacturer website
 %TODO a little more about the powder technique, maybe historical background? -> Wikipedia
-The \ac{HCI} group's workshop includes a plaster-based 3D printer, a ProJet 360 by 3DSystems, Inc. The print bed is filled with Visijet PXL material, a plaster-like powder. The model is then created by printing the binder fluid with an inkjet printhead onto the plaster. After each printed layer, a new thin layer of plaster is added to the print. This allows even delicate structures without any additional supports, since the printed object is surrounded by plaster powder. The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid. This step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load might break them easily. Wall strengths of 1.5 mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the bracelet's shape.
+% Mechanisms and Mechanical Devices Sourcebook, TIB
+% http://www.sciencedirect.com/science/book/9780121742317
+% http://www.google.com/patents/US5340656
+% http://en.wikipedia.org/wiki/Z_Corporation
+% http://www.3dsystems.com/about-us
+The \ac{HCI} group's workshop includes a powder bed and inkjet head 3D printer, a ProJet 360 by 3DSystems, Inc\cite{printer}. This manufacturing technique was developed in 1989 by the \ac{MIT} and then licensed to the Z Corporation in 1995. On January 3, 2012, Z Corporation was acquired by 3DSystems, Inc.
+
+When printing an object, the print bed is filled first with a base layer of powder. The powder used by the printer is called VisiJet PXL, a plaster-like substance. After filling the bed, a standard inkjet printhead is cleaned and prepared for the printing process. Immediately after this setup is complete, the additive manufacturing process starts.
+
+The model is created by printing the binder fluid onto the plaster. After each printed layer, a new thin layer of powder is added to the print bed. The ProJet360 allows for a layer thickness of 0.1 mm with a vertical build speed of 2 cm per hour\cite{datasheet_printer}. This allows even delicate structures without any additional supports, since the printed object is surrounded by plaster powder. The only drawback of this printing process is that it doesn't support closed, hollow objects since there is no possibility of removing the enclosed excess powder after the process has finished. When designing models for 3D printing, this constraint has to be kept in mind.
+
+The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. The printer offers a cleaning chamber with a pressurized air pistol and a vacuuming system to assist in that task. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid after they were thoroughly cleaned. Prints produced by the ProJet 360 can be infiltrated with one of three different substances with varying characteristics: The ColorBond "instant-cure infiltrant", the two-part StrengthMax infiltrant "ideal for functional models", and the Salt Water Cure "eco-friendly and hazard-free infiltrant"\cite{datasheet_printer}. All prints produced for this thesis were infiltrated with ColorBond.
+
+The infiltration step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load might break them easily. Wall strengths of 1.5 mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the object geometry.
 
 \subsection{Silicone Casting}
 %TODO explain shore
 %TODO mold making
-Another manufacturing process for bracelet prototypes used in this thesis is liquid silicone casting. A mold is printed and then filled with a two compound mix.
+Another manufacturing process for bracelet prototypes used in this thesis is liquid silicone casting. Two different types of silicone were used for making various bracelet prototypes. 
+
+A mold is printed and then filled with a two compound mix.
 
 \section{Design Process and Prototype Manufacturing}
 %Idea: Section as concepts like in the presentation: rigid prints, segmented prints, casts
