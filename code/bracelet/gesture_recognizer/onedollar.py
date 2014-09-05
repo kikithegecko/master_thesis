@@ -11,8 +11,10 @@ class Bounding_Box(points):
 	def __init__(self):
 		min_x = float("inf")
 		min_y = float("inf")
+		#min_z = float("inf")
 		max_x = float("-inf")
 		max_y = float("-inf")
+		#max_z = float("-inf")
 		for p in points:
 			if p.x < min_x:
 				min_x = p.x
@@ -22,8 +24,13 @@ class Bounding_Box(points):
 				min_y = p.y
 			elif p.y > max_y:
 				max_y = p.y
+			#if p.z < min_z:
+				#min_z = p.z
+			#elif p.z > max_z:
+				#max_z = p.z
 		self.width = abs(max_x - min_x)
 		self.height = abs(max_y - min_y)
+		#self.depth = abs(max_z - min_z)
 
 def centroid(points):
 	c = Point()
@@ -86,12 +93,13 @@ def rotate_by(points, theta):
 # the raw input points. For candidates, steps 1-4 should be used just after 
 # the candidate is articulated.
 def scale_to_square(points, size):
-	B = bounding_box(points) #TODO
+	B = bounding_box(points)
 	newpoints = []
 	for p in points:
 		q = Point()
 		q.x = p.x * (size / B.width)
 		q.y = p.y * (size / B.height)
+		#q.z = p.z * (size / B.depth)
 		newpoints.append(q)
 	return newpoints
 	
