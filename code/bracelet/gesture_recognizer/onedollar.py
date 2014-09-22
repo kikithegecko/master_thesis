@@ -44,20 +44,21 @@ def centroid(points):
 
 # resample a points path into n evenly spaced points
 def resample(points, n):
-	I = path_length(points) / (n - 1)
+	increment = path_length(points) / (n - 1)
 	D = 0
 	newpoints = points[:1]
 	for i in len(points[1:]):
-		d = distance(points[i-1], points[i])
-		if(D + d) > I:
+		dist = distance(points[i-1], points[i])
+		if(D + dist) > increment:
 			q = Point()
-			q.x = points[i-1].x + ((I - D) / d) * (points[i].x - points[i-1].x)
-			q.y = points[i-1].y + ((I - D) / d) * (points[i].y - points[i-1].y)
+			q.x = points[i-1].x + ((increment - D) / dist) * (points[i].x - points[i-1].x)
+			q.y = points[i-1].y + ((increment - D) / dist) * (points[i].y - points[i-1].y)
+			#q.z = points[i-1].z + ((increment - D) / dist) * (points[i].z - points[i-1].z) #TODO
 			newpoints.append(q)
 			points.insert(i, q)
 			D = 0
 		else:
-			D = D + d
+			D = D + dist
 	return newpoints
 	
 def path_length(A):
