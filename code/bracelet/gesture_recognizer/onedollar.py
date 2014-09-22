@@ -80,6 +80,7 @@ def rotate_to_zero(points):
 	
 def rotate_by(points, theta):
 	c = centroid(points)
+	newpoints = []
 	for p in points:
 		q = Point()
 		q.x = (p.x - c.x) * cos(thetha) - (p.y - c.y) * sin(theta) + c.x
@@ -117,45 +118,50 @@ def translate_to_origin(points):
 	
 # match points against a set of templates. The size variable in recognize 
 # refers to the size passed to scale_to_square. the symbol phi equals 0.5*(-1 + sqrt(5)). 
-# We use thetha = +- 45 degrees and theta_delta = 2 degrees in recognize. 
 # Due to using resample, we can assume that A abd B in path_distance contain 
 # the same number of points, i.e. |A| = |B|.
 def recognize(points, templates):
-	b = float("inf")
+	#'constants'
+	theta_min = -45
+	theta_max = 45
+	theta_delta = 2
+	
+	best = float("inf")
 	for t in templates:
-		d = distance_at_best_angle(points, t, -theta, theta, theta_delta) #TODO theta stuff
-		if d < b:
-			b = d
+		dist = distance_at_best_angle(points, t, theta_min, theta_max, theta_delta)
+		if dist < best:
+			best = dist
 			t_best = t
-	score = 1 - b / 0.5 * sqrt(size*size + size*size)
-	return (T, score)
+	score = 1 - best / 0.5 * sqrt(size*size + size*size)
+	return (t_best, score)
 
-def distance_at_best_angle(points, thehta_a, thehta_b, theta_delta):
+def distance_at_best_angle(points, template, theta_min, thehta_b, theta_delta):
 	phi = 0.5 * (-1 + sqrt(5))
-	x1 = phi * thehta_a + (1 - phi) * theta_b
-	f1 = distance_at_angle(points, T, x1)
-	x2 = (1 - phi) * theta_a + phi * theta_b
-	f2 = distance_at_angle(points, T, x2)
-	while abs(theta_b - theta_a) > theta_delta:
+	x1 = phi * theta_min + (1 - phi) * theta_max
+	f1 = distance_at_angle(points, template, x1)
+	x2 = (1 - phi) * theta_min + phi * theta_max
+	f2 = distance_at_angle(points, template, x2)
+	while abs(theta_max - theta_min) > theta_delta:
 		if f1 < f2:
-			theta_b = x2
+			theta_max = x2
 			x2 = x1
 			f2 = f1
-			x1 = phi * theta_a + (1 - phi) * theta_b
-			f1 = distance_at_angle(points, T, x1)
+			x1 = phi * theta_min + (1 - phi) * theta_max
+			f1 = distance_at_angle(points, template, x1)
 		else:
-			theta_a = x1
+			theta_min = x1
 			x2 = x1
 			f2 = f1
-			x1 = phi * theta_a + (1 - phi) * theta_b
-			f1 = distance_at_angle(points, T, x2)
+			x1 = phi * theta_min + (1 - phi) * theta_max
+			f1 = distance_at_angle(points, template, x2)
 	return min(f1, f2)
 	
-def distance_at_angle(points, T, theta):
+def distance_at_angle(points, template, theta):
 	newpoints = rotate_by(points, theta)
-	d = path_distance(newpoints, T_points)
+	d = path_distance(newpoints, template)
 	return d
-	
+
+# assume |A| = |B| (usually valid due to resampling)
 def path_distance(A, B):
 	d = 0
 	for i in range(len(A)):
