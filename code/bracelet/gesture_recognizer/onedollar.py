@@ -47,7 +47,7 @@ def resample(points, n):
 	increment = path_length(points) / (n - 1)
 	D = 0
 	newpoints = points[:1]
-	for i in len(points[1:]):
+	for i in range(1, len(points[1:])):
 		dist = distance(points[i-1], points[i])
 		if(D + dist) > increment:
 			q = Point()
@@ -62,10 +62,10 @@ def resample(points, n):
 	return newpoints
 	
 def path_length(A):
-	d = 0
-	for i in range(len(A)):
-		d += distance(A[i-1], A[i])
-	return d
+	dist = 0
+	for i in range(1, len(A)):
+		dist += distance(A[i-1], A[i])
+	return dist
 	
 def distance(p, q):
 	return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
