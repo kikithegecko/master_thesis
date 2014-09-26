@@ -119,3 +119,7 @@ eagle.epf
 *.drd.*
 *.info
 *.eps
+
+# Autorouting files
+*.job
+*.pro
