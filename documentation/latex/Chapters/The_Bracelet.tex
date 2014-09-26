@@ -84,19 +84,26 @@ The design process for the interactive bracelet presented in this thesis went th
 
 \subsection{Rigid Designs}
 
+%TODO pictures: cad view and printout side by side
 The first approach that comes to mind when thinking about bracelet design is a cuff-like, rigid shape. From the CAD point of view, the first bracelet prototype consisted of a single rectangular profile rotated around a oval curve which was derived from a measured wrist. The bracelet's inside was hollow, that would be the storage space for all electronic components. The cuff's gap was just large enough for the wrist to fit through, although in reality, this lead to light scratches on the skin in combination with the rough texture of the printed material. In addition, the uniform thickness made this first prototype uncomfortable to wear, especially at the open ends. So this fist prototype had some clear downsides that were eliminated in the next iteration.
 
-This very simple first approach is basically a rectangular profile rotated around a curve. It has the same magnitude at any point, which makes it quite uncomfortable to wear, especially under a layer of clothing.
+%Picture
 
-\subsection{Tapered Shape}
+Due to a settings error in the PC that controls the 3D printer, the printout of this first design was aborted after one third of the process.
 
-With a tapered shape and non-uniform thickness, the bracelet looks more appealing. The reduced wall strength (0.7mm) made it very fragile in fabrication, two (out of two) prints broke during post-processing. Wearing the cuff while working on a PC feels only slightly uncomfortable, but twisting the hand is encumbered by the tight-fitting bracelet. Future prototypes should allow more space between the arm and the bracelet to ensure better comfort.
+In the following iteration, a bracelet of varying thickness was designed to make wearing the prototype more comfortable. Decreasing the thickness from XX cm to YY cm made the look more appealing and wearing a little less clumsy. At the same time, the wall strength was decreased from X.Y mm to 0.7 mm, which made it very fragile in fabrication and usage, both prints broke during post-processing. Wearing the cuff while working on a PC feels only slightly uncomfortable, but twisting the hand is encumbered by the tight-fitting bracelet. A design goal for future prototypes derived from this prototype was adding more space between the arm and the bracelet to ensure better comfort while wearing it.
 
-\subsection{Tapered Shape with Lid}
+% Picture
 
-A modified design of Prototype 2 features a removable lid. The structure of the lid turned out to be too fine, especially the flexible part was too thin to work as intended. The size of the bracelet was increased a little to render it more comfortable to wear. Still, the rigid shape leads to clumsiness.
+A modified design of the aforementioned prototype featured a removable lid since the tapered shape made it hard to access the inside space of the bracelet. The lid design was inspired by battery case covers commonly found in remote controls or small electronic devices. It features two nubsis on the one side that support the lid in its place and another, smaller nubsi with a cavity in the material right next to it, so the nubsi can snap just inside the lid gap when it closes.
 
-\subsection{Amico Bracelet Print-out}
+%Picture
+
+It turned out that the lid features were designed too fine, especially the flexible part was too thin to work as intended. The lid had to be opened and closed very cautiously and overall, the construction seemed not reliable for daily use. In addition, the rigid shape still lead to clumsiness in wearing the bracelet, so the whole concept of rigid bracelets was left behind.
+
+\subsection{Segmented Designs}
+
+The search for a more flexible printed bracelet shape lead to an entry for an activity bracelet design contest by Daniel Muschke on a 3D printing template exchange site called \textit{GrabCAD} \cite{amicobracelet}. Muschke created a \ac{CAD} file for a bracelet consisting of three segments that are connected by slow hinges. This design considered the electronic components like a micro-controller and a micro \ac{USB} port which made a good start for further modification, but unfortunately the file format made it impossible to alter the design in detail. A print was possible since \ac{STL} files were included in the upload. However, the design turned out to be too small to be actually wearable, but it demonstrated that printed hinges work well with a pivot made from wire. The style felt more comfortable to wear than the precious prototypes and felt leaner on the wrist than the rigid prototypes. Overall, the printed design looked promising so the idea of a tri-part bracelet was investigated further.
 
 A print of the tri-part design by Daniel Muschke on GrabCAD turned out to be a little too small, but the style felt more comfortable than the previous prototypes.
 
