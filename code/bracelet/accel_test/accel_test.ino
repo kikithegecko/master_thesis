@@ -6,6 +6,10 @@
 #define gselPin 11
 #define buttonPin 14
 
+#define RPin 5
+#define GPin 4
+#define BPin 6
+
 //application configurations
 #define SIXGMODE 0
 #define SAMPLE_SIZE 100 //number of samples per Gesture
@@ -77,6 +81,10 @@ void readAccel(){
 }
 
 void loop() {
+  analogWrite(RPin, 255);
+  analogWrite(GPin, 255);
+  analogWrite(BPin, 255);
+  
   buttonstate = digitalRead(buttonPin);
   if(buttonstate == HIGH){
     //Serial.println("Button pressed!");
