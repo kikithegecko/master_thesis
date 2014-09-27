@@ -132,6 +132,16 @@ Recreating Muschke's design was not as easy as planned, since the parametric mod
 
 The bracelet segments are hollow and open on the side that lays to the wrist, this leaves enough space for storing electronics. Since the parts are only connected by hinges, routing the necessary wires between the segments needs to be considered, e.g. by leaving small holes right next to the hinges.
 
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[\ac{CAD} view]
+	{\includegraphics[width=.45\linewidth]{gfx/bracelet04-cad.png}} \quad
+	\subfloat[Hinge Detail]
+	{\label{fig:bracelet04}%
+		\includegraphics[width=.45\linewidth]{gfx/bracelet04-print.png}}
+	\caption{Multi-part design}
+\end{figure}
+
 Since the manufacturing techniques offered at the \ac{HCI} group don't allow for slow hinges (as the inspiration by Muschke suggests), a different solution for keeping the bracelet closed while worn on the wrist needed to be considered. A magnet clasp with small neodymium magnets was tested, but attaching them turned out to be more difficult than expected. When attached to the inside of the segment tips, the magnetic force was too weak for reliably keeping the bracelet together. Mounting the magnets on the outside of the segments resulted in mounting difficulties, since the magnetic force of neodymium magnets is very strong and frequently resulted in torn glue layers.
 
 When an electrophoretic display was considered to be part of the bracelet, the segmented approach became undesired, since in addition to aforementioned difficulties, the usable surface space was relatively small when it came to hosting a single big component like a display. This issue led to further research into various other manufacturing techniques and potential materials for bracelet prototypes, and eventually led to cast silicone.
