@@ -2,6 +2,12 @@
 
 #define ADDR         0x1D
 #define CTRL_REG1    0x2A
+#define OUT_X_MSB    0x01
+#define OUT_X_LSB    0x02
+#define OUT_Y_MSB    0x03
+#define OUT_Y_LSB    0x04
+#define OUT_Z_MSB    0x05
+#define OUT_Z_LSB    0x06
 #define ACTIVE_MASK  0x01
 
 byte read_reg(byte addr){
@@ -9,7 +15,8 @@ byte read_reg(byte addr){
   Wire.send(addr);
   Wire.endTransmission();
   Wire.requestFrom(ADDR, 1);
-  return Wire.read();
+  if(Wire.available())
+    return Wire.read();
 } 
 
 void write_reg(byte addr, byte val){
@@ -20,33 +27,45 @@ void write_reg(byte addr, byte val){
 }
 
 void active_mode(){
-  byte current = read_reg(CTRL_REG1);
+  write_reg(CTRL_REG1, read_reg(CTRL_REG1) & ~ ACTIVE_MASK);
+}
+
+void standby_mode(){
+  write_reg(CTRL_REG1, read_reg(CTRL_REG1) | ACTIVE_MASK);
+}
 
 void setup(){
   Serial.begin(115200);
   Serial.println("Serial ready");
   Wire.begin(); //as master
   
-  Wire.beginTransmission(ADDR);
-  Wire.send(0x2A);
-  Wire.send(0x01); //set active
-  Wire.endTransmission();
-  //Wire.requestFrom(0x1D, 1);
-  //byte b = Wire.read();
-  //Serial.println(b, BIN);
-  //Serial.println("---");
-
+  //config stuff
+  active_mode();
 }
 
 void loop(){
-  Wire.beginTransmission(ADDR);
-  Wire.send(0x01);
-  Wire.endTransmission();
+  /*
+  byte msb, lsb;
+  msb = read_reg(OUT_X_MSB);
+  lsb = read_reg(OUT_X_LSB);
+  Serial.print("x: ");
+  Serial.print(msb, HEX);
+  Serial.println(lsb, HEX);
   
-  Wire.requestFrom(0x1D, 1);
-  byte c = Wire.read();
-  //Serial.print("received: ");
-  Serial.println(c, BIN);
+  msb = read_reg(OUT_Y_MSB);
+  lsb = read_reg(OUT_Y_LSB);
+  Serial.print("y: ");
+  Serial.print(msb, HEX);
+  Serial.println(lsb, HEX);
+  
+  msb = read_reg(OUT_Z_MSB);
+  lsb = read_reg(OUT_Z_LSB);
+  Serial.print("z: ");
+  Serial.print(msb, HEX);
+  Serial.println(lsb, HEX);
+  */
+  byte test = read_reg(CTRL_REG1);
+  Serial.println(test, BIN);
   
   delay(1000);
 }
