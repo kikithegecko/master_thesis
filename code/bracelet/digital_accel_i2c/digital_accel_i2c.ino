@@ -45,18 +45,17 @@ void active_mode(){
 
 void setup(){
   Serial.begin(115200);
-  Serial.println("Serial ready");
   Wire.begin(); //as master
   
   //config stuff
+  write_reg(CTRL_REG1, 0x00); //to clear previous test data
   active_mode();
-  //write_reg(CTRL_REG1, 0x00);
 }
 
 void loop(){
   uint8_t test = 0;
-  /*
-  byte msb, lsb;
+  
+  uint8_t msb, lsb;
   msb = read_reg(OUT_X_MSB);
   lsb = read_reg(OUT_X_LSB);
   Serial.print("x: ");
@@ -74,14 +73,16 @@ void loop(){
   Serial.print("z: ");
   Serial.print(msb, HEX);
   Serial.println(lsb, HEX);
-  */
+  
 
+  /*
   active_mode();
   test = read_reg(CTRL_REG1);
   Serial.println(test, BIN);
   standby_mode();
   test = read_reg(CTRL_REG1);
   Serial.println(test, BIN);
+  */
   
   delay(1000);
 }
