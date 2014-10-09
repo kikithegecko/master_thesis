@@ -10,7 +10,7 @@
 #define OUT_Z_LSB    0x06
 #define ACTIVE_MASK  0x01
 
-byte read_reg(byte addr){
+uint8_t read_reg(uint8_t addr){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
   int res = Wire.endTransmission(I2C_NOSTOP);
@@ -20,23 +20,26 @@ byte read_reg(byte addr){
   //Serial.print("Register data request status: ");
   //Serial.println(res);
   if(Wire.available())
-    return Wire.read();
+    return Wire.readByte();
 } 
 
-void write_reg(byte addr, byte val){
+void write_reg(uint8_t addr, uint8_t val){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
+  int res = Wire.endTransmission(I2C_NOSTOP);
+  //Serial.print("Register write status 1: ");
+  //Serial.println(res);
   Wire.send(val);
-  int res = Wire.endTransmission();
-  Serial.print("Register write status: ");
-  Serial.println(res);
-}
-
-void active_mode(){
-  write_reg(CTRL_REG1, read_reg(CTRL_REG1) & ~ ACTIVE_MASK);
+  res = Wire.endTransmission(I2C_STOP);
+  //Serial.print("Register write status 2: ");
+  //Serial.println(res);
 }
 
 void standby_mode(){
+  write_reg(CTRL_REG1, read_reg(CTRL_REG1) & ~ ACTIVE_MASK);
+}
+
+void active_mode(){
   write_reg(CTRL_REG1, read_reg(CTRL_REG1) | ACTIVE_MASK);
 }
 
@@ -47,9 +50,11 @@ void setup(){
   
   //config stuff
   active_mode();
+  //write_reg(CTRL_REG1, 0x00);
 }
 
 void loop(){
+  uint8_t test = 0;
   /*
   byte msb, lsb;
   msb = read_reg(OUT_X_MSB);
@@ -70,8 +75,12 @@ void loop(){
   Serial.print(msb, HEX);
   Serial.println(lsb, HEX);
   */
-  //active_mode();
-  byte test = read_reg(0x0D);
+
+  active_mode();
+  test = read_reg(CTRL_REG1);
+  Serial.println(test, BIN);
+  standby_mode();
+  test = read_reg(CTRL_REG1);
   Serial.println(test, BIN);
   
   delay(1000);
