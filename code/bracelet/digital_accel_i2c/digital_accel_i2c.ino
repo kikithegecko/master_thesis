@@ -10,6 +10,12 @@
 #define OUT_Z_LSB    0x06
 #define ACTIVE_MASK  0x01
 
+typedef struct {
+  int x;
+  int y;
+  int z;
+} AccelData;
+
 uint8_t read_reg(uint8_t addr){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
@@ -21,7 +27,7 @@ uint8_t read_reg(uint8_t addr){
   //Serial.println(res);
   if(Wire.available())
     return Wire.readByte();
-} 
+}
 
 void write_reg(uint8_t addr, uint8_t val){
   Wire.beginTransmission(ADDR);
@@ -43,18 +49,54 @@ void active_mode(){
   write_reg(CTRL_REG1, read_reg(CTRL_REG1) | ACTIVE_MASK);
 }
 
+int bytes_to_int(uint8_t high, uint8_t low){
+  uint16_t temp = (high << 8) + low;
+  int factor = 1;
+  
+  if (high > 0x7F)
+  {
+    // negative number
+    temp = (~ temp) + 1;
+    factor = -1;
+  }
+  
+  return (temp >> 4) * factor;
+}
+  
+AccelData get_acceleration_data(){
+  AccelData data;
+  
+  uint8_t x_hi = read_reg(OUT_X_MSB);
+  uint8_t x_lo = read_reg(OUT_X_LSB);
+  
+  data.x = bytes_to_int(x_hi, x_lo);
+  
+  uint8_t y_hi = read_reg(OUT_Y_MSB);
+  uint8_t y_lo = read_reg(OUT_Y_LSB);
+  
+  data.y = bytes_to_int(y_hi, y_lo);  
+  
+  uint8_t z_hi = read_reg(OUT_Z_MSB);
+  uint8_t z_lo = read_reg(OUT_Z_LSB);
+  
+  data.z = bytes_to_int(z_hi, z_lo);
+  
+  return data;
+}
+
 void setup(){
   Serial.begin(115200);
   Wire.begin(); //as master
   
   //config stuff
-  write_reg(CTRL_REG1, 0x00); //to clear previous test data
+  write_reg(CTRL_REG1, 0x00); //to clear previous config
   active_mode();
 }
 
 void loop(){
   uint8_t test = 0;
   
+  /*
   uint8_t msb, lsb;
   msb = read_reg(OUT_X_MSB);
   lsb = read_reg(OUT_X_LSB);
@@ -73,7 +115,15 @@ void loop(){
   Serial.print("z: ");
   Serial.print(msb, HEX);
   Serial.println(lsb, HEX);
+  */
   
+  AccelData data = get_acceleration_data();
+  Serial.print("x: ");
+  Serial.println(data.x);
+  Serial.print("y: ");
+  Serial.println(data.y);
+  Serial.print("z: ");
+  Serial.println(data.z);
 
   /*
   active_mode();
