@@ -1,4 +1,4 @@
-#include <Wire.h>
+#include <i2c_t3.h>
 
 #define ADDR         0x1D
 #define CTRL_REG1    0x2A
@@ -13,8 +13,12 @@
 byte read_reg(byte addr){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
-  Wire.endTransmission();
-  Wire.requestFrom(ADDR, 1);
+  int res = Wire.endTransmission(I2C_NOSTOP);
+  //Serial.print("Register addr transmission status: ");
+  //Serial.println(res);
+  res = Wire.requestFrom(ADDR, 1);
+  //Serial.print("Register data request status: ");
+  //Serial.println(res);
   if(Wire.available())
     return Wire.read();
 } 
@@ -23,7 +27,9 @@ void write_reg(byte addr, byte val){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
   Wire.send(val);
-  Wire.endTransmission();
+  int res = Wire.endTransmission();
+  Serial.print("Register write status: ");
+  Serial.println(res);
 }
 
 void active_mode(){
@@ -64,7 +70,8 @@ void loop(){
   Serial.print(msb, HEX);
   Serial.println(lsb, HEX);
   */
-  byte test = read_reg(CTRL_REG1);
+  //active_mode();
+  byte test = read_reg(0x0D);
   Serial.println(test, BIN);
   
   delay(1000);
