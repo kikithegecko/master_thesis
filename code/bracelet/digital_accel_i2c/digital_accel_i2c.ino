@@ -8,23 +8,20 @@
 #define OUT_Y_LSB    0x04
 #define OUT_Z_MSB    0x05
 #define OUT_Z_LSB    0x06
+
 #define ACTIVE_MASK  0x01
 
-typedef struct {
+struct AccelData{
   int x;
   int y;
   int z;
-} AccelData;
+};
 
 uint8_t read_reg(uint8_t addr){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
   int res = Wire.endTransmission(I2C_NOSTOP);
-  //Serial.print("Register addr transmission status: ");
-  //Serial.println(res);
   res = Wire.requestFrom(ADDR, 1);
-  //Serial.print("Register data request status: ");
-  //Serial.println(res);
   if(Wire.available())
     return Wire.readByte();
 }
@@ -33,12 +30,8 @@ void write_reg(uint8_t addr, uint8_t val){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
   int res = Wire.endTransmission(I2C_NOSTOP);
-  //Serial.print("Register write status 1: ");
-  //Serial.println(res);
   Wire.send(val);
   res = Wire.endTransmission(I2C_STOP);
-  //Serial.print("Register write status 2: ");
-  //Serial.println(res);
 }
 
 void standby_mode(){
@@ -63,8 +56,8 @@ int bytes_to_int(uint8_t high, uint8_t low){
   return (temp >> 4) * factor;
 }
   
-AccelData get_acceleration_data(){
-  AccelData data;
+struct AccelData get_acceleration_data(){
+  struct AccelData data;
   
   uint8_t x_hi = read_reg(OUT_X_MSB);
   uint8_t x_lo = read_reg(OUT_X_LSB);
@@ -117,14 +110,15 @@ void loop(){
   Serial.println(lsb, HEX);
   */
   
-  AccelData data = get_acceleration_data();
+  struct AccelData data = get_acceleration_data();
   Serial.print("x: ");
   Serial.println(data.x);
   Serial.print("y: ");
   Serial.println(data.y);
   Serial.print("z: ");
   Serial.println(data.z);
-
+  
+  
   /*
   active_mode();
   test = read_reg(CTRL_REG1);
