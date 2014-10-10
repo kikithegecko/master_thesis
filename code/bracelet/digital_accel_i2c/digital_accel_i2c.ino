@@ -79,7 +79,7 @@ struct AccelData get_acceleration_data(){
 
 void setup(){
   Serial.begin(115200);
-  Wire.begin(); //as master
+  Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
