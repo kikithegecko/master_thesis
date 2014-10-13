@@ -2864,7 +2864,7 @@ design rules under a new name.</description>
 <element name="R1" library="resistor" package="R0805" value="" x="23.3" y="29.2"/>
 <element name="R2" library="resistor" package="R0805" value="" x="23.2" y="27"/>
 <element name="R3" library="resistor" package="R0805" value="" x="23.3" y="31.4"/>
-<element name="TOUCHSLIDER_CONNECTOR" library="con-amp-micromatch-smd" package="MICROMATCH-8-SMD" value="MICROMATCH-8SMD" x="20.7" y="38.9" rot="R180"/>
+<element name="TOUCHSLIDER_CONNECTOR" library="con-amp-micromatch-smd" package="MICROMATCH-8-SMD" value="MICROMATCH-8SMD" x="20.7" y="42.4" rot="R180"/>
 <element name="U$3" library="talons" package="MMA8652FC" value="MMA8652FC" x="49.2" y="34.5"/>
 <element name="C1" library="rcl" package="C0805" value="1uF" x="56" y="36.5" rot="R90"/>
 <element name="C2" library="rcl" package="C0805" value="0.1uF" x="53.9" y="36.5" rot="R90"/>
@@ -2905,7 +2905,7 @@ design rules under a new name.</description>
 <wire x1="51.3625" y1="35.865" x2="51.965" y2="35.865" width="0.254" layer="1"/>
 <wire x1="51.965" y1="35.865" x2="52.1" y2="36" width="0.254" layer="1"/>
 <contactref element="R5" pad="1"/>
-<wire x1="51.3625" y1="35.865" x2="51.3625" y2="35.085" width="0" layer="19" extent="1-1"/>
+<wire x1="51.3625" y1="35.085" x2="51.3625" y2="35.865" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$4">
 <contactref element="LED1" pad="2"/>
@@ -2929,51 +2929,43 @@ design rules under a new name.</description>
 </signal>
 <signal name="CAP01">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="1"/>
-<wire x1="16.4" y1="42.685" x2="16.255" y2="41.44" width="0.3048" layer="1"/>
-<wire x1="16.5" y1="42.785" x2="16.255" y2="41.44" width="0.3048" layer="1"/>
 <contactref element="U$1" pad="P17"/>
-<wire x1="18.9" y1="47.9" x2="16.5" y2="45.5" width="0.254" layer="1"/>
-<wire x1="16.5" y1="45.5" x2="16.5" y2="41.685" width="0.254" layer="1"/>
-<wire x1="16.5" y1="41.685" x2="16.255" y2="41.44" width="0.254" layer="1"/>
-<wire x1="18.9" y1="47.9" x2="53.815" y2="47.9" width="0.3048" layer="1"/>
-<wire x1="53.815" y1="47.9" x2="57.395" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="53.315" y1="48.4" x2="57.395" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="53.315" y1="48.4" x2="17.1" y2="48.4" width="0.3048" layer="1"/>
+<wire x1="17.1" y1="48.4" x2="16.255" y2="47.555" width="0.3048" layer="1"/>
+<wire x1="16.255" y1="47.555" x2="16.255" y2="44.94" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP02">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="2"/>
 <contactref element="U$1" pad="P2"/>
-<wire x1="28.5" y1="31.4" x2="31.575" y2="31.4" width="0.3048" layer="1"/>
-<wire x1="31.575" y1="31.4" x2="31.995" y2="29.08" width="0.3048" layer="1"/>
-<wire x1="17.525" y1="36.36" x2="17.525" y2="34.275" width="0.3048" layer="1"/>
-<wire x1="17.525" y1="34.275" x2="19" y2="32.8" width="0.3048" layer="1"/>
-<wire x1="19" y1="32.8" x2="27.1" y2="32.8" width="0.3048" layer="1"/>
-<wire x1="27.1" y1="32.8" x2="28.5" y2="31.4" width="0.3048" layer="1"/>
+<wire x1="31.995" y1="29.08" x2="26.875" y2="34.2" width="0.3048" layer="1"/>
+<wire x1="26.875" y1="34.2" x2="20.4" y2="34.2" width="0.3048" layer="1"/>
+<wire x1="20.4" y1="34.2" x2="17.525" y2="37.075" width="0.3048" layer="1"/>
+<wire x1="17.525" y1="37.075" x2="17.525" y2="39.86" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP03">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="3"/>
 <contactref element="U$1" pad="P18"/>
-<wire x1="21.2" y1="47.2" x2="18.8" y2="44.8" width="0.254" layer="1"/>
-<wire x1="18.8" y1="44.8" x2="18.8" y2="41.445" width="0.254" layer="1"/>
-<wire x1="18.8" y1="41.445" x2="18.795" y2="41.44" width="0.254" layer="1"/>
-<wire x1="21.2" y1="47.2" x2="51.975" y2="47.2" width="0.3048" layer="1"/>
-<wire x1="51.975" y1="47.2" x2="54.855" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="51.275" y1="47.9" x2="54.855" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="51.275" y1="47.9" x2="19.6" y2="47.9" width="0.3048" layer="1"/>
+<wire x1="19.6" y1="47.9" x2="18.795" y2="47.095" width="0.3048" layer="1"/>
+<wire x1="18.795" y1="47.095" x2="18.795" y2="44.94" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP04">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="4"/>
 <contactref element="U$1" pad="P3"/>
-<wire x1="34.1" y1="33.6" x2="21" y2="33.6" width="0.254" layer="1"/>
-<wire x1="21" y1="33.6" x2="20.065" y2="34.535" width="0.254" layer="1"/>
-<wire x1="20.065" y1="34.535" x2="20.065" y2="36.36" width="0.254" layer="1"/>
-<wire x1="34.1" y1="33.6" x2="34.535" y2="33.165" width="0.3048" layer="1"/>
-<wire x1="34.535" y1="33.165" x2="34.535" y2="29.08" width="0.3048" layer="1"/>
+<wire x1="34.535" y1="29.08" x2="28.115" y2="35.5" width="0.3048" layer="1"/>
+<wire x1="28.115" y1="35.5" x2="21.4" y2="35.5" width="0.3048" layer="1"/>
+<wire x1="21.4" y1="35.5" x2="20.065" y2="36.835" width="0.3048" layer="1"/>
+<wire x1="20.065" y1="36.835" x2="20.065" y2="39.86" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP05">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="5"/>
 <contactref element="U$1" pad="P19"/>
-<wire x1="23.5" y1="46.5" x2="21.3" y2="44.3" width="0.254" layer="1"/>
-<wire x1="21.3" y1="44.3" x2="21.3" y2="41.475" width="0.254" layer="1"/>
-<wire x1="21.3" y1="41.475" x2="21.335" y2="41.44" width="0.254" layer="1"/>
-<wire x1="23.5" y1="46.5" x2="50.135" y2="46.5" width="0.3048" layer="1"/>
-<wire x1="50.135" y1="46.5" x2="52.315" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="49.235" y1="47.4" x2="52.315" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="49.235" y1="47.4" x2="21.8" y2="47.4" width="0.3048" layer="1"/>
+<wire x1="21.8" y1="47.4" x2="21.335" y2="46.935" width="0.3048" layer="1"/>
+<wire x1="21.335" y1="46.935" x2="21.335" y2="44.94" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP06">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="6"/>
@@ -2981,16 +2973,16 @@ design rules under a new name.</description>
 <signal name="CAP07">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="7"/>
 <contactref element="U$1" pad="P25"/>
-<wire x1="26.6" y1="43.1" x2="24.94" y2="41.44" width="0.254" layer="1"/>
-<wire x1="24.94" y1="41.44" x2="23.875" y2="41.44" width="0.254" layer="1"/>
 <wire x1="26.6" y1="43.1" x2="35.855" y2="43.1" width="0.3048" layer="1"/>
 <wire x1="35.855" y1="43.1" x2="37.075" y2="44.32" width="0.3048" layer="1"/>
+<wire x1="26.6" y1="43.1" x2="24.76" y2="44.94" width="0.3048" layer="1"/>
+<wire x1="24.76" y1="44.94" x2="23.875" y2="44.94" width="0.3048" layer="1"/>
 </signal>
 <signal name="CAP08">
 <contactref element="TOUCHSLIDER_CONNECTOR" pad="8"/>
 <contactref element="U$1" pad="P24"/>
-<wire x1="39.615" y1="44.32" x2="33.555" y2="36.36" width="0.254" layer="1"/>
-<wire x1="33.555" y1="36.36" x2="25.145" y2="36.36" width="0.254" layer="1"/>
+<wire x1="39.615" y1="44.32" x2="35.155" y2="39.86" width="0.3048" layer="1"/>
+<wire x1="35.155" y1="39.86" x2="25.145" y2="39.86" width="0.3048" layer="1"/>
 </signal>
 <signal name="SS">
 <contactref element="U$1" pad="P12"/>
