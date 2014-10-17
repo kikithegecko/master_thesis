@@ -1,7 +1,15 @@
 #include <i2c_t3.h>
 
+#define LED_R 4
+#define LED_G 5
+#define LED_B 3
+
 #define ADDR         0x1D
+
 #define CTRL_REG1    0x2A
+#define PULSE_CFG    0x21
+#define PULSE_SRC    0x22
+#define STATUS_REG   0x00
 #define OUT_X_MSB    0x01
 #define OUT_X_LSB    0x02
 #define OUT_Y_MSB    0x03
@@ -10,6 +18,11 @@
 #define OUT_Z_LSB    0x06
 
 #define ACTIVE_MASK  0x01
+#define DATA_RDY     0x04
+#define TAP_Z_SINGLE_EN 0x50
+#define TAP_Z_DOUBLE_EN 0x60
+#define TAP_Z_S_MASK 0xC0
+#define TAP_Z_D_MASK 0xC8
 
 struct AccelData{
   int x;
@@ -77,56 +90,62 @@ struct AccelData get_acceleration_data(){
   return data;
 }
 
+void process_pulse(uint8_t register_data){
+  if((register_data & 0b11001000) == TAP_Z_S_MASK){ //there is an important zero in the lsb
+    //signal single tap
+    analogWrite(LED_G, 200);
+    delay(200);
+    analogWrite(LED_G, 0);
+  }
+  else if((register_data & TAP_Z_D_MASK) == TAP_Z_D_MASK){
+    //signal double tap)
+    analogWrite(LED_B, 200);
+    delay(100);
+    analogWrite(LED_B, 0);
+    delay(50);
+    analogWrite(LED_B, 200);
+    delay(100);
+    analogWrite(LED_B, 0);
+  }
+}
+
 void setup(){
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
+  
   Serial.begin(115200);
   Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
+  
+  //2g mode is default (1024 counts per g)
+  
+  //enable tap-detection on z-axis
+  write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
+  
   active_mode();
 }
 
 void loop(){
-  uint8_t test = 0;
   
-  /*
-  uint8_t msb, lsb;
-  msb = read_reg(OUT_X_MSB);
-  lsb = read_reg(OUT_X_LSB);
-  Serial.print("x: ");
-  Serial.print(msb, HEX);
-  Serial.println(lsb, HEX);
+  if(read_reg(STATUS_REG) & DATA_RDY){
+    struct AccelData data = get_acceleration_data();
+    Serial.print("x: ");
+    Serial.println(data.x / 1024.0);
+    Serial.print("y: ");
+    Serial.println(data.y / 1024.0);
+    Serial.print("z: ");
+    Serial.println(data.z / 1024.0);
+  }
   
-  msb = read_reg(OUT_Y_MSB);
-  lsb = read_reg(OUT_Y_LSB);
-  Serial.print("y: ");
-  Serial.print(msb, HEX);
-  Serial.println(lsb, HEX);
+  //need to save this because data is reset after reading
+  uint8_t pulse_data = read_reg(PULSE_SRC);
   
-  msb = read_reg(OUT_Z_MSB);
-  lsb = read_reg(OUT_Z_LSB);
-  Serial.print("z: ");
-  Serial.print(msb, HEX);
-  Serial.println(lsb, HEX);
-  */
+  if(pulse_data & 0x80){
+    process_pulse(pulse_data);
+  }
   
-  struct AccelData data = get_acceleration_data();
-  Serial.print("x: ");
-  Serial.println(data.x);
-  Serial.print("y: ");
-  Serial.println(data.y);
-  Serial.print("z: ");
-  Serial.println(data.z);
-  
-  
-  /*
-  active_mode();
-  test = read_reg(CTRL_REG1);
-  Serial.println(test, BIN);
-  standby_mode();
-  test = read_reg(CTRL_REG1);
-  Serial.println(test, BIN);
-  */
-  
-  delay(1000);
+  //delay(1000);
 }
