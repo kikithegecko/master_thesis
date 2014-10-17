@@ -10,6 +10,8 @@
 #define PULSE_CFG    0x21
 #define PULSE_SRC    0x22
 #define PULSE_THSZ   0x25
+#define PULSE_LTCY   0x27
+#define PULSE_WIND   0x28
 #define STATUS_REG   0x00
 #define OUT_X_MSB    0x01
 #define OUT_X_LSB    0x02
@@ -92,22 +94,24 @@ struct AccelData get_acceleration_data(){
 }
 
 void process_pulse(uint8_t register_data){
-  if((register_data & TAP_Z_D_MASK) == TAP_Z_D_MASK){ 
-    //signal double tap
-    analogWrite(LED_G, 50);
-    delay(200);
-    analogWrite(LED_G, 0);
-  }
-  else if((register_data & 0b11001000) == TAP_Z_S_MASK){ //there is an important zero in the lsb
-    //signal single tap)
-    analogWrite(LED_B, 50);
-    delay(100);
-    analogWrite(LED_B, 0);
-    delay(50);
-    analogWrite(LED_B, 50);
-    delay(100);
-    analogWrite(LED_B, 0);
-  }
+  if(register_data & TAP_Z_S_MASK){ 
+    if(register_data & 0x08){
+      //signal double tap)
+      analogWrite(LED_B, 50);
+      delay(100);
+      analogWrite(LED_B, 0);
+      delay(50);
+      analogWrite(LED_B, 50);
+      delay(100);
+      analogWrite(LED_B, 0);
+    }
+    else{
+      //signal single tap
+      analogWrite(LED_G, 50);
+      delay(200);
+      analogWrite(LED_G, 0);
+    }
+  }  
 }
 
 void setup(){
@@ -127,6 +131,10 @@ void setup(){
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
   //configure tap detection threshold
   write_reg(PULSE_THSZ, 20);
+  //define time interval after pulse detection in which other pulses are ignored
+  write_reg(PULSE_LTCY, 10);
+  //configure maximum time between two taps of a double tap
+  write_reg(PULSE_WIND, 200);
   
   active_mode();
 }
