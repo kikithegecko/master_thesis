@@ -9,6 +9,7 @@
 #define CTRL_REG1    0x2A
 #define PULSE_CFG    0x21
 #define PULSE_SRC    0x22
+#define PULSE_THSZ   0x25
 #define STATUS_REG   0x00
 #define OUT_X_MSB    0x01
 #define OUT_X_LSB    0x02
@@ -19,8 +20,8 @@
 
 #define ACTIVE_MASK  0x01
 #define DATA_RDY     0x04
-#define TAP_Z_SINGLE_EN 0x50
-#define TAP_Z_DOUBLE_EN 0x60
+#define TAP_Z_SINGLE_EN 0xD0
+#define TAP_Z_DOUBLE_EN 0xE0
 #define TAP_Z_S_MASK 0xC0
 #define TAP_Z_D_MASK 0xC8
 
@@ -91,19 +92,19 @@ struct AccelData get_acceleration_data(){
 }
 
 void process_pulse(uint8_t register_data){
-  if((register_data & 0b11001000) == TAP_Z_S_MASK){ //there is an important zero in the lsb
-    //signal single tap
-    analogWrite(LED_G, 200);
+  if((register_data & TAP_Z_D_MASK) == TAP_Z_D_MASK){ 
+    //signal double tap
+    analogWrite(LED_G, 50);
     delay(200);
     analogWrite(LED_G, 0);
   }
-  else if((register_data & TAP_Z_D_MASK) == TAP_Z_D_MASK){
-    //signal double tap)
-    analogWrite(LED_B, 200);
+  else if((register_data & 0b11001000) == TAP_Z_S_MASK){ //there is an important zero in the lsb
+    //signal single tap)
+    analogWrite(LED_B, 50);
     delay(100);
     analogWrite(LED_B, 0);
     delay(50);
-    analogWrite(LED_B, 200);
+    analogWrite(LED_B, 50);
     delay(100);
     analogWrite(LED_B, 0);
   }
@@ -124,6 +125,8 @@ void setup(){
   
   //enable tap-detection on z-axis
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
+  //configure tap detection threshold
+  write_reg(PULSE_THSZ, 20);
   
   active_mode();
 }
