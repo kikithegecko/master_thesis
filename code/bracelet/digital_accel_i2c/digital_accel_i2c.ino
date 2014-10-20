@@ -10,6 +10,7 @@
 #define PULSE_CFG    0x21
 #define PULSE_SRC    0x22
 #define PULSE_THSZ   0x25
+#define PULSE_TMLT   0x26
 #define PULSE_LTCY   0x27
 #define PULSE_WIND   0x28
 #define STATUS_REG   0x00
@@ -129,12 +130,17 @@ void setup(){
   
   //enable tap-detection on z-axis
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
-  //configure tap detection threshold
-  write_reg(PULSE_THSZ, 20);
+  //configure tap detection threshold, with steps of 0.063g/LSB @+/-8g range
+  write_reg(PULSE_THSZ, 20); //1.26g
+  //maximum time interval between the start impulse and the end impulse of a tap
+  //with steps of 0.625ms/LSB @800MHz ODR with normal power mode and no LP filtering
+  write_reg(PULSE_TMLT, 10);
   //define time interval after pulse detection in which other pulses are ignored
-  write_reg(PULSE_LTCY, 10);
+  //with steps of 2.5ms/LSB @800MHz ODR with normal power mode
+  write_reg(PULSE_LTCY, 10); //25ms
   //configure maximum time between two taps of a double tap
-  write_reg(PULSE_WIND, 200);
+  //with steps of 2.5ms/LSB @800MHz ODR with normal power mode
+  write_reg(PULSE_WIND, 200); //500ms
   
   active_mode();
 }
