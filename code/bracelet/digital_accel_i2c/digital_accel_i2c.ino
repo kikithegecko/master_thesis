@@ -131,7 +131,7 @@ void setup(){
   //enable tap-detection on z-axis
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
   //configure tap detection threshold, with steps of 0.063g/LSB @+/-8g range
-  write_reg(PULSE_THSZ, 20); //1.26g
+  write_reg(PULSE_THSZ, 100); //6.3g
   //maximum time interval between the start impulse and the end impulse of a tap
   //with steps of 0.625ms/LSB @800MHz ODR with normal power mode and no LP filtering
   write_reg(PULSE_TMLT, 10);
