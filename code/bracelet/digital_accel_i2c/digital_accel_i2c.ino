@@ -1,11 +1,14 @@
 #include <i2c_t3.h>
 
+/* Pin Configuration */
 #define LED_R 4
 #define LED_G 5
 #define LED_B 3
 
+/* I2C Configuration */
 #define ADDR         0x1D
 
+/* Register Addresses */
 #define CTRL_REG1    0x2A
 #define PULSE_CFG    0x21
 #define PULSE_SRC    0x22
@@ -21,6 +24,7 @@
 #define OUT_Z_MSB    0x05
 #define OUT_Z_LSB    0x06
 
+/* Bitmasks for Configuration and Status Checks*/
 #define ACTIVE_MASK  0x01
 #define DATA_RDY     0x04
 #define TAP_Z_SINGLE_EN 0xD0
@@ -28,12 +32,19 @@
 #define TAP_Z_S_MASK 0xC0
 #define TAP_Z_D_MASK 0xC8
 
+/* Gesture Recognizer Configuration */
+#define SAMPLE_SIZE 100 //number of samples per Gesture
+#define DELAY_SIZE 10 //delay betweeen two samples
+
 struct AccelData{
   int x;
   int y;
   int z;
 };
 
+AccelData gesture[SAMPLE_SIZE];
+
+/* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
@@ -43,6 +54,7 @@ uint8_t read_reg(uint8_t addr){
     return Wire.readByte();
 }
 
+/* Wrapper Function for Storing a given Byte in a Register */
 void write_reg(uint8_t addr, uint8_t val){
   Wire.beginTransmission(ADDR);
   Wire.send(addr);
@@ -51,14 +63,21 @@ void write_reg(uint8_t addr, uint8_t val){
   res = Wire.endTransmission(I2C_STOP);
 }
 
+/* Sets the Accelerometer to Standby Mode.
+ * Many Configurations can only be done while in Standby Mode 
+ */
 void standby_mode(){
   write_reg(CTRL_REG1, read_reg(CTRL_REG1) & ~ ACTIVE_MASK);
 }
 
+/* Sets the Accelerometer to Active Mode and Enables Data Recording */
 void active_mode(){
   write_reg(CTRL_REG1, read_reg(CTRL_REG1) | ACTIVE_MASK);
 }
 
+/* Converts a 12-bit 2's complement Number stored in 
+ * two 8-bit Registers to a signed integer number.
+*/
 int bytes_to_int(uint8_t high, uint8_t low){
   uint16_t temp = (high << 8) + low;
   int factor = 1;
@@ -72,7 +91,10 @@ int bytes_to_int(uint8_t high, uint8_t low){
   
   return (temp >> 4) * factor;
 }
-  
+
+/* Returns a Struct containing X, Y, and Z Acceleration Data
+ * for the Point in Time when the Function is called.
+ */
 struct AccelData get_acceleration_data(){
   struct AccelData data;
   
@@ -94,6 +116,9 @@ struct AccelData get_acceleration_data(){
   return data;
 }
 
+/* When a Pulse was detected, this checks if it was a
+ * single or double tap and does stuff in each case.
+ */
 void process_pulse(uint8_t register_data){
   if(register_data & TAP_Z_S_MASK){ 
     if(register_data & 0x08){
@@ -105,6 +130,14 @@ void process_pulse(uint8_t register_data){
       analogWrite(LED_B, 50);
       delay(100);
       analogWrite(LED_B, 0);
+      
+      //record accelerometer data for the next SAMPLE_SIZE datasets
+      analogWrite(LED_R, 50);
+      for(int i = 0; i < SAMPLE_SIZE; i++){
+        gesture[i] = get_acceleration_data();
+        delay(DELAY_SIZE);
+      }
+      analogWrite(LED_R, 0);
     }
     else{
       //signal single tap
@@ -115,6 +148,9 @@ void process_pulse(uint8_t register_data){
   }  
 }
 
+/* The usual setup stuff, setting pins, configuring the accelerometer
+ * and starting serial communication.
+ */
 void setup(){
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
@@ -144,6 +180,7 @@ void setup(){
   
   active_mode();
 }
+
 
 void loop(){
   
