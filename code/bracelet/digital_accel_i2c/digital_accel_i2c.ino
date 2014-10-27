@@ -123,27 +123,31 @@ void process_pulse(uint8_t register_data){
   if(register_data & TAP_Z_S_MASK){ 
     if(register_data & 0x08){
       //signal double tap)
-      analogWrite(LED_B, 50);
+      analogWrite(LED_B, 255);
       delay(100);
       analogWrite(LED_B, 0);
       delay(50);
-      analogWrite(LED_B, 50);
+      analogWrite(LED_B, 255);
       delay(100);
       analogWrite(LED_B, 0);
+      Serial.println("double tap");
       
       //record accelerometer data for the next SAMPLE_SIZE datasets
-      analogWrite(LED_R, 50);
+      analogWrite(LED_R, 255);
+      Serial.println("start recording");
       for(int i = 0; i < SAMPLE_SIZE; i++){
         gesture[i] = get_acceleration_data();
         delay(DELAY_SIZE);
       }
       analogWrite(LED_R, 0);
+      Serial.println("end recording");
     }
     else{
       //signal single tap
-      analogWrite(LED_G, 50);
+      analogWrite(LED_G, 255);
       delay(200);
       analogWrite(LED_G, 0);
+      Serial.println("single tap");
     }
   }  
 }
@@ -167,7 +171,7 @@ void setup(){
   //enable tap-detection on z-axis
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
   //configure tap detection threshold, with steps of 0.063g/LSB @+/-8g range
-  write_reg(PULSE_THSZ, 100); //6.3g
+  write_reg(PULSE_THSZ, 100); //6.3g? o_O
   //maximum time interval between the start impulse and the end impulse of a tap
   //with steps of 0.625ms/LSB @800MHz ODR with normal power mode and no LP filtering
   write_reg(PULSE_TMLT, 10);
@@ -184,6 +188,7 @@ void setup(){
 
 void loop(){
   
+  /*
   if(read_reg(STATUS_REG) & DATA_RDY){
     struct AccelData data = get_acceleration_data();
     Serial.print("x: ");
@@ -193,6 +198,7 @@ void loop(){
     Serial.print("z: ");
     Serial.println(data.z / 1024.0);
   }
+  */
   
   //need to save this because data is reset after reading
   uint8_t pulse_data = read_reg(PULSE_SRC);
