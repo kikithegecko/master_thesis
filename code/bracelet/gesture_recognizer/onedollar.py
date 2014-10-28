@@ -7,6 +7,7 @@ class Point:
 		self.y = 0
 		#self.z = 0
 
+# helper function for getting a bounding box around a gesture
 class Bounding_Box(points):
 	def __init__(self):
 		min_x = float("inf")
@@ -32,6 +33,7 @@ class Bounding_Box(points):
 		self.height = abs(max_y - min_y)
 		#self.depth = abs(max_z - min_z)
 
+# helper function for calculating the centroid
 def centroid(points):
 	c = Point()
 	for p in points:
@@ -42,6 +44,7 @@ def centroid(points):
 	c.y /= len(points)
 	#c.z /= len(points)
 
+# STEP 1:
 # resample a points path into n evenly spaced points
 def resample(points, n):
 	increment = path_length(points) / (n - 1)
@@ -60,24 +63,32 @@ def resample(points, n):
 		else:
 			D = D + dist
 	return newpoints
-	
+
+# helper function for step 1
 def path_length(A):
 	dist = 0
 	for i in range(1, len(A)):
 		dist += distance(A[i-1], A[i])
 	return dist
 	
+# helper function for step 1:
+# calculate eucledian distance
 def distance(p, q):
 	return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
 	#return sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
 	
+# STEP 2:
 # rotate points so that their indicative angle is at 0 degrees
 def rotate_to_zero(points):
 	c = centroid(points)
-	theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi
+	theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
+	#scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
+	#length = math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)
+	#theta = math.acos(scalarprod / length)
 	newpoints = rotate_by(points, -theta)
 	return newpoints
-	
+
+# helper function for step 2	
 def rotate_by(points, theta):
 	c = centroid(points)
 	newpoints = []
