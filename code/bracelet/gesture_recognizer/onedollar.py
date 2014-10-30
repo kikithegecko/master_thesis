@@ -5,17 +5,17 @@ class Point:
 	def __init__(self):
 		self.x = 0
 		self.y = 0
-		#self.z = 0
+		self.z = 0
 
 # helper function for getting a bounding box around a gesture
 class Bounding_Box(points):
 	def __init__(self):
 		min_x = float("inf")
 		min_y = float("inf")
-		#min_z = float("inf")
+		min_z = float("inf")
 		max_x = float("-inf")
 		max_y = float("-inf")
-		#max_z = float("-inf")
+		max_z = float("-inf")
 		for p in points:
 			if p.x < min_x:
 				min_x = p.x
@@ -25,13 +25,13 @@ class Bounding_Box(points):
 				min_y = p.y
 			elif p.y > max_y:
 				max_y = p.y
-			#if p.z < min_z:
-				#min_z = p.z
-			#elif p.z > max_z:
-				#max_z = p.z
+			if p.z < min_z:
+				min_z = p.z
+			elif p.z > max_z:
+				max_z = p.z
 		self.width = abs(max_x - min_x)
 		self.height = abs(max_y - min_y)
-		#self.depth = abs(max_z - min_z)
+		self.depth = abs(max_z - min_z)
 
 # helper function for calculating the centroid
 def centroid(points):
@@ -39,10 +39,20 @@ def centroid(points):
 	for p in points:
 		c.x += p.x
 		c.y += p.y
-		#c.z += p.z
+		c.z += p.z
 	c.x /= len(points)
 	c.y /= len(points)
-	#c.z /= len(points)
+	c.z /= len(points)
+	
+# helper function for calculating the cross product
+# between two vectors/points
+def cross_product(p, q):
+	r = Point()
+	r.x = p.y * q.z - p.z * q.y
+	r.y = p.z * q.x - p.x * q.z
+	r.z = p.x * q.y - p.y * q.x
+	return r
+		
 
 # STEP 1:
 # resample a points path into n evenly spaced points
@@ -56,7 +66,7 @@ def resample(points, n):
 			q = Point()
 			q.x = points[i-1].x + ((increment - D) / dist) * (points[i].x - points[i-1].x)
 			q.y = points[i-1].y + ((increment - D) / dist) * (points[i].y - points[i-1].y)
-			#q.z = points[i-1].z + ((increment - D) / dist) * (points[i].z - points[i-1].z) #TODO
+			q.z = points[i-1].z + ((increment - D) / dist) * (points[i].z - points[i-1].z) #TODO
 			newpoints.append(q)
 			points.insert(i, q)
 			D = 0
@@ -74,18 +84,20 @@ def path_length(A):
 # helper function for step 1:
 # calculate eucledian distance
 def distance(p, q):
-	return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
-	#return sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
+	#return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
+	return sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
 	
 # STEP 2:
 # rotate points so that their indicative angle is at 0 degrees
 def rotate_to_zero(points):
 	c = centroid(points)
-	theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
-	#scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
-	#length = math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)
-	#theta = math.acos(scalarprod / length)
-	newpoints = rotate_by(points, -theta)
+	#theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
+	scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
+	length = distance(points[0], c)
+	theta = math.acos(scalarprod / length)
+	v_axis = cross_product(points[0], c)
+	#newpoints = rotate_by(points, -theta)
+	newpoints = rotate_rodrigues(points, v_axis, theta)
 	return newpoints
 
 # helper function for step 2	
@@ -96,8 +108,25 @@ def rotate_by(points, theta):
 		q = Point()
 		q.x = (p.x - c.x) * cos(thetha) - (p.y - c.y) * sin(theta) + c.x
 		q.y = (p.x - c.x) * sin(thetha) - (p.y - c.y) * cos(theta) + c.y
-		append(newpoints, q)
+		newpoints.append(q)
 	return newpoints
+	
+# helper function for step 2:
+# vector rotation in axis-angle representation
+# using Rodrigues' rotation formula
+def rotate_rodrigues(points, vector, theta):
+	c = centroid(points)
+	newpoints = []
+	for p in points:
+		q = Point()
+		cp = cross_product(p, vector)
+		sp = p.x * vector.x + p.y * vector.y + p.z * vector.z
+		q.x = math.cos(theta) * p.x + math.sin(theta) * cp.x + (1 - math.cos(theta)) * sp * vector.x
+		q.y = math.cos(theta) * p.y + math.sin(theta) * cp.y + (1 - math.cos(theta)) * sp * vector.y
+		q.z = math.cos(theta) * p.z + math.sin(theta) * cp.z + (1 - math.cos(theta)) * sp * vector.z
+		newpoints.append(q)
+	return newpoints
+		
 	
 # scale points so that the resulting bounding box will be of size*size dimension;
 # then translate points to the origin. bounding_box returns a rectangle according to
@@ -112,7 +141,7 @@ def scale_to_square(points, size):
 		q = Point()
 		q.x = p.x * (size / B.width)
 		q.y = p.y * (size / B.height)
-		#q.z = p.z * (size / B.depth)
+		q.z = p.z * (size / B.depth)
 		newpoints.append(q)
 	return newpoints
 	
@@ -123,7 +152,7 @@ def translate_to_origin(points):
 		q = Point()
 		q.x = p.x - c.x
 		q.y = p.y - c.y
-		#q.z = p.z - c.z
+		q.z = p.z - c.z
 		newpoints.append(q)
 	return newpoints
 	
@@ -131,6 +160,7 @@ def translate_to_origin(points):
 # refers to the size passed to scale_to_square. the symbol phi equals 0.5*(-1 + sqrt(5)). 
 # Due to using resample, we can assume that A abd B in path_distance contain 
 # the same number of points, i.e. |A| = |B|.
+#TODO
 def recognize(points, templates):
 	#'constants'
 	theta_min = -45
@@ -173,6 +203,7 @@ def distance_at_angle(points, template, theta):
 	return d
 
 # assume |A| = |B| (usually valid due to resampling)
+#TODO
 def path_distance(A, B):
 	d = 0
 	for i in range(len(A)):
