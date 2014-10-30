@@ -40,7 +40,6 @@ The finished object is then carefully removed from the build bed and any excess 
 The infiltration step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load might break them easily. Wall strengths of 1.5 mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the object geometry.
 
 \subsection{Silicone Casting}
-%TODO explain shore
 %TODO mold making
 %TODO are those the right silicone names?
 % http://www.npl.co.uk/science-technology/mass-and-force/hardness/rubber-hardness
@@ -78,7 +77,6 @@ The silicone rubbers used for casting bracelet prototypes are both located on th
 Both silicone products are two compound mixes that have to be added up and stirred before casting. While the Mold Star silicone has a rather low viscosity, casting the Sorta-Clear requires careful mold design, since it does not distribute well and is rather viscous. A vibrating table can help in filling the mold completely, but nonetheless were casts with the Sorta-Clear silicone much less fruitful, especially for the detailed molds of the one-piece designs (cf. section \ref{sec:silicone-prototypes}).
 
 \section{Design Process and Prototype Manufacturing}
-%Idea: Section as concepts like in the presentation: rigid prints, segmented prints, casts
 
 The design process for the interactive bracelet presented in this thesis went through different stages. At first, a 3D-printed casing was favored, but later on a cast silicone bracelet turned out to be more comfortable for the user. The different prototypes are explained in detail in the following sections.
 
@@ -161,14 +159,16 @@ Mold design turned out a little tricky but finally succeeded. A two-piece mold w
 
 The first cast with a closed mold and filling through the holes was unsuccessful; it produced two small end pieces and nothing in between. For following casts, one part of the mold was filled with silicone and closed afterwards; this turned out significantly better. The orientation in which the mold is placed during the dry period is also relevant, as air bubbles will float towards the ``top'' of the mold, leading to instabilities when oriented inappropriately. Getting the silicone part out of the mold was no problem.
 
-This first rubber bracelet design involved a magnet clasp, but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to another in the design.
+This first rubber bracelet design involved a magnet clasp, but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to each other in the design.
 
 Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a disappealing color. In addition, the cavity rims were too short, so the display would jump out of place almost instantly when bending the bracelet.
 
 \subsection{One-Piece Silicone Bracelet}
 The next design was a ring-like silicone bracelet in one piece, so the issue with the clasp was no concern. The mold for this prototype consisted of three pieces, two rings and a bottom plate. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive the cast. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used especially for the display area.
 
-This mold was much harder to fill with silicone than the previous one. Especially the Sortaclear silicone was too viscous to fill the complete mold, resulting in broken casts. The green Mold Star silicone turned out to work quite well. A simple vibrating plate made with a servo monitor with some scrap materials an imbalance glued onto a plastic tray helped filling all parts of the mold and reducing air bubbles in the cast. The design also features wider cavity rims to hold the display in place and first wearing tests resulted in success.
+This mold was much harder to fill with silicone than the previous one. Especially the Sortaclear silicone was too viscous to fill the complete mold, resulting in broken casts. The green MoldStar silicone turned out to work quite well. A simple vibrating plate made with a servo monitor with some scrap materials as an imbalance glued onto a plastic tray helped filling all parts of the mold and reducing air bubbles in the cast. The design also features wider cavity rims to hold the display in place and first wearing tests resulted in success.
+
+The design was iterated several times as the hardware components were layouted on a \ac{PCB} shield and the display was omitted for initial interaction tests.
 
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256
