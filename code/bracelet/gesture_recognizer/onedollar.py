@@ -2,10 +2,10 @@
 import math
 
 class Point:
-	def __init__(self):
-		self.x = 0
-		self.y = 0
-		self.z = 0
+	def __init__(self, x=0, y=0, z=0):
+		self.x = x
+		self.y = y
+		self.z = z
 
 # helper function for getting a bounding box around a gesture
 class Bounding_Box(points):
@@ -134,7 +134,7 @@ def rotate_rodrigues(points, vector, theta):
 # for gestures serving as templates, steps 1-3 should be carried out once on 
 # the raw input points. For candidates, steps 1-4 should be used just after 
 # the candidate is articulated.
-def scale_to_square(points, size):
+def scale_to_square(points, size): # in 3$ paper, size=100
 	B = bounding_box(points)
 	newpoints = []
 	for p in points:
@@ -155,16 +155,19 @@ def translate_to_origin(points):
 		q.z = p.z - c.z
 		newpoints.append(q)
 	return newpoints
-	
+
+# STEP 4:	
 # match points against a set of templates. The size variable in recognize 
 # refers to the size passed to scale_to_square. the symbol phi equals 0.5*(-1 + sqrt(5)). 
 # Due to using resample, we can assume that A abd B in path_distance contain 
 # the same number of points, i.e. |A| = |B|.
 #TODO
-def recognize(points, templates):
+def recognize(points, templates, rescale_size):
 	#'constants'
-	theta_min = -45
-	theta_max = 45
+	#theta_min = -45
+	theta_min = -180
+	#theta_max = 45
+	theta_max = 180
 	theta_delta = 2
 	
 	best = float("inf")
@@ -173,15 +176,35 @@ def recognize(points, templates):
 		if dist < best:
 			best = dist
 			t_best = t
-	score = 1 - best / 0.5 * sqrt(size*size + size*size)
+	#score = 1 - best / 0.5 * sqrt(rescale_size**2 + rescale_size**2)
+	score = 1 - best / (0.5 * math.sqrt(3 * rescale_size**2))
 	return (t_best, score)
 
-def distance_at_best_angle(points, template, theta_min, thehta_b, theta_delta):
-	phi = 0.5 * (-1 + sqrt(5))
-	x1 = phi * theta_min + (1 - phi) * theta_max
-	f1 = distance_at_angle(points, template, x1)
-	x2 = (1 - phi) * theta_min + phi * theta_max
-	f2 = distance_at_angle(points, template, x2)
+def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
+	phi = 0.5 * (-1 + math.sqrt(5))
+	alpha_min = theta_min
+	alpha_max = theta_max
+	beta_min = theta_min
+	beta_max = theta_max
+	gamma_min = theta_min
+	gamma_max = theta_max
+	
+	x1 = phi * alpha_min + (1 - phi) * alpha_max
+	x2 = (1 - phi) * alpha_min + phi * alpha_max
+	y1 = phi * beta_min + (1 - phi) * beta_max
+	y2 = (1 - phi) * beta_min + phi * beta_max
+	z1 = phi * gamma_min + (1 - phi) * gamma_max
+	z2 = (1 - phi) * gamma_min + phi * gamma_max
+	
+	f1 = distance_at_angle(points, template, x1, y1, z1)
+	f2 = distance_at_angle(points, template, x1, y1, z2)
+	f3 = distance_at_angle(points, template, x1, y2, z1)
+	f4 = distance_at_angle(points, template, x1, y2, z2)
+	f5 = distance_at_angle(points, template, x2, y1, z1)
+	f6 = distance_at_angle(points, template, x2, y1, z2)
+	f7 = distance_at_angle(points, template, x2, y2, z1)
+	f8 = distance_at_angle(points, template, x2, y2, z2)
+	
 	while abs(theta_max - theta_min) > theta_delta:
 		if f1 < f2:
 			theta_max = x2
@@ -197,13 +220,15 @@ def distance_at_best_angle(points, template, theta_min, thehta_b, theta_delta):
 			f1 = distance_at_angle(points, template, x2)
 	return min(f1, f2)
 	
-def distance_at_angle(points, template, theta):
-	newpoints = rotate_by(points, theta)
+def distance_at_angle(points, template, alpha, beta, gamma):
+	#newpoints = rotate_by(points, theta)
+	newpoints = rotate_rodrigues(points, Point(1, 0, 0), alpha)
+	newpoints = rotate_rodrigues(newpoints, Point(0, 1, 0), beta)
+	newpoints = rotate_rodrigues(newpoints, Point(0, 0, 1), gamma)
 	d = path_distance(newpoints, template)
 	return d
 
 # assume |A| = |B| (usually valid due to resampling)
-#TODO
 def path_distance(A, B):
 	d = 0
 	for i in range(len(A)):
