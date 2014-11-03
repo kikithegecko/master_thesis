@@ -85,7 +85,7 @@ def path_length(A):
 # calculate eucledian distance
 def distance(p, q):
 	#return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
-	return sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
+	return math.sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
 	
 # STEP 2:
 # rotate points so that their indicative angle is at 0 degrees
