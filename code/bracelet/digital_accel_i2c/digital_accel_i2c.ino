@@ -137,6 +137,11 @@ void process_pulse(uint8_t register_data){
       Serial.println("start recording");
       for(int i = 0; i < SAMPLE_SIZE; i++){
         gesture[i] = get_acceleration_data();
+        Serial.print(gesture[i].x / 1024.0);
+        Serial.print(" ");
+        Serial.print(gesture[i].y / 1024.0);
+        Serial.print(" ");
+        Serial.println(gesture[i].z / 1024.0);
         delay(DELAY_SIZE);
       }
       analogWrite(LED_R, 0);
