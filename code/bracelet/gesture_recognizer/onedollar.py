@@ -8,7 +8,7 @@ class Point:
 		self.z = z
 
 # helper function for getting a bounding box around a gesture
-class Bounding_Box(points):
+class Bounding_Box:
 	def __init__(self):
 		min_x = float("inf")
 		min_y = float("inf")
