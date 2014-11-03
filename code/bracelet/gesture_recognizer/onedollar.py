@@ -204,21 +204,157 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	f6 = distance_at_angle(points, template, x2, y1, z2)
 	f7 = distance_at_angle(points, template, x2, y2, z1)
 	f8 = distance_at_angle(points, template, x2, y2, z2)
-	
-	while abs(theta_max - theta_min) > theta_delta:
-		if f1 < f2:
-			theta_max = x2
+
+	while (abs(alpha_max - alpha_min) > theta_delta) and (abs(beta_max - beta_min) > theta_delta) and (abs(gamma_max - gamma_min) > theta_delta):	
+		min_f = min(f1, f2, f3, f4, f5, f6, f7, f8)
+		
+		if min_f == f1: #x1, y1, z1
+			alpha_max = x2
 			x2 = x1
-			f2 = f1
-			x1 = phi * theta_min + (1 - phi) * theta_max
-			f1 = distance_at_angle(points, template, x1)
-		else:
-			theta_min = x1
+			x1 = phi * alpha_min + (1 - phi) * alpha_max
+			beta_max = y2
+			y2 = y1
+			y1 = phi * beta_min + (1 - phi) * beta_max
+			gamma_max = z1
+			z2 = z1
+			z1 = phi * gamma_min + (1 - phi) * gamma_max
+			f8 = f1
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+		elif min_f == f2: #x1, y1, z2
+			alpha_max = x2
 			x2 = x1
-			f2 = f1
-			x1 = phi * theta_min + (1 - phi) * theta_max
-			f1 = distance_at_angle(points, template, x2)
-	return min(f1, f2)
+			x1 = phi * alpha_min + (1 - phi) * alpha_max
+			beta_max = y2
+			y2 = y1
+			y1 = phi * beta_min + (1 - phi) * beta_max
+			gamma_min = z1
+			z1 = z2
+			z2 = (1 - phi) * gamma_min + phi * gamma_max
+			f7 = f2
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		elif min_f == f3: #x1, y2, z1
+			alpha_max = x2
+			x2 = x1
+			x1 = phi * alpha_min + (1 - phi) * alpha_max
+			beta_min = y2
+			y1 = y2
+			y2 = (1 - phi) * beta_min + phi * beta_max
+			gamma_max = z1
+			z2 = z1
+			z1 = phi * gamma_min + (1 - phi) * gamma_max
+			f6 = f3
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		elif min_f == f4: #x1, y2, z2
+			alpha_max = x2
+			x2 = x1
+			x1 = phi * alpha_min + (1 - phi) * alpha_max
+			beta_min = y2
+			y1 = y2
+			y2 = (1 - phi) * beta_min + phi * beta_max
+			gamma_min = z1
+			z1 = z2
+			z2 = (1 - phi) * gamma_min + phi * gamma_max
+			f5 = f4
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		elif min_f == f5: #x2, y1, z1
+			alpha_min = x1
+			x1 = x2
+			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
+			beta_max = y2
+			y2 = y1
+			y1 = phi * beta_min + (1 - phi) * beta_max
+			gamma_max = z1
+			z2 = z1
+			z1 = phi * gamma_min + (1 - phi) * gamma_max
+			f4 = f5
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		elif min_f == f6: #x2, y1, z2
+			alpha_min = x1
+			x1 = x2
+			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
+			beta_max = y2
+			y2 = y1
+			y1 = phi * beta_min + (1 - phi) * beta_max
+			gamma_min = z1
+			z1 = z2
+			z2 = (1 - phi) * gamma_min + phi * gamma_max
+			f3 = f6
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		elif min_f == f7: #x2, y2, z1
+			alpha_min = x1
+			x1 = x2
+			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
+			beta_min = y2
+			y1 = y2
+			y2 = (1 - phi) * beta_min + phi * beta_max
+			gamma_max = z1
+			z2 = z1
+			z1 = phi * gamma_min + (1 - phi) * gamma_max
+			f2 = f7
+			f1 = distance_at_angle(points, template, x1, y1, z1)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+		else: #x2, y2, z2
+			alpha_min = x1
+			x1 = x2
+			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
+			beta_min = y2
+			y1 = y2
+			y2 = (1 - phi) * beta_min + phi * beta_max
+			gamma_min = z1
+			z1 = z2
+			z2 = (1 - phi) * gamma_min + phi * gamma_max
+			f1 = f8
+			f2 = distance_at_angle(points, template, x1, y1, z2)
+			f3 = distance_at_angle(points, template, x1, y2, z1)
+			f4 = distance_at_angle(points, template, x1, y2, z2)
+			f5 = distance_at_angle(points, template, x2, y1, z1)
+			f6 = distance_at_angle(points, template, x2, y1, z2)
+			f7 = distance_at_angle(points, template, x2, y2, z1)
+			f8 = distance_at_angle(points, template, x2, y2, z2)
+
+	return min(f1, f2, f3, f4, f5, f6, f7, f8)
 	
 def distance_at_angle(points, template, alpha, beta, gamma):
 	#newpoints = rotate_by(points, theta)
