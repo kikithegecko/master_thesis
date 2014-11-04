@@ -6,10 +6,12 @@ class Point:
 		self.x = x
 		self.y = y
 		self.z = z
+	def __str__(self):
+		return str(self.x) + " " + str(self.y) + " " + str(self.z)
 
 # helper function for getting a bounding box around a gesture
 class Bounding_Box:
-	def __init__(self):
+	def __init__(self, points):
 		min_x = float("inf")
 		min_y = float("inf")
 		min_z = float("inf")
@@ -43,6 +45,7 @@ def centroid(points):
 	c.x /= len(points)
 	c.y /= len(points)
 	c.z /= len(points)
+	return c
 	
 # helper function for calculating the cross product
 # between two vectors/points
@@ -93,8 +96,7 @@ def rotate_to_zero(points):
 	c = centroid(points)
 	#theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
 	scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
-	length = distance(points[0], c)
-	theta = math.acos(scalarprod / length)
+	theta = math.acos(scalarprod / (math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)))
 	v_axis = cross_product(points[0], c)
 	#newpoints = rotate_by(points, -theta)
 	newpoints = rotate_rodrigues(points, v_axis, theta)
@@ -135,7 +137,7 @@ def rotate_rodrigues(points, vector, theta):
 # the raw input points. For candidates, steps 1-4 should be used just after 
 # the candidate is articulated.
 def scale_to_square(points, size): # in 3$ paper, size=100
-	B = bounding_box(points)
+	B = Bounding_Box(points)
 	newpoints = []
 	for p in points:
 		q = Point()
