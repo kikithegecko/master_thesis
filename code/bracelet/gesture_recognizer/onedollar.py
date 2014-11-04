@@ -163,7 +163,6 @@ def translate_to_origin(points):
 # refers to the size passed to scale_to_square. the symbol phi equals 0.5*(-1 + sqrt(5)). 
 # Due to using resample, we can assume that A abd B in path_distance contain 
 # the same number of points, i.e. |A| = |B|.
-#TODO
 def recognize(points, templates, rescale_size):
 	#'constants'
 	#theta_min = -45
