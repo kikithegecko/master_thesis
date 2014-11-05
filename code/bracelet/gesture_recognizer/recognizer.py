@@ -45,7 +45,7 @@ for t in templates:
 		ys.append(t[i].y)
 		zs.append(t[i].z)
 	#ax.plot(xs, ys, zs)
-plt.show()
+#plt.show()
 
 # now do the same for the "unknown" gestures
 gestures = []
@@ -54,9 +54,18 @@ gestures.append(file2gesture("sample_data/arc3.txt"))
 gestures.append(file2gesture("sample_data/circle2.txt"))
 gestures.append(file2gesture("sample_data/line2.txt"))
 for g in gestures:
+	xs = []
+	ys = []
+	zs = []
+	for i in range(len(g)):
+		xs.append(g[i].x)
+		ys.append(g[i].y)
+		zs.append(g[i].z)
+	ax.plot(xs, ys, zs)
 	g = onedollar.resample(g, 64)
 	g = onedollar.rotate_to_zero(g)
 	g = onedollar.scale_to_square(t, 100)
 	result = onedollar.recognize(g, templates, 100)
 	print(result[1])
 	print(templates.index(result[0]))
+plt.show()
