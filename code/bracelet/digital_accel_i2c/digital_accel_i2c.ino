@@ -16,6 +16,7 @@
 #define PULSE_TMLT   0x26
 #define PULSE_LTCY   0x27
 #define PULSE_WIND   0x28
+#define XYZ_DATA_CFG 0x0E
 #define STATUS_REG   0x00
 #define OUT_X_MSB    0x01
 #define OUT_X_LSB    0x02
@@ -31,9 +32,10 @@
 #define TAP_Z_DOUBLE_EN 0xE0
 #define TAP_Z_S_MASK 0xC0
 #define TAP_Z_D_MASK 0xC8
+#define HPF_EN_MASK  0x10
 
 /* Gesture Recognizer Configuration */
-#define SAMPLE_SIZE 100 //number of samples per Gesture
+#define SAMPLE_SIZE 150 //number of samples per Gesture
 #define DELAY_SIZE 10 //delay betweeen two samples
 
 struct AccelData{
@@ -170,13 +172,14 @@ void setup(){
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
+  write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
   
   //2g mode is default (1024 counts per g)
   
   //enable tap-detection on z-axis
   write_reg(PULSE_CFG, (TAP_Z_SINGLE_EN | TAP_Z_DOUBLE_EN));
   //configure tap detection threshold, with steps of 0.063g/LSB @+/-8g range
-  write_reg(PULSE_THSZ, 10); //6.3g? o_O
+  write_reg(PULSE_THSZ, 100); //default: 100
   //maximum time interval between the start impulse and the end impulse of a tap
   //with steps of 0.625ms/LSB @800MHz ODR with normal power mode and no LP filtering
   write_reg(PULSE_TMLT, 10);
