@@ -1,4 +1,5 @@
 #include <i2c_t3.h>
+#include "threedollar.h"
 
 /* Pin Configuration */
 #define LED_R 4
