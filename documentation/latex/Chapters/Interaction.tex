@@ -5,11 +5,66 @@ This chapter describes the various interaction levels with the bracelet in detai
 \section{Pairing the Bracelet with a Light Source}
 
 \section{Gesture Recognition}
-%TODO mention activation by double-tap and accelerometer config
 %TODO explain one-dollar and three-dollar
 %TODO explain 3-dimensional GSS
 The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
 
+After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}).
+
+\begin{lstlisting}[label=lst:resample,language=python,frame=lt,caption=Resampling of a points path into N evenly spaced points]
+def resample(points, N):
+	I = path_length(points) / (N - 1)
+	D = 0
+	newpoints = points[:1]
+	for i in range(1, len(points[1:])):
+		dist = distance(points[i-1], points[i])
+		if(D + dist) > I:
+			q = points[i-1] + ((I - D)/dist) * (points[i] - points[i-1])
+			newpoints.append(q)
+			points.insert(i, q)
+			D = 0
+		else:
+			D = D + dist
+	return newpoints
+\end{lstlisting}
+
+In the next step, the gesture is prepared for matching against the templates by rotating it to a specific position. The so called \textit{indicative angle} $\theta$ between the gesture's centroid $C$ and its first point is calculated using the normalized scalar product of the centroid and the first point's position vectors. Afterwards the gesture is rotated so that $\theta$ is at $0\degree$. Wobbrock et. al. do this by using the inverse tangens function, however this is not possible in 3D space. Hence, \textit{Rodrigues' rotation formula} (named after French mathematician Olinde Rodrigues) was implemented instead. This efficient algorithm for rotating a vector in $\mathbb{R}^3$ takes the rotation angle $\theta$ as well as the axis unit vector $k$ as input, and calculates the following formula:
+
+%TODO check source: Don Koks, (2006) Explorations in Mathematical Physics, Springer Science+Business Media,LLC. ISBN 0-387-30943-8. Ch.4, pps 147 et seq. A Roundabout Route to Geometric Algebra'
+\begin{center}
+\(
+v_{rot} = v \cos\theta + (k \times v)\sin\theta + k (k \cdot v) (1 - \cos\theta).
+\) \cite{TODO}
+\end{center}
+
+After applying this function on the gesture, a good starting point is created for the actual recognizing part of the algorithm. Listing \ref{lst:rotate2zero} illustrates this procedure.
+
+\begin{lstlisting}[label=lst:rotate2zero,language=python,frame=lt,caption=Rotation of points so that their indicative angle is at $0 \degree$]
+def rotate_to_zero(points):
+	c = centroid(points)
+	theta = acos(points[0] * c / (|points[0]| * |c|)
+	newpoints = rotate_by(points, -theta)
+	return newpoints
+\end{lstlisting}
+
+In order to harmonize gestures of different sizes, the points are scaled to a reference cube with edge length of $100$ and translated so that the respective centroid $C$ is on the origin (cf. listing \ref{lst:scale+translate}).
+
+\begin{lstlisting}[label=lst:scale+translate,language=python,frame=lt,caption=Scaling to reference cube and translation to origin]
+def scale_and_translate(points, size): # size=100
+	B = Bounding_Box(points)
+	newpoints = []
+	for p in points:
+		q = Point()
+		q.x = (p.x * (size / B.width)) - c.x
+		q.y = (p.y * (size / B.height)) - c.y
+		q.z = (p.z * (size / B.depth)) - c.z
+		newpoints.append(q)
+	return newpoints
+\end{lstlisting}
+
+After these harmonization and preparation steps, the gestures are matched against the prerecorded templates. The aforementioned steps are applied to templates as well as to newly recorded gestures, the following algorithms only apply to unrecognized gestures.
+
+The candidate is first compared to all stored templates and the average \ac{MSE} between the respective corresponding points is calculated
 
 \section{Casual Touch Input}
 
