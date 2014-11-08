@@ -8,10 +8,35 @@ This chapter describes the various interaction levels with the bracelet in detai
 %TODO mention activation by double-tap and accelerometer config
 %TODO explain one-dollar and three-dollar
 %TODO explain 3-dimensional GSS
-The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}.
+The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
+
 
 \section{Casual Touch Input}
 
 \section{Precise Touch Input}
 
 \section{Presets and Configuration}
+
+Gesture recording and recognition is triggered by a gentle double tap on the bracelet. This small but focused activation reduces unwanted triggering of the gesture recognition process, e.g. while gesturing heavily, and thus reducing false positives. The tap detection functionality is a built-in feature of the bracelet's accelerometer, configuration parameters for this process are listed in table \ref{tab:tapconf}.
+
+In order to be recognized as a tap interaction, the initial impulse needs to be at least XX g in intensity. When calibrated like this, jerky movements like suddenly raising the hand at a high speed are correctly not recognized as a tap. However since the threshold is that high, the activation tap needs to be executed directly on the hardware which is located on the inner wrist.
+
+The PULSE\_TMLT register configures the maximum time interval between the  impulse exceeding the threshold on the Z axis and falling back under said threshold. If the mentioned interval lasts at most $6.25 ms$, the interaction is considered as a tap.
+
+After a tap is detected, all impulses in the following $25ms$ are ignored by the detection mechanism. This prevents bouncing effects and detecting multiple taps in a singe tap movement.
+
+The MMA8652FC accelerometer is able to distinguish between single and double taps. The last configuration register listed in table \ref{tab:tapconf} is a parameter for double tap detection. It specifies the maximum time interval between two double taps and is set to $500 ms$, the same time interval as the Windows default between two mouse clicks of a double click \cite{doubleclick}.
+
+\begin{table}
+	\myfloatalign
+	\begin{tabularx}{\textwidth}{lll} \toprule
+		\tableheadline{Register Name} & \tableheadline{Parameter} & \tableheadline{Value}\\ 
+		\midrule
+		PULSE\_THSZ & Tap Detection Threshold & $100 g$\\ %TODO on +/-8g scale @.063g/LSB
+		PULSE\_TMLT & Interval between Start and End Pulse & $6.25 ms$\\
+		PULSE\_LTCY & Ignore Interval after Detection & $25 ms$\\
+		PULSE\_WIND & Maximum Double Tap Interval & $500ms$ \\
+		\bottomrule
+	\end{tabularx}
+	\caption[Tap detection configuration]{Single- and double tap detection configuration for the MMA8652FC digital accelerometer}  \label{tab:tapconf}
+\end{table}
