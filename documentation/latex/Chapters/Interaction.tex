@@ -30,11 +30,10 @@ def resample(points, N):
 
 In the next step, the gesture is prepared for matching against the templates by rotating it to a specific position. The so called \textit{indicative angle} $\theta$ between the gesture's centroid $C$ and its first point is calculated using the normalized scalar product of the centroid and the first point's position vectors. Afterwards the gesture is rotated so that $\theta$ is at $0\degree$. Wobbrock et. al. do this by using the inverse tangens function, however this is not possible in 3D space. Hence, \textit{Rodrigues' rotation formula} (named after French mathematician Olinde Rodrigues) was implemented instead. This efficient algorithm for rotating a vector in $\mathbb{R}^3$ takes the rotation angle $\theta$ as well as the axis unit vector $k$ as input, and calculates the following formula:
 
-%TODO check source: Don Koks, (2006) Explorations in Mathematical Physics, Springer Science+Business Media,LLC. ISBN 0-387-30943-8. Ch.4, pps 147 et seq. A Roundabout Route to Geometric Algebra'
 \begin{center}
 \(
 v_{rot} = v \cos\theta + (k \times v)\sin\theta + k (k \cdot v) (1 - \cos\theta).
-\) \cite{TODO}
+\) \cite{koks2006}
 \end{center}
 
 After applying this function on the gesture, a good starting point is created for the actual recognizing part of the algorithm. Listing \ref{lst:rotate2zero} illustrates this procedure.
