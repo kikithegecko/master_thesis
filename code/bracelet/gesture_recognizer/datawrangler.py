@@ -1,6 +1,6 @@
 import serial
 
-s = serial.Serial('COM7', 115200)
+s = serial.Serial('COM9', 115200)
 filename = 1
 
 while True:

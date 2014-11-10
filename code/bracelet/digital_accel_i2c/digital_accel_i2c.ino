@@ -3,8 +3,8 @@
 
 /* Pin Configuration */
 #define LED_R 4
-#define LED_G 5
-#define LED_B 3
+#define LED_G 3
+#define LED_B 5
 
 /* I2C Configuration */
 #define ADDR         0x1D
@@ -173,7 +173,7 @@ void setup(){
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
-  write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
+  //write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
   
   //2g mode is default (1024 counts per g)
   
