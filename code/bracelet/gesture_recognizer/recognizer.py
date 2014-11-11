@@ -18,13 +18,21 @@ def file2gesture(fname):
 
 
 # first, process the sample gestures
-circle = file2gesture("sample_data/circle1.txt")
-line = file2gesture("sample_data/line1.txt")
-arc = file2gesture("sample_data/arc1.txt")
-templates = [circle, arc, line]
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+corner1 = file2gesture("templates/corner_1.txt")
+corner2 = file2gesture("templates/corner_2.txt")
+corner3 = file2gesture("templates/corner_3.txt")
+arc1 = file2gesture("templates/arc_1.txt")
+arc2 = file2gesture("templates/arc_2.txt")
+arc3 = file2gesture("templates/arc_3.txt")
+circle1 = file2gesture("templates/circle_1.txt")
+circle2 = file2gesture("templates/circle_2.txt")
+circle3 = file2gesture("templates/circle_3.txt")
+
+templates = [corner1, corner2, corner3, arc1, arc2, arc3, circle1, circle2, circle3]
+
 for t in templates:
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
 	xs = []
 	ys = []
 	zs = []
@@ -32,7 +40,7 @@ for t in templates:
 		xs.append(t[i].x)
 		ys.append(t[i].y)
 		zs.append(t[i].z)
-	ax.plot(xs, ys, zs)
+	#ax.plot(xs, ys, zs)
 	t = onedollar.resample(t, 64) #magic number for the start
 	t = onedollar.rotate_to_zero(t)
 	t = onedollar.scale_to_square(t, 100) #magic number from 3$ paper
@@ -45,14 +53,12 @@ for t in templates:
 		ys.append(t[i].y)
 		zs.append(t[i].z)
 	#ax.plot(xs, ys, zs)
-#plt.show()
+	#plt.show()
 
 # now do the same for the "unknown" gestures
 gestures = []
-gestures.append(file2gesture("sample_data/arc2.txt"))
-gestures.append(file2gesture("sample_data/arc3.txt"))
-gestures.append(file2gesture("sample_data/circle2.txt"))
-gestures.append(file2gesture("sample_data/line2.txt"))
+for i in range(30):
+	gestures.append(file2gesture("sample_data/" + str(i+1) + ".txt"))
 for g in gestures:
 	xs = []
 	ys = []
@@ -66,6 +72,13 @@ for g in gestures:
 	g = onedollar.rotate_to_zero(g)
 	g = onedollar.scale_to_square(t, 100)
 	result = onedollar.recognize(g, templates, 100)
-	print(result[1])
-	print(templates.index(result[0]))
+	print("score: " + str(result[1]))
+	match = templates.index(result[0])
+	print("match: " + str(match))
+	if match < 4:
+		print("corner")
+	elif match < 7:
+		print("arc")
+	else:
+		print("circle")
 plt.show()

@@ -87,7 +87,6 @@ def path_length(A):
 # helper function for step 1:
 # calculate eucledian distance
 def distance(p, q):
-	#return sqrt((q.x - p.x)**2 + (q.y - p.y)**2)
 	return math.sqrt((q.x - p.x)**2 + (q.y - p.y)**2 + (q.z - p.z)**2)
 	
 # STEP 2:
@@ -96,7 +95,10 @@ def rotate_to_zero(points):
 	c = centroid(points)
 	#theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
 	scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
-	theta = math.acos(scalarprod / (math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)))
+	if scalarprod == 0: # prevent divition by zero
+		theta = 0
+	else:
+		theta = math.acos(scalarprod / (math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)))
 	v_axis = cross_product(points[0], c)
 	#newpoints = rotate_by(points, -theta)
 	newpoints = rotate_rodrigues(points, v_axis, theta)
@@ -164,10 +166,8 @@ def translate_to_origin(points):
 # Due to using resample, we can assume that A abd B in path_distance contain 
 # the same number of points, i.e. |A| = |B|.
 def recognize(points, templates, rescale_size):
-	#'constants'
-	#theta_min = -45
+	#'constants' from 3$ paper
 	theta_min = -180
-	#theta_max = 45
 	theta_max = 180
 	theta_delta = 2
 	
@@ -177,8 +177,7 @@ def recognize(points, templates, rescale_size):
 		if dist < best:
 			best = dist
 			t_best = t
-	#score = 1 - best / 0.5 * sqrt(rescale_size**2 + rescale_size**2)
-	score = 1 - best / (0.5 * math.sqrt(3 * rescale_size**2))
+	score = 1 - (best / (0.5 * math.sqrt(3 * rescale_size**2)))
 	return (t_best, score)
 
 def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
@@ -358,7 +357,6 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	return min(f1, f2, f3, f4, f5, f6, f7, f8)
 	
 def distance_at_angle(points, template, alpha, beta, gamma):
-	#newpoints = rotate_by(points, theta)
 	newpoints = rotate_rodrigues(points, Point(1, 0, 0), alpha)
 	newpoints = rotate_rodrigues(newpoints, Point(0, 1, 0), beta)
 	newpoints = rotate_rodrigues(newpoints, Point(0, 0, 1), gamma)
