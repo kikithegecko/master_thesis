@@ -30,28 +30,29 @@ circle3 = file2gesture("templates/circle_3.txt")
 
 templates = [corner1, corner2, corner3, arc1, arc2, arc3, circle1, circle2, circle3]
 
-for t in templates:
+for t in range(len(templates)):
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
 	xs = []
 	ys = []
 	zs = []
-	for i in range(len(t)):
-		xs.append(t[i].x)
-		ys.append(t[i].y)
-		zs.append(t[i].z)
+	for i in range(len(templates[t])):
+		xs.append(templates[t][i].x)
+		ys.append(templates[t][i].y)
+		zs.append(templates[t][i].z)
 	#ax.plot(xs, ys, zs)
-	t = onedollar.resample(t, 64) #magic number for the start
-	t = onedollar.rotate_to_zero(t)
-	t = onedollar.scale_to_square(t, 100) #magic number from 3$ paper
+	templates[t] = onedollar.resample(templates[t], 64) #magic number for the start
+	templates[t] = onedollar.rotate_to_zero(templates[t])
+	templates[t] = onedollar.scale_to_square(templates[t], 100) #magic number from 3$ paper
+	print("Template length: " + str(len(templates[t])))
 	# now plot dem templates
 	xs = []
 	ys = []
 	zs = []
-	for i in range(len(t)):
-		xs.append(t[i].x)
-		ys.append(t[i].y)
-		zs.append(t[i].z)
+	for i in range(len(templates[t])):
+		xs.append(templates[t][i].x)
+		ys.append(templates[t][i].y)
+		zs.append(templates[t][i].z)
 	#ax.plot(xs, ys, zs)
 	#plt.show()
 
@@ -67,10 +68,11 @@ for g in gestures:
 		xs.append(g[i].x)
 		ys.append(g[i].y)
 		zs.append(g[i].z)
-	ax.plot(xs, ys, zs)
+	#ax.plot(xs, ys, zs)
 	g = onedollar.resample(g, 64)
 	g = onedollar.rotate_to_zero(g)
-	g = onedollar.scale_to_square(t, 100)
+	g = onedollar.scale_to_square(g, 100)
+	print("Gesture length: " + str(len(g)))
 	result = onedollar.recognize(g, templates, 100)
 	print("score: " + str(result[1]))
 	match = templates.index(result[0])
@@ -81,4 +83,4 @@ for g in gestures:
 		print("arc")
 	else:
 		print("circle")
-plt.show()
+#plt.show()

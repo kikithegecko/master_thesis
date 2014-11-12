@@ -1,5 +1,6 @@
 # A 1$ Gesture Recognizer
 import math
+from math import sin, cos, acos, radians
 
 class Point:
 	def __init__(self, x=0, y=0, z=0):
@@ -62,19 +63,25 @@ def cross_product(p, q):
 def resample(points, n):
 	increment = path_length(points) / (n - 1)
 	D = 0
-	newpoints = points[:1]
-	for i in range(1, len(points[1:])):
+	newpoints = [points[0]]
+	for i in range(1, len(points)):
 		dist = distance(points[i-1], points[i])
 		if(D + dist) > increment:
 			q = Point()
 			q.x = points[i-1].x + ((increment - D) / dist) * (points[i].x - points[i-1].x)
 			q.y = points[i-1].y + ((increment - D) / dist) * (points[i].y - points[i-1].y)
-			q.z = points[i-1].z + ((increment - D) / dist) * (points[i].z - points[i-1].z) #TODO
+			q.z = points[i-1].z + ((increment - D) / dist) * (points[i].z - points[i-1].z)
 			newpoints.append(q)
-			points.insert(i, q)
-			D = 0
+			D = distance(q, points[i])
 		else:
 			D = D + dist
+	if(D + dist) > increment: #append last point manually
+		q = Point()
+		q.x = newpoints[-1].x + ((increment - D) / dist) * (points[i].x - newpoints[-1].x)
+		q.y = newpoints[-1].y + ((increment - D) / dist) * (points[i].y - newpoints[-1].y)
+		q.z = newpoints[-1].z + ((increment - D) / dist) * (points[i].z - newpoints[-1].z)
+		newpoints.append(q)
+		print("one point appended manually")
 	return newpoints
 
 # helper function for step 1
@@ -100,34 +107,27 @@ def rotate_to_zero(points):
 	else:
 		theta = math.acos(scalarprod / (math.sqrt(points[0].x**2 + points[0].y**2 + points[0].z**2) * math.sqrt(c.x**2 + c.y**2 + c.z**2)))
 	v_axis = cross_product(points[0], c)
-	#newpoints = rotate_by(points, -theta)
 	newpoints = rotate_rodrigues(points, v_axis, theta)
-	return newpoints
-
-# helper function for step 2	
-def rotate_by(points, theta):
-	c = centroid(points)
-	newpoints = []
-	for p in points:
-		q = Point()
-		q.x = (p.x - c.x) * cos(thetha) - (p.y - c.y) * sin(theta) + c.x
-		q.y = (p.x - c.x) * sin(thetha) - (p.y - c.y) * cos(theta) + c.y
-		newpoints.append(q)
 	return newpoints
 	
 # helper function for step 2:
 # vector rotation in axis-angle representation
 # using Rodrigues' rotation formula
 def rotate_rodrigues(points, vector, theta):
-	c = centroid(points)
+	#c = centroid(points)
+	l = math.sqrt(vector.x**2 + vector.y**2 + vector.z**2)
+	if l != 0:
+		v = Point(vector.x / l, vector.y / l, vector.z / l)
+	else:
+		v = vector
 	newpoints = []
 	for p in points:
 		q = Point()
-		cp = cross_product(p, vector)
-		sp = p.x * vector.x + p.y * vector.y + p.z * vector.z
-		q.x = math.cos(theta) * p.x + math.sin(theta) * cp.x + (1 - math.cos(theta)) * sp * vector.x
-		q.y = math.cos(theta) * p.y + math.sin(theta) * cp.y + (1 - math.cos(theta)) * sp * vector.y
-		q.z = math.cos(theta) * p.z + math.sin(theta) * cp.z + (1 - math.cos(theta)) * sp * vector.z
+		cp = cross_product(p, v)
+		sp = p.x * v.x + p.y * v.y + p.z * v.z
+		q.x = cos(theta) * p.x + sin(theta) * cp.x + (1 - cos(theta)) * sp * v.x
+		q.y = cos(theta) * p.y + sin(theta) * cp.y + (1 - cos(theta)) * sp * v.y
+		q.z = cos(theta) * p.z + sin(theta) * cp.z + (1 - cos(theta)) * sp * v.z
 		newpoints.append(q)
 	return newpoints
 		
@@ -174,11 +174,13 @@ def recognize(points, templates, rescale_size):
 	best = float("inf")
 	for t in templates:
 		dist = distance_at_best_angle(points, t, theta_min, theta_max, theta_delta)
+		#dist = distance_at_angle(points, t, 0, 0, 0)
 		if dist < best:
 			best = dist
 			t_best = t
 	score = 1 - (best / (0.5 * math.sqrt(3 * rescale_size**2)))
 	return (t_best, score)
+	#return (t_best, dist)
 
 def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	phi = 0.5 * (-1 + math.sqrt(5))
@@ -195,6 +197,12 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	y2 = (1 - phi) * beta_min + phi * beta_max
 	z1 = phi * gamma_min + (1 - phi) * gamma_max
 	z2 = (1 - phi) * gamma_min + phi * gamma_max
+	#x1 = alpha_min
+	#x2 = alpha_max
+	#y1 = beta_min
+	#y2 = beta_max
+	#z1 = gamma_min
+	#z2 = gamma_max	
 	
 	f1 = distance_at_angle(points, template, x1, y1, z1)
 	f2 = distance_at_angle(points, template, x1, y1, z2)
@@ -204,9 +212,11 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	f6 = distance_at_angle(points, template, x2, y1, z2)
 	f7 = distance_at_angle(points, template, x2, y2, z1)
 	f8 = distance_at_angle(points, template, x2, y2, z2)
+	i = 0
 
-	while (abs(alpha_max - alpha_min) > theta_delta) and (abs(beta_max - beta_min) > theta_delta) and (abs(gamma_max - gamma_min) > theta_delta):	
+	while (abs(alpha_max - alpha_min) > theta_delta) or (abs(beta_max - beta_min) > theta_delta) or (abs(gamma_max - gamma_min) > theta_delta):	
 		min_f = min(f1, f2, f3, f4, f5, f6, f7, f8)
+		i += 1
 		
 		if min_f == f1: #x1, y1, z1
 			alpha_max = x2
@@ -215,7 +225,7 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			beta_max = y2
 			y2 = y1
 			y1 = phi * beta_min + (1 - phi) * beta_max
-			gamma_max = z1
+			gamma_max = z2
 			z2 = z1
 			z1 = phi * gamma_min + (1 - phi) * gamma_max
 			f8 = f1
@@ -248,10 +258,10 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			alpha_max = x2
 			x2 = x1
 			x1 = phi * alpha_min + (1 - phi) * alpha_max
-			beta_min = y2
+			beta_min = y1
 			y1 = y2
 			y2 = (1 - phi) * beta_min + phi * beta_max
-			gamma_max = z1
+			gamma_max = z2
 			z2 = z1
 			z1 = phi * gamma_min + (1 - phi) * gamma_max
 			f6 = f3
@@ -266,7 +276,7 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			alpha_max = x2
 			x2 = x1
 			x1 = phi * alpha_min + (1 - phi) * alpha_max
-			beta_min = y2
+			beta_min = y1
 			y1 = y2
 			y2 = (1 - phi) * beta_min + phi * beta_max
 			gamma_min = z1
@@ -287,7 +297,7 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			beta_max = y2
 			y2 = y1
 			y1 = phi * beta_min + (1 - phi) * beta_max
-			gamma_max = z1
+			gamma_max = z2
 			z2 = z1
 			z1 = phi * gamma_min + (1 - phi) * gamma_max
 			f4 = f5
@@ -321,10 +331,10 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			alpha_min = x1
 			x1 = x2
 			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
-			beta_min = y2
+			beta_min = y1
 			y1 = y2
 			y2 = (1 - phi) * beta_min + phi * beta_max
-			gamma_max = z1
+			gamma_max = z2
 			z2 = z1
 			z1 = phi * gamma_min + (1 - phi) * gamma_max
 			f2 = f7
@@ -339,7 +349,7 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			alpha_min = x1
 			x1 = x2
 			x2 = (1 - phi) * alpha_min + phi * (alpha_max)
-			beta_min = y2
+			beta_min = y1
 			y1 = y2
 			y2 = (1 - phi) * beta_min + phi * beta_max
 			gamma_min = z1
@@ -353,19 +363,33 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			f6 = distance_at_angle(points, template, x2, y1, z2)
 			f7 = distance_at_angle(points, template, x2, y2, z1)
 			f8 = distance_at_angle(points, template, x2, y2, z2)
-
+	
+	#print(i)
 	return min(f1, f2, f3, f4, f5, f6, f7, f8)
 	
 def distance_at_angle(points, template, alpha, beta, gamma):
-	newpoints = rotate_rodrigues(points, Point(1, 0, 0), alpha)
-	newpoints = rotate_rodrigues(newpoints, Point(0, 1, 0), beta)
-	newpoints = rotate_rodrigues(newpoints, Point(0, 0, 1), gamma)
+	alpha = radians(alpha)
+	beta = radians(beta)
+	gamma = radians(gamma)
+	theta = acos(0.5*(cos(alpha)*cos(beta)+sin(alpha)*sin(beta)*sin(gamma)+cos(alpha)*cos(gamma)+cos(beta)*cos(gamma)-1))
+	denominator = 2*sin(theta)
+	if denominator == 0:
+		newpoints = points
+	else:
+		e1 = (sin(alpha)*sin(beta)*cos(gamma)-cos(alpha)*sin(gamma)-cos(beta)*sin(gamma)) / denominator
+		e2 = (-sin(beta)-cos(alpha)*sin(beta)*cos(gamma)-sin(alpha)*sin(gamma)) / denominator
+		e3 = (cos(alpha)*sin(beta)*sin(gamma)-sin(alpha)*cos(gamma)-sin(alpha)*cos(beta)) / denominator
+		newpoints = rotate_rodrigues(points, Point(e1, e2, e3), theta)
 	d = path_distance(newpoints, template)
 	return d
 
 # assume |A| = |B| (usually valid due to resampling)
 def path_distance(A, B):
 	d = 0
+	#if len(A) != len(B):
+		#print("WARNING! |A| != |B|")
+		#print(len(A))
+		#print(len(B))
 	for i in range(len(A)):
 		d = d + distance(A[i], B[i])
 	return d / len(A)
