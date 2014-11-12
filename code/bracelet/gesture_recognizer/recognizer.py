@@ -44,7 +44,8 @@ for t in range(len(templates)):
 	templates[t] = onedollar.resample(templates[t], 64) #magic number for the start
 	templates[t] = onedollar.rotate_to_zero(templates[t])
 	templates[t] = onedollar.scale_to_square(templates[t], 100) #magic number from 3$ paper
-	print("Template length: " + str(len(templates[t])))
+	templates[t] = onedollar.translate_to_origin(templates[t])
+	#print("Template length: " + str(len(templates[t])))
 	# now plot dem templates
 	xs = []
 	ys = []
@@ -72,11 +73,12 @@ for g in gestures:
 	g = onedollar.resample(g, 64)
 	g = onedollar.rotate_to_zero(g)
 	g = onedollar.scale_to_square(g, 100)
-	print("Gesture length: " + str(len(g)))
+	g = onedollar.translate_to_origin(g)
+	#print("Gesture length: " + str(len(g)))
 	result = onedollar.recognize(g, templates, 100)
-	print("score: " + str(result[1]))
+	#print("score: " + str(result[1]))
 	match = templates.index(result[0])
-	print("match: " + str(match))
+	#print("match: " + str(match))
 	if match < 4:
 		print("corner")
 	elif match < 7:
