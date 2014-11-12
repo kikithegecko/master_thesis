@@ -81,7 +81,6 @@ def resample(points, n):
 		q.y = newpoints[-1].y + ((increment - D) / dist) * (points[i].y - newpoints[-1].y)
 		q.z = newpoints[-1].z + ((increment - D) / dist) * (points[i].z - newpoints[-1].z)
 		newpoints.append(q)
-		print("one point appended manually")
 	return newpoints
 
 # helper function for step 1
@@ -100,7 +99,6 @@ def distance(p, q):
 # rotate points so that their indicative angle is at 0 degrees
 def rotate_to_zero(points):
 	c = centroid(points)
-	#theta = math.atan(c.y - points[0].y, c.x - points[0].x) # for -pi <= theta <= pi TODO check this?
 	scalarprod = points[0].x * c.x + points[0].y * c.y + points[0].z * c.z
 	if scalarprod == 0: # prevent divition by zero
 		theta = 0
@@ -114,7 +112,6 @@ def rotate_to_zero(points):
 # vector rotation in axis-angle representation
 # using Rodrigues' rotation formula
 def rotate_rodrigues(points, vector, theta):
-	#c = centroid(points)
 	l = math.sqrt(vector.x**2 + vector.y**2 + vector.z**2)
 	if l != 0:
 		v = Point(vector.x / l, vector.y / l, vector.z / l)
@@ -174,13 +171,11 @@ def recognize(points, templates, rescale_size):
 	best = float("inf")
 	for t in templates:
 		dist = distance_at_best_angle(points, t, theta_min, theta_max, theta_delta)
-		#dist = distance_at_angle(points, t, 0, 0, 0)
 		if dist < best:
 			best = dist
 			t_best = t
-	score = 1 - (best / (0.5 * math.sqrt(3 * rescale_size**2)))
+	score = 1 - (best / (0.5 * math.sqrt(3 * rescale_size**2))) #TODO maybe omit score?
 	return (t_best, score)
-	#return (t_best, dist)
 
 def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	phi = 0.5 * (-1 + math.sqrt(5))
@@ -196,13 +191,7 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 	y1 = phi * beta_min + (1 - phi) * beta_max
 	y2 = (1 - phi) * beta_min + phi * beta_max
 	z1 = phi * gamma_min + (1 - phi) * gamma_max
-	z2 = (1 - phi) * gamma_min + phi * gamma_max
-	#x1 = alpha_min
-	#x2 = alpha_max
-	#y1 = beta_min
-	#y2 = beta_max
-	#z1 = gamma_min
-	#z2 = gamma_max	
+	z2 = (1 - phi) * gamma_min + phi * gamma_max	
 	
 	f1 = distance_at_angle(points, template, x1, y1, z1)
 	f2 = distance_at_angle(points, template, x1, y1, z2)
@@ -364,7 +353,6 @@ def distance_at_best_angle(points, template, theta_min, theta_max, theta_delta):
 			f7 = distance_at_angle(points, template, x2, y2, z1)
 			f8 = distance_at_angle(points, template, x2, y2, z2)
 	
-	#print(i)
 	return min(f1, f2, f3, f4, f5, f6, f7, f8)
 	
 def distance_at_angle(points, template, alpha, beta, gamma):
@@ -386,10 +374,6 @@ def distance_at_angle(points, template, alpha, beta, gamma):
 # assume |A| = |B| (usually valid due to resampling)
 def path_distance(A, B):
 	d = 0
-	#if len(A) != len(B):
-		#print("WARNING! |A| != |B|")
-		#print(len(A))
-		#print(len(B))
 	for i in range(len(A)):
 		d = d + distance(A[i], B[i])
 	return d / len(A)
