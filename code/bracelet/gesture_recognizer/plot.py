@@ -24,4 +24,5 @@ for j in range(3):
 		ax.plot(xs, ys, zs)
 		
 	plt.show()
+
 	

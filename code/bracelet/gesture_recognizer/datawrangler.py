@@ -13,4 +13,5 @@ while True:
 			line = line.replace('\r', '')
 			f.write(line)
 		f.close()
+		print("File #" + str(i) + " saved.")
 		filename += 1
