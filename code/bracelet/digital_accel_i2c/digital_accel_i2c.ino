@@ -1,5 +1,5 @@
 #include <i2c_t3.h>
-#include "threedollar.h"
+//#include "threedollar.h"
 
 /* Pin Configuration */
 #define LED_R 4
@@ -173,7 +173,7 @@ void setup(){
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
-  //write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
+  write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
   
   //2g mode is default (1024 counts per g)
   

@@ -1,11 +1,12 @@
 #include "threedollar.h"
 
-struct Point centroid(struct Point[] points, int length){
+struct Point centroid(struct Point* points, int length){
   struct Point c;
+  int i;
   c.x = 0;
   c.y = 0;
   c.z = 0;
-  for(int i = 0; i < length; i++){
+  for(i = 0; i < length; i++){
     c.x += points[i].x;
     c.y += points[i].y;
     c.z += points[i].z;
@@ -24,12 +25,13 @@ struct Point cross_product(struct Point p, struct Point q){
   return r;
 }
 
-float distance(Point p, Point q){
+float distance(struct Point p, struct Point q){
   return sqrt((q.x - p.x)*(q.x - p.x) + (q.y - p.y)*(q.y - p.y) + (q.z - p.z)*(q.z - p.z));
 }
 
 struct Point* rotate(struct Point* points, int n, struct Point axis, float angle){
   struct Point v;
+  int i;
   float l = sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z);
   if(l != 0){
     v.x = axis.x;
@@ -40,7 +42,7 @@ struct Point* rotate(struct Point* points, int n, struct Point axis, float angle
     v = axis;
   }
   struct Point* newpoints = malloc(sizeof(struct Point)*n);
-  for(int i = 0; i < n; i++){
+  for(i = 0; i < n; i++){
     struct Point cp = cross_product(points[i], axis);
     float sp = points[i].x * axis.x + points[i].y * axis.y + points[i].z * axis.z;
     newpoints[i].x = cos(angle) * points[i].x + sin(angle) * cp.x + (1 - cos(angle)) * sp * axis.x;

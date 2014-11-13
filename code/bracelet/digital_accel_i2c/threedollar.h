@@ -27,7 +27,7 @@ struct Point cross_product(struct Point p, struct Point q);
 
 // helper function for step 1:
 // calculate eucledian distance
-float distance(Point p, Point q);
+float distance(struct Point p, struct Point q);
 
 // helper function for step 2:
 // vector rotation in axis-angle representation
