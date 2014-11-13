@@ -9,22 +9,24 @@ This chapter describes the various interaction levels with the bracelet in detai
 %TODO explain 3-dimensional GSS
 The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
 
-After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}).
+After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}). %TODOwe have fixed # of samples. is this necessary?
 
 \begin{lstlisting}[label=lst:resample,language=python,frame=lt,caption=Resampling of a points path into N evenly spaced points]
 def resample(points, N):
 	I = path_length(points) / (N - 1)
 	D = 0
 	newpoints = points[:1]
-	for i in range(1, len(points[1:])):
+	for i in range(1, len(points)):
 		dist = distance(points[i-1], points[i])
 		if(D + dist) > I:
 			q = points[i-1] + ((I - D)/dist) * (points[i] - points[i-1])
 			newpoints.append(q)
-			points.insert(i, q)
-			D = 0
+			D = distance(q, points[i])
 		else:
 			D = D + dist
+	if(D + dist) > increment: #append last point manually
+		q = newpoints[-1] + ((increment - D) / dist) * (points[i] - newpoints[-1])
+		newpoints.append(q)
 	return newpoints
 \end{lstlisting}
 
@@ -36,7 +38,7 @@ v_{rot} = v \cos\theta + (k \times v)\sin\theta + k (k \cdot v) (1 - \cos\theta)
 \) \cite{koks2006}
 \end{center}
 
-After applying this function on the gesture, a good starting point is created for the actual recognizing part of the algorithm. Listing \ref{lst:rotate2zero} illustrates this procedure.
+After applying this function on the gesture, a good starting point is created for the actual recognizing part of the algorithm. Listing \ref{lst:rotate2zero} illustrates the rotation procedure.
 
 \begin{lstlisting}[label=lst:rotate2zero,language=python,frame=lt,caption=Rotation of points so that their indicative angle is at $0 \degree$]
 def rotate_to_zero(points):
@@ -46,7 +48,7 @@ def rotate_to_zero(points):
 	return newpoints
 \end{lstlisting}
 
-In order to harmonize gestures of different sizes, the points are scaled to a reference cube with edge length of $100$ and translated so that the respective centroid $C$ is on the origin (cf. listing \ref{lst:scale+translate}).
+In order to harmonize gestures of different sizes, the points are scaled to a reference cube with edge length of $100$ units and translated so that the respective centroid $C$ is on the origin (cf. listing \ref{lst:scale+translate}).
 
 \begin{lstlisting}[label=lst:scale+translate,language=python,frame=lt,caption=Scaling to reference cube and translation to origin]
 def scale_and_translate(points, size): # size=100
@@ -63,7 +65,9 @@ def scale_and_translate(points, size): # size=100
 
 After these harmonization and preparation steps, the gestures are matched against the prerecorded templates. The aforementioned steps are applied to templates as well as to newly recorded gestures, the following algorithms only apply to unrecognized gestures.
 
-The candidate is first compared to all stored templates and the average \ac{MSE} between the respective corresponding points is calculated
+The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms od computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
+
+The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953 \cite{Kiefer1953} and relies on the ...
 
 \section{Casual Touch Input}
 
