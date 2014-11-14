@@ -67,7 +67,7 @@ After these harmonization and preparation steps, the gestures are matched agains
 
 The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms od computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
 
-The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953 \cite{Kiefer1953} and relies on the ...
+The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953 \cite{Kiefer1953} and relies on the Golden Ratio $\phi = 0.5(-1+\sqrt{5})$ to find the minimum value in a range.
 
 \section{Casual Touch Input}
 
