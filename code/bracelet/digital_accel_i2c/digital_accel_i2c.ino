@@ -1,10 +1,14 @@
 #include <i2c_t3.h>
+#include <SoftwareSerial.h>
 //#include "threedollar.h"
 
 /* Pin Configuration */
 #define LED_R 4
 #define LED_G 3
 #define LED_B 5
+#define BT_RX 7
+#define BT_TX 8
+#define BT_WAKE_HW 6
 
 /* I2C Configuration */
 #define ADDR         0x1D
@@ -46,6 +50,7 @@ struct AccelData{
 };
 
 AccelData gesture[SAMPLE_SIZE];
+SoftwareSerial bluetooth(BT_RX, BT_TX);
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -167,9 +172,12 @@ void setup(){
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+  pinMode(BT_WAKE_HW, OUTPUT);
   
+  digitalWrite(BT_WAKE_HW, HIGH);
   Serial.begin(115200);
   Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
+  bluetooth.begin(115200);
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
@@ -215,6 +223,11 @@ void loop(){
   if(pulse_data & 0x80){
     process_pulse(pulse_data);
   }
+  
+  if (bluetooth.available())
+    Serial.write(bluetooth.read());
+  if (Serial.available())
+    bluetooth.write(Serial.read());
   
   //delay(1000);
 }
