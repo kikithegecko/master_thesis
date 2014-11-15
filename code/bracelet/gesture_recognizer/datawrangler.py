@@ -1,7 +1,7 @@
 import serial
 
-s = serial.Serial('COM9', 115200)
-filename = 1
+s = serial.Serial('/dev/ttyACM0', 115200)
+filename = 80
 
 while True:
 	line = s.readline().decode('ascii')
@@ -13,5 +13,5 @@ while True:
 			line = line.replace('\r', '')
 			f.write(line)
 		f.close()
-		print("File #" + str(i) + " saved.")
+		print("File #" + str(filename) + " saved.")
 		filename += 1
