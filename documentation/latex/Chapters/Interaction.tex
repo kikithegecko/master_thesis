@@ -3,6 +3,7 @@
 This chapter describes the various interaction levels with the bracelet in detail and illustrates the respective algorithms.
 
 \section{Pairing the Bracelet with a Light Source}
+The bracelet's Bluetooth device automatically searches for nearby devices and connects to a range of matching IDs without any interaction or confirmation by the user. This can pose a security risk to spoofing a lamp device, but since no sensitive data is handled by either participant, the impact would rather be an annoying disturbance than a serious threat to privacy.
 
 \section{Gesture Recognition}
 %TODO explain one-dollar and three-dollar
@@ -63,11 +64,113 @@ def scale_and_translate(points, size): # size=100
 	return newpoints
 \end{lstlisting}
 
-After these harmonization and preparation steps, the gestures are matched against the prerecorded templates. The aforementioned steps are applied to templates as well as to newly recorded gestures, the following algorithms only apply to unrecognized gestures.
+After these harmonization and preparation steps, the gestures are matched against the prerecorded templates (cf. listing \ref{lst:recognize}). The aforementioned steps are applied to templates as well as to newly recorded gestures, the following algorithms only apply to unrecognized gestures.
+
+\begin{lstlisting}[label=lst:recognize,language=python,frame=lt,caption=Matching candidate gesture against every template]
+def recognize(points, templates, rescale_size):
+	theta_min = -180
+	theta_max = 180
+	theta_delta = 2
+
+	best = float("inf")
+	for t in templates:
+		dist = distance_at_best_angle(points, t, theta_min, theta_max, theta_delta)
+		if dist < best:
+			best = dist
+			t_best = t
+	return t_best
+\end{lstlisting}
 
 The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms od computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
 
-The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953 \cite{Kiefer1953} and relies on the Golden Ratio $\phi = 0.5(-1+\sqrt{5})$ to find the minimum value in a range.
+The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953  and is conceptualized to find the minimum value $x^*$ of a unimodal function $f(x)$ in a given interval $[a,b]$ \cite{Kiefer1953}. Two function points $f(x_1)$ and $f(x_2)$ with 
+\[ x_1=a+(1-\phi)(b-a) \\
+x_2=a+\phi(b-a) \]
+are calculated and compared, where $\phi=2/(1+\sqrt{5})$ denotes the Golden Section constant. If $f(x_1) < f(x_2)$, the interval for the next iteration becomes $[a,x_1]$ and the new test points are calculated as described above with respect to the new interval borders. Note that the value $f(x_1)$ can be reused \cite{chang2009n}. If $f(x_1) > f(x_2)$, the interval for the next iteration step changes to $[x_2, b]$ respectively. If the function points differ not more than a given $x_\Delta$, the current minimum will be accepted as the algorithm's result.
+
+In the context of the implemented gesture recognizer, the function to be minimized is the distance between a gesture candidate and a certain template at the best angle. Since the recognizer works with three-dimensional data, there is not a single angle for rotation, but one fir each coordinate axis. Hence, the \ac{GSS} needs to be adapted for three dimensions.
+
+As listing \ref{lst:daba} illustrates, the three-dimensional approach is similar to the one-dimensional algorithm. Each of the variables $\alpha$, $ \beta $, $ \gamma $ has its own search interval and a pair of calculated values. This leads to eight function points to be evaluated in each iteration, denoted in the code by variables \texttt{f1} to \texttt{f8}. The minimum of these values is calculated and the intervals adjusted accordingly. Note that in every case one function value from the previous step can be carried over, for example when \texttt{f1} is the minimum, its value is used for the new \texttt{f8}.
+
+\begin{lstlisting}[label=lst:daba,language=python,frame=lt,caption=Three-dimensional Golden Section Search for finding the best angle between a candidate gesture and a template]
+def distance_at_best_angle(p, t, theta_min, theta_max, theta_delta):
+	phi = 0.5 * (-1 + math.sqrt(5))
+	a_min = theta_min
+	a_max = theta_max
+	b_min = theta_min
+	b_max = theta_max
+	g_min = theta_min
+	g_max = theta_max
+
+	x1 = phi * a_min + (1 - phi) * a_max
+	x2 = (1 - phi) * a_min + phi * a_max
+	y1 = phi * b_min + (1 - phi) * b_max
+	y2 = (1 - phi) * b_min + phi * b_max
+	z1 = phi * g_min + (1 - phi) * g_max
+	z2 = (1 - phi) * g_min + phi * g_max	
+
+	f1 = distance_at_angle(p, t, x1, y1, z1)
+	f2 = distance_at_angle(p, t, x1, y1, z2)
+	f3 = distance_at_angle(p, t, x1, y2, z1)
+	f4 = distance_at_angle(p, t, x1, y2, z2)
+	f5 = distance_at_angle(p, t, x2, y1, z1)
+	f6 = distance_at_angle(p, t, x2, y1, z2)
+	f7 = distance_at_angle(p, t, x2, y2, z1)
+	f8 = distance_at_angle(p, t, x2, y2, z2)
+
+	while (|a_max - a_min| > theta_delta) or (|b_max - b_min| > theta_delta) or (|g_max - g_min| > theta_delta):	
+		min_f = min(f1, f2, f3, f4, f5, f6, f7, f8)
+		if min_f == f1: #x1, y1, z1
+			a_max = x2
+			x2 = x1
+			x1 = phi * a_min + (1 - phi) * a_max
+			b_max = y2
+			y2 = y1
+			y1 = phi * b_min + (1 - phi) * b_max
+			g_max = z2
+			z2 = z1
+			z1 = phi * g_min + (1 - phi) * g_max
+			f8 = f1
+			f1 = distance_at_angle(p, t, x1, y1, z1)
+			...
+			f7 = distance_at_angle(p, t, x2, y2, z1)
+		elif min_f == f2: #x1, y1, z2
+			...
+		else: #x2, y2, z2
+			...
+	return min(f1, f2, f3, f4, f5, f6, f7, f8)
+\end{lstlisting}
+
+To determine the distance between a gesture and a certain template at given angles $ \alpha $, $ \beta $, and $ \gamma $, the gesture is rotated using the Rodrigues rotation formula discussed in the context of the indicative angle above. The rotation formula needs an axis and an angle for executing the rotation, but the \ac{GSS} works with three angles. Therefore, the rotation matrix formed by the angles needs to be transformed into a Euler axis/angle pair for use in the implemented rotation formula. The authors of \cite{Kratz2010} state the following rotation matrix in their reference implementation \cite{repo:3dollar}:
+
+\[
+A = 
+\begin{pmatrix}
+\cos{\alpha}\cos{\beta} & \cos{\alpha}\sin{\beta}\sin{\gamma} - \sin{\alpha}\cos{\gamma} & \cos{\alpha}\sin{\beta}\cos{\gamma} + \sin{\alpha}\sin{\gamma} \\
+\sin{\alpha}\cos{\beta} & \sin{\alpha}\sin{\beta}\sin{\gamma} + \cos{\alpha}\cos{\gamma} & \sin{\alpha}\sin{\beta}\cos{\gamma} - \cos{\alpha}\sin{\gamma} \\
+-\sin{\beta} & \cos{\beta}\sin{\gamma} & \cos{\beta}\cos{\gamma}
+\end{pmatrix}
+\]
+
+The Euler rotation angle $ \theta $ is composed by the matrix's diagonal elements.
+\begin{eqnarray*}
+\theta & = & \arccos(\frac{1}{2}(A_{11} + A_{22} + A_{33} - 1)) \\
+       & = & \arccos(\frac{1}{2}(\cos\alpha\cos\beta+\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma+\cos\beta\cos\gamma-1))
+\end{eqnarray*}
+The rotation axis vector $ e $ can be derived from $ A $ and $ \theta $ as follows:
+\begin{eqnarray*}
+e_1 & = &  \frac{A_{32} - A_{23}}{2\sin\theta} \\
+    & = & \frac{\sin\alpha\sin\beta\cos\gamma-\cos\alpha\sin\gamma-\cos\beta\sin\gamma}{2\sin\theta} \\
+e_2 & = & \frac{A_{13} - A_{31}}{2\sin\theta} \\
+    & = & \frac{-\sin\beta-\cos\alpha\sin\beta\cos\gamma-\sin\alpha\sin\gamma}{2\sin\theta} \\
+e_3 & = & \frac{A_{21} - A_{12}}{2\sin\theta} \\
+    & = & \frac{\cos\alpha\sin\beta\sin\gamma-\sin\alpha\cos\gamma-\sin\alpha\cos\beta}{2\sin\theta}
+\end{eqnarray*}
+
+An so, the angles determined in algorithm \ref{lst:daba} lead to an axis/angle rotation which is performed on the candidate gesture.
+
+Once the best template for a candidate gesture is found, the corresponding index in the stored template list is returned and the recognized gesture triggers certain changes in the light source's color or brightness. Note that this gesture recognition algorithm is only used for recognition of the preset gestures formulated in section XX. %TODO
+
 
 \section{Casual Touch Input}
 

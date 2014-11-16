@@ -172,10 +172,10 @@ The design was iterated several times as the hardware components were layouted o
 
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256
-32 bit ARM Cortex-M4 Processor running on 72 MHz clock speed \cite{teensy_web}.
+32 bit ARM Cortex-M4 Processor running on 72 MHz clock speed \cite{teensy_web}. The Teensy can be programmed using the popular Arduino IDE and thus can profit from the great amount of existing libraries and code examples for the Arduino family.
 
 \section{Touch Slider}
-The major input interface of the bracelet is a touch surface which consists of cut copper foil placed underneath the electrophorus display.
+The major input interface of the bracelet is a touch surface which consists of seven cut copper foil segments that are placed in a zigzag pattern. This capacitive strip can either be used as an array of seven individual buttons or as a single large surface that can detect swiping gestures or a primitive variant of multi-touch interaction.
 %TODO explain capacitive touch
 %TODO explain geometry
 %TODO explain interference sources
