@@ -49,5 +49,14 @@ struct Point* rotate(struct Point* points, int n, struct Point axis, float angle
     newpoints[i].y = cos(angle) * points[i].y + sin(angle) * cp.y + (1 - cos(angle)) * sp * axis.y;
     newpoints[i].z = cos(angle) * points[i].z + sin(angle) * cp.z + (1 - cos(angle)) * sp * axis.z;
   }
-  return newpoints;    
+  return newpoints;
+}
+
+struct Point* preprocess(struct Point* points, int n, int bb_size){
+  // resample a points path into n evenly spaced points
+  float dist = 0;
+  
+// rotate points so that their indicative angle is at 0 degrees
+// scale points so that the resulting bounding box will be of size*size dimension;
+// then translate points to the origin.
 }
