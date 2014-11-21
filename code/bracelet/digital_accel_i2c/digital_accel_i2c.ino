@@ -1,6 +1,7 @@
 #include <i2c_t3.h>
 #include <SoftwareSerial.h>
 //#include "threedollar.h"
+#include "TouchSlider.h"
 
 /* Pin Configuration */
 #define LED_R 4
@@ -9,6 +10,13 @@
 #define BT_RX 7
 #define BT_TX 8
 #define BT_WAKE_HW 6
+#define TOUCH_1 16
+#define TOUCH_2 23
+#define TOUCH_3 1
+#define TOUCH_4 17
+#define TOUCH_5 15
+#define TOUCH_6 0
+#define TOUCH_7 22
 
 /* I2C Configuration */
 #define ADDR         0x1D
@@ -51,6 +59,8 @@ struct AccelData{
 
 AccelData gesture[SAMPLE_SIZE];
 SoftwareSerial bluetooth(BT_RX, BT_TX);
+const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, TOUCH_7};
+TouchSlider slider(7, TOUCH_PINS);
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -228,6 +238,13 @@ void loop(){
     Serial.write(bluetooth.read());
   if (Serial.available())
     bluetooth.write(Serial.read());
+    
+  slider.read();
+  int sliderPos = slider.getSliderPosition();
+  for(int i = 0; i < sliderPos; ++i) {
+    Serial.print("*");
+  }
+  Serial.println("");
   
   //delay(1000);
 }
