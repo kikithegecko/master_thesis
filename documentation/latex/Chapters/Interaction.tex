@@ -5,7 +5,21 @@ This chapter describes the various interaction levels with the bracelet in detai
 \section{Pairing the Bracelet with a Light Source}
 The bracelet's Bluetooth device automatically searches for nearby devices and connects to a range of matching IDs without any interaction or confirmation by the user. This can pose a security risk to spoofing a lamp device, but since no sensitive data is handled by either participant, the impact would rather be an annoying disturbance than a serious threat to privacy.
 
-\section{Gesture Recognition}
+\section{Switching the Light Source on and off}
+Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand and holding for a few seconds will result in switching the lights on or off, dependent on the current state.
+
+\section{Adjusting the Light Source's Brightness}
+Apart from switching the lights on or off, a change in brightness is probably the second most desired interaction in the smart lighting scenario. For example, the incentive of watching TV in the living rooms benefits from a dimmed light setting. However, if the user fails to locate the remote control for the television, a quick dim interaction towards brighter light facilitates the search for the missing remote control. After it is found, the brightness level of the room's lighting can easily be dimmed back to the desired setting.
+
+The dimming interaction is different from the other use cases, since there exists a fixed solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
+
+The intention was to preserve this association to make the interaction with the bracelet more intuitively. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
+
+\section{Changing the Lighting Mood}
+
+\section{Precise Touch Input for Color Change}
+
+\section{Template picking by Gesture Recognition}
 %TODO explain one-dollar and three-dollar
 %TODO explain 3-dimensional GSS
 The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
@@ -171,10 +185,6 @@ An so, the angles determined in algorithm \ref{lst:daba} lead to an axis/angle r
 
 Once the best template for a candidate gesture is found, the corresponding index in the stored template list is returned and the recognized gesture triggers certain changes in the light source's color or brightness. Note that this gesture recognition algorithm is only used for recognition of the preset gestures formulated in section XX. %TODO
 
-
-\section{Casual Touch Input}
-
-\section{Precise Touch Input}
 
 \section{Presets and Configuration}
 

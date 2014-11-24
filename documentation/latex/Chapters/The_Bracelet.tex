@@ -9,7 +9,6 @@ In this section, the various methods and tools used for designing and manufactur
 \subsection{Computer Aided Design}
 %TODO: references
 % http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
-%TODO pictures
 In the beginning of a design iteration, a virtual model of the desired object is built with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
 The model's basis is a circumference sketch for the bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints. The sketch should be fully constrained (i.e. leaving no degrees of freedom) before moving on to the next step, also with respect to the printing of the finished design.
@@ -145,6 +144,7 @@ Since the manufacturing techniques offered at the \ac{HCI} group don't allow for
 When an electrophoretic display was considered to be part of the bracelet, the segmented approach became undesired, since in addition to aforementioned difficulties, the usable surface space was relatively small when it came to hosting a single big component like a display. This issue led to further research into various other manufacturing techniques and potential materials for bracelet prototypes, and eventually led to cast silicone.
 
 \subsection{Silicone Bracelet}
+%TODO pictures
 
 After some consideration on a flexible e-ink display, a prototype bracelet made of silicone was considered. The molds used in the casting process were designed and printed just as the bracelets presented in the previous sections. However, designing a mold was significantly more difficult.
 
@@ -184,4 +184,5 @@ The major input interface of the bracelet is a touch surface which consists of s
 %TODO how it works
 %TODO I2C
 
-\section{Flexible Electrophoretic Display}
+\section{Visual Feedback}
+To provide visual feedback to the user, an RGB \ac{LED} is incorporated in the bracelet. Since most changes are reflected by the light source with no perceptible delay, the \ac{LED} serves mainly as an indicator for the recognition of specific interactions like the double tap detection.
