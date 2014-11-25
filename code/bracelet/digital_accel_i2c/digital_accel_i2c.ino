@@ -11,12 +11,12 @@
 #define BT_TX 8
 #define BT_WAKE_HW 6
 #define TOUCH_1 16
-#define TOUCH_2 23
-#define TOUCH_3 1
-#define TOUCH_4 17
-#define TOUCH_5 15
-#define TOUCH_6 0
-#define TOUCH_7 22
+#define TOUCH_2 1
+#define TOUCH_3 23
+#define TOUCH_4 15
+#define TOUCH_5 17
+#define TOUCH_6 22
+#define TOUCH_7 0
 
 /* I2C Configuration */
 #define ADDR         0x1D
@@ -240,11 +240,20 @@ void loop(){
     bluetooth.write(Serial.read());
     
   slider.read();
-  int sliderPos = slider.getSliderPosition();
-  for(int i = 0; i < sliderPos; ++i) {
-    Serial.print("*");
+  //int sliderPos = slider.getSliderPosition();
+  //for(int i = 0; i < sliderPos; ++i) {
+    //Serial.print("*");
+  //}
+  //TODO: save state for each pad (pressed/unpressed)
+  //TODO: record time for each press
+  for(int i = 0; i < 7; i++){
+    int val = slider.getValue(i);
+    if(val > 200){
+      Serial.print("Touch at ");
+      Serial.println(i);
+    }
   }
-  Serial.println("");
+  //Serial.println("");
   
   delay(10);
 }
