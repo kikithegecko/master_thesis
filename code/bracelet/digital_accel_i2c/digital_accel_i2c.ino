@@ -61,6 +61,7 @@ AccelData gesture[SAMPLE_SIZE];
 SoftwareSerial bluetooth(BT_RX, BT_TX);
 const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, TOUCH_7};
 TouchSlider slider(7, TOUCH_PINS);
+int touch_state[7]; 
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -175,6 +176,17 @@ void process_pulse(uint8_t register_data){
   }  
 }
 
+void process_rotation(){
+  AccelData data = get_acceleration_data();
+  float alpha = (atan(data.z / (sqrt(data.x*data.x + data.y*data.y))) * 4086) / 71; //z-axis //convert to degrees
+  float beta = (atan(data.x / (sqrt(data.y*data.y + data.z*data.z))) * 4086) / 71; //y axis
+  Serial.print("Z-Rot: ");
+  Serial.print(alpha);
+  Serial.print(" Y-Rot: ");
+  Serial.println(beta);
+  //Serial.println(data.y);
+}
+
 /* The usual setup stuff, setting pins, configuring the accelerometer
  * and starting serial communication.
  */
@@ -191,7 +203,7 @@ void setup(){
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
-  write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
+  //write_reg(XYZ_DATA_CFG, HPF_EN_MASK); //output high-pass filtered data
   
   //2g mode is default (1024 counts per g)
   
@@ -210,6 +222,10 @@ void setup(){
   write_reg(PULSE_WIND, 200); //500ms
   
   active_mode();
+  
+  for(int i = 0; i < 7; i++){
+    touch_state[i] = 0;
+  }
 }
 
 
@@ -240,18 +256,42 @@ void loop(){
     bluetooth.write(Serial.read());
     
   slider.read();
-  //int sliderPos = slider.getSliderPosition();
-  //for(int i = 0; i < sliderPos; ++i) {
-    //Serial.print("*");
-  //}
-  //TODO: save state for each pad (pressed/unpressed)
-  //TODO: record time for each press
+
   for(int i = 0; i < 7; i++){
     int val = slider.getValue(i);
     if(val > 200){
-      Serial.print("Touch at ");
-      Serial.println(i);
+      if(touch_state[i] == 0){
+        //Serial.print("Touch at ");
+        //Serial.println(i);
+      }
+      touch_state[i]++;
     }
+    else if(touch_state[i] > 0){
+      /*
+      Serial.print("Release of ");
+      Serial.print(i);
+      Serial.print(" after ");
+      Serial.print(touch_state[i]);
+      Serial.println(" cycles");
+      */
+      touch_state[i] = 0;
+    }
+  }
+  //check for "cover touch"
+  int segments_covered = 0;
+  for(int i = 0; i < 7; i++){
+    if(touch_state[i] > 10){ //magic number -.-
+      segments_covered++;
+    }
+  }
+  if(segments_covered >= 6){
+    //Serial.println("Cover touch!");
+    process_rotation();
+    //TODO: send on/off command
+    for(int i = 0; i < 7; i++){
+      touch_state[i] = 1;
+    }
+    //TODO: differentiate dimming
   }
   //Serial.println("");
   
