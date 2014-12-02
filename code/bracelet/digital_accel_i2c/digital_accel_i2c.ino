@@ -177,14 +177,83 @@ void process_pulse(uint8_t register_data){
 }
 
 void process_rotation(){
-  AccelData data = get_acceleration_data();
-  float alpha = (atan(data.z / (sqrt(data.x*data.x + data.y*data.y))) * 4086) / 71; //z-axis //convert to degrees
-  float beta = (atan(data.x / (sqrt(data.y*data.y + data.z*data.z))) * 4086) / 71; //y axis
-  Serial.print("Z-Rot: ");
-  Serial.print(alpha);
+  float rotation[4]; //magic number!
+  int i = 0;
+  
+  while(isCovered()){  
+    AccelData data = get_acceleration_data();
+    float x = data.x / 1024.0;
+    float y = data.y / 1024.0;
+    float z = (data.z / 1024.0) - 1; //subtract gravity
+    //float alpha = (atan(z / (sqrt(x*x + y*y))) * 4086) / 71; //z-axis //convert to degrees
+    //float beta = (atan(x / (sqrt(y*y + z*z))) * 4086) / 71; //y axis
+    rotation[i] = (atan(y / (sqrt(x*x + z*z))) * 4086) / 71; //x axis //<- use this!
+    //look for twist
+    float delta = rotation[((i-1) % 4)] - rotation[i];
+    if(delta > 0){ //more light
+      Serial.print("<-- | ");/*
+      Serial.print(rotation[(i-1) % 4]);
+      Serial.print(" - ");
+      Serial.print(rotation[i]);
+      Serial.print(" = ");
+      Serial.println(delta);*/
+    }
+    else{
+      Serial.print("--> | ");/*
+      Serial.print(rotation[(i-1) % 4]);
+      Serial.print(" - ");
+      Serial.print(rotation[i]);
+      Serial.print(" = ");
+      Serial.println(delta);*/
+    }   
+    i = (i + 1) % 4;
+    Serial.println(i);
+    delay(10);
+  }
+  /*
+  Serial.print("X-Rot: ");
+  Serial.print(gamma);
   Serial.print(" Y-Rot: ");
-  Serial.println(beta);
-  //Serial.println(data.y);
+  Serial.print(beta);
+  Serial.print(" Z-Rot: ");
+  Serial.println(alpha);
+  */
+  /*
+  Serial.print(data.x / 1024.0);
+  Serial.print(" ");  
+  Serial.print(data.y / 1024.0);
+  Serial.print(" ");
+  Serial.println(data.z / 1024.0);
+  */
+}
+
+int isCovered(){
+  slider.read();
+  for(int i = 0; i < 7; i++){
+    int val = slider.getValue(i);
+    if(val > 200){ //contact
+      touch_state[i]++;
+    }
+    else if(touch_state[i] > 0){
+      touch_state[i] = 0; //release contact
+    }
+  }
+  int segments_covered = 0;
+  for(int i = 0; i < 7; i++){
+    if(touch_state[i] > 10){ //magic number -.-
+      segments_covered++;
+    }
+  }
+  if(segments_covered >= 6){
+    //Serial.println("Cover touch!");
+    //for(int i = 0; i < 7; i++){
+      //touch_state[i] = 1;
+    //}
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
 
 /* The usual setup stuff, setting pins, configuring the accelerometer
