@@ -1,6 +1,6 @@
 \chapter{The Bracelet}
 
-The interactive bracelet consists mainly of an electronic ink display and several touch sensors for conscious interaction and a motion sensor for gesture recognition. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
+The interactive bracelet consists of several touch sensors, a motion sensor, a status \ac{LED} and a Bluetooth communication module, all powered by an ARM microcontroller. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
 
 \section{Manufacturing Techniques}
 
@@ -8,10 +8,11 @@ In this section, the various methods and tools used for designing and manufactur
 
 \subsection{Computer Aided Design}
 %TODO: references
+%TODO: Illustration
 % http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
 In the beginning of a design iteration, a virtual model of the desired object is built with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
-The model's basis is a circumference sketch for the bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints. The sketch should be fully constrained (i.e. leaving no degrees of freedom) before moving on to the next step, also with respect to the printing of the finished design.
+The model's starting point is a circumference sketch for the bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints. The sketch should be fully constrained (i.e. leaving no degrees of freedom) before moving on to the next step, also with respect to the printing of the finished design.
 
 In the next step one or more profile cuts are added to the circumference. They define the thickness and shape of the bracelet at different points along the oval circumference. For increased comfort, the bracelet should be as slim as possible, especially on the "backside" below the palm. In more complicated designs, an alternative to complex sketches for the profiles is the creation of multiple, overlaid sketches as a preparation for a subtraction operation in the later process. All those profiles need to be fully constrained as well.
 
@@ -22,14 +23,6 @@ The last step in the design process is usually the finishing of the \ac{CAD} mod
 The finished designs are then exported as mesh files (usually in \ac{STL} format) for printing.
 
 \subsection{3D Printing}
-%TODO a little more about the powder technique, maybe historical background? -> Wikipedia
-%TODO Mechanisms and Mechanical Devices Sourcebook, TIB
-% http://www.sciencedirect.com/science/book/9780121742317
-% http://www.google.com/patents/US5340656
-% http://en.wikipedia.org/wiki/Z_Corporation
-% http://www.3dsystems.com/about-us
-The \ac{HCI} group's workshop includes a powder bed and inkjet head 3D printer, a ProJet 360 by 3DSystems, Inc\cite{printer}. This manufacturing technique was developed in 1989 by the \ac{MIT} \cite{sachs1994three} and then licensed to the Z Corporation in 1995. On January 3, 2012, Z Corporation was acquired by 3DSystems, Inc.
-
 When printing an object, the print bed is filled first with a base layer of powder. The powder used by the printer is called VisiJet PXL, a plaster-like substance. After filling the bed, a standard inkjet printhead is cleaned and prepared for the printing process. Immediately after this setup is complete, the additive manufacturing process starts.
 
 The model is created by printing the binder fluid onto the plaster. After each printed layer, a new thin layer of powder is added to the print bed. The ProJet360 allows for a layer thickness of 0.1 mm with a vertical build speed of 2 cm per hour\cite{datasheet_printer}. This allows even delicate structures without any additional supports, since the printed object is surrounded and therefore supported by plaster powder during the production process. The only drawback of this printing process is that it doesn't support closed, hollow objects since there is no possibility of removing the enclosed excess powder after the process has finished. When designing models for 3D printing, this constraint has to be kept in mind.
