@@ -1,5 +1,5 @@
 \chapter{Interaction}
-
+%TODO explain the interaction concept again
 This chapter describes the various interaction levels with the bracelet in detail and illustrates the respective algorithms.
 
 \section{Pairing the Bracelet with a Light Source}
@@ -23,6 +23,7 @@ In addition to the brightness, users should be able to change the \textit{mood} 
 \section{Template picking by Gesture Recognition}
 %TODO explain one-dollar and three-dollar
 %TODO explain 3-dimensional GSS
+%TODO explain gesture recognition indication (double tap)
 The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
 
 After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}). %TODOwe have fixed # of samples. is this necessary?
