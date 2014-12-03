@@ -185,46 +185,29 @@ void process_rotation(){
     float x = data.x / 1024.0;
     float y = data.y / 1024.0;
     float z = (data.z / 1024.0) - 1; //subtract gravity
-    //float alpha = (atan(z / (sqrt(x*x + y*y))) * 4086) / 71; //z-axis //convert to degrees
-    //float beta = (atan(x / (sqrt(y*y + z*z))) * 4086) / 71; //y axis
     rotation[i] = (atan(y / (sqrt(x*x + z*z))) * 4086) / 71; //x axis //<- use this!
     //look for twist
     float delta = rotation[((i-1) % 4)] - rotation[i];
-    if(delta > 0){ //more light
+    if((delta > 0.5) && (rotation[i] < -30.0)){ //more light
       Serial.print("<-- | ");/*
       Serial.print(rotation[(i-1) % 4]);
-      Serial.print(" - ");
-      Serial.print(rotation[i]);
-      Serial.print(" = ");
-      Serial.println(delta);*/
+      Serial.print(" - ");*/
+      Serial.println(rotation[i]);
+      //Serial.print(" = ");*/
+      //Serial.println(delta);
     }
-    else{
+    else if((delta < -0.5) && (rotation[i] > -10.0)){ //less light
       Serial.print("--> | ");/*
       Serial.print(rotation[(i-1) % 4]);
-      Serial.print(" - ");
-      Serial.print(rotation[i]);
-      Serial.print(" = ");
-      Serial.println(delta);*/
-    }   
+      Serial.print(" - ");*/
+      Serial.println(rotation[i]);
+/*      Serial.print(" = ");*/
+      //Serial.println(delta);
+    }   //TODO differentiate on/off
     i = (i + 1) % 4;
-    Serial.println(i);
+    //Serial.println(i);
     delay(10);
   }
-  /*
-  Serial.print("X-Rot: ");
-  Serial.print(gamma);
-  Serial.print(" Y-Rot: ");
-  Serial.print(beta);
-  Serial.print(" Z-Rot: ");
-  Serial.println(alpha);
-  */
-  /*
-  Serial.print(data.x / 1024.0);
-  Serial.print(" ");  
-  Serial.print(data.y / 1024.0);
-  Serial.print(" ");
-  Serial.println(data.z / 1024.0);
-  */
 }
 
 int isCovered(){
@@ -245,10 +228,6 @@ int isCovered(){
     }
   }
   if(segments_covered >= 6){
-    //Serial.println("Cover touch!");
-    //for(int i = 0; i < 7; i++){
-      //touch_state[i] = 1;
-    //}
     return 1;
   }
   else{
