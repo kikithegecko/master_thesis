@@ -4,6 +4,8 @@ The interactive bracelet consists of several touch sensors, a motion sensor, a s
 
 \section{Manufacturing Techniques}
 
+All bracelets produced for this thesis were designed using a 3D \ac{CAD} modeler. The first prototypes were 3D printed rigid bodies to wear as armcuffs, but those designs turned out to be too inflexible and uncomfortable to wear. A different material for the bracelets was needed, so a transition from printing to casting with liquid silicone took place. The molds are printed, assembled, filled with silicone and usually destroyed while retrieving the finished cast.
+
 In this section, the various methods and tools used for designing and manufacturing the bracelet prototypes will be explained in detail.
 
 \subsection{Computer Aided Design}
@@ -157,11 +159,11 @@ This first rubber bracelet design involved a magnet clasp, but it was infeasible
 Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a disappealing color. In addition, the cavity rims were too short, so the display would jump out of place almost instantly when bending the bracelet.
 
 \subsection{One-Piece Silicone Bracelet}
-The next design was a ring-like silicone bracelet in one piece, so the issue with the clasp was no concern. The mold for this prototype consisted of three pieces, two rings and a bottom plate. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive the cast. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used especially for the display area.
+The next design was a ring-like silicone bracelet in one piece, so the issue with the clasp was no concern. The mold for this prototype consisted of three pieces, an outer and an inner ring as well as a bottom plate. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive assembly and the casting process. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used in some models, especially for the display area to hide cables or bulky connectors.
 
-This mold was much harder to fill with silicone than the previous one. Especially the Sortaclear silicone was too viscous to fill the complete mold, resulting in broken casts. The green MoldStar silicone turned out to work quite well. A simple vibrating plate made with a servo monitor with some scrap materials as an imbalance glued onto a plastic tray helped filling all parts of the mold and reducing air bubbles in the cast. The design also features wider cavity rims to hold the display in place and first wearing tests resulted in success.
+Those molds were harder to fill with silicone than the previous one. Especially the Sortaclear silicone was too viscous to fill the complete mold, resulting in broken casts. The green MoldStar silicone turned out to work quite well, but sometimes it would leak through little gaps between the rings and the base plate, so a thorough assembly was desired more than ever. Remaining gaps were closed with hot glue in later iterations. In addition, a simple self-made vibrating plate helped filling all parts of the mold and reduced the number of air bubbles in the cast. 
 
-The design was iterated several times as the hardware components were layouted on a \ac{PCB} shield and the display was omitted for initial interaction tests.
+The first one-piece bracelet designs included an electrophoretic display and featured wide cavity rims to hold said display in place. First wearing tests resulted in success. When the display was omitted later on, the cavities stayed to hold the capacitive touch surface in place. After the final hardware configuration took shape, this element was added to the designs. Since the hardware was thicker than the bracelet, the spot to house it needed to be enlarged. The board is located on the inner wrist and connects to the touch element with a short flat wire cable along the bracelet's surface. It is powered by a micro USB cable attached on the lower rim of the bracelet. %TODO write nice, add pic
 
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256
