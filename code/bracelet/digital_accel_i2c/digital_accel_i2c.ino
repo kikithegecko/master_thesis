@@ -44,12 +44,15 @@
 #define TAP_Z_SINGLE_EN 0xD0
 #define TAP_Z_DOUBLE_EN 0xE0
 #define TAP_Z_S_MASK 0xC0
-#define TAP_Z_D_MASK 0xC8
+#define TAP_Z_D_MASK 0xC8ttslider
 #define HPF_EN_MASK  0x10
 
 /* Gesture Recognizer Configuration */
 #define SAMPLE_SIZE 150 //number of samples per Gesture
 #define DELAY_SIZE 10 //delay betweeen two samples
+
+/* Capacitive Touch Configuration */
+#define SEGMENT_COVER_THRESH 10 //number of cycles before a touch segment counts as touched !!!check this if delay functions are removed!
 
 struct AccelData{
   int x;
@@ -60,7 +63,7 @@ struct AccelData{
 AccelData gesture[SAMPLE_SIZE];
 SoftwareSerial bluetooth(BT_RX, BT_TX);
 const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, TOUCH_7};
-TouchSlider slider(7, TOUCH_PINS);
+TouchSlider tslider(7, TOUCH_PINS);
 int touch_state[7]; //contains information on how long a touch element has been pressed
 
 /* Wrapper Function for Reading the Contents of a Register */
@@ -138,7 +141,7 @@ struct AccelData get_acceleration_data(){
 /* When a Pulse was detected, this checks if it was a
  * single or double tap and does stuff in each case.
  */
-void process_pulse(uint8_t register_data){
+int process_pulse(uint8_t register_data){
   if(register_data & TAP_Z_S_MASK){ 
     if(register_data & 0x08){
       //signal double tap)
@@ -165,6 +168,7 @@ void process_pulse(uint8_t register_data){
       }
       analogWrite(LED_R, 0);
       Serial.println("end recording");
+      return 2; //double tap
     }
     else{
       //signal single tap
@@ -172,7 +176,11 @@ void process_pulse(uint8_t register_data){
       delay(200);
       analogWrite(LED_G, 0);
       Serial.println("single tap");
+      return 1; //single tap
     }
+  }
+  else{
+    return 0; //no tap
   }  
 }
 
@@ -180,7 +188,7 @@ void process_rotation(){
   float rotation[4]; //magic number!
   int i = 0;
   int rotation_count = 0;
-  int shortest_hold = 0;
+  int mean_hold = 0;
   int debounce_onoff = 0;
   
   while(isCovered()){  
@@ -204,13 +212,11 @@ void process_rotation(){
       //TODO dim
     }
     i = (i + 1) % 4;
-    shortest_hold = touch_state[0];
-    for(int k = 1; k < 7; k++){
-      if(touch_state[k] > shortest_hold){
-        shortest_hold = touch_state[k];
-      }
+    for(int k = 0; k < 7; k++){
+      mean_hold += touch_state[i];
     }
-    if((debounce_onoff == 0) && (shortest_hold > 75) && (rotation_count < 10)){ //magic numbers!
+    mean_hold /= 7;
+    if((debounce_onoff == 0) && (mean_hold > 150) && (rotation_count < 10)){ //magic numbers!
       Serial.println("ON/OFF");
       debounce_onoff = 1;
       //TODO on/off
@@ -220,9 +226,9 @@ void process_rotation(){
 }
 
 int isCovered(){
-  slider.read();
+  tslider.read();
   for(int i = 0; i < 7; i++){
-    int val = slider.getValue(i);
+    int val = tslider.getValue(i);
     if(val > 200){ //contact
       touch_state[i]++;
     }
@@ -232,7 +238,7 @@ int isCovered(){
   }
   int segments_covered = 0;
   for(int i = 0; i < 7; i++){
-    if(touch_state[i] > 10){ //magic number -.-
+    if(touch_state[i] > SEGMENT_COVER_THRESH){
       segments_covered++;
     }
   }
@@ -242,6 +248,56 @@ int isCovered(){
   else{
     return 0;
   }
+}
+
+void process_mood_change(int param){
+  //TODO change mood
+}
+
+void process_hue_change(){
+  int pos = -1;
+  int tap_detect = 0;
+  int8_t pulse_data = 0;
+  int hue = 0;
+  int sat = 0;
+  int val = 0;
+  int state = 0; //0 = hue, 1 = sat, 2 = val
+  
+  Serial.println("Now slide for Hue!");
+  while(state < 3){
+    tslider.read();
+    pos = tslider.getSliderPosition(); //ranges roughly from 22 to 75
+    if(pos != -1){
+      pos = (pos - 20) * (255 / (75-20)); //map values to byte range
+      Serial.println(pos);
+      if(state == 0){
+        hue = pos;
+      }
+      else if(state == 1){
+        sat = pos;
+      }
+      else{
+        val = pos;
+      }
+      change_color_hsv(hue, sat, val);
+      //change to sat/val by tap recognition
+      pulse_data = read_reg(PULSE_SRC);
+      if(pulse_data & 0x80){
+        tap_detect = process_pulse(pulse_data);
+      }
+      if(tap_detect == 1){
+        Serial.println("Next");
+        state++;
+        tap_detect = 0;
+      }
+    }
+    delay(10);
+  }
+  Serial.println("Done!");
+}
+
+void change_color_hsv(int hue, int sat, int val){
+  //TODO convert to RGB and send to lamp
 }
 
 /* The usual setup stuff, setting pins, configuring the accelerometer
@@ -307,35 +363,57 @@ void loop(){
     process_pulse(pulse_data);
   }
   
+  /* bluetooth stuff, doesn't work yet */
   if (bluetooth.available())
     Serial.write(bluetooth.read());
   if (Serial.available())
     bluetooth.write(Serial.read());
-    
-  slider.read();
+  
+  
+  /* capacitive touch stuff */  
+  tslider.read();
 
   for(int i = 0; i < 7; i++){
-    int val = slider.getValue(i);
+    int val = tslider.getValue(i);
     if(val > 200){
       //touch at i
+      //Serial.print("Touch at ");
+      //Serial.println(i);
       touch_state[i]++;
     }
     else if(touch_state[i] > 0){ //touch released
       touch_state[i] = 0;
     }
   }
+  
   //check for "cover touch"
   int segments_covered = 0;
   for(int i = 0; i < 7; i++){
-    if(touch_state[i] > 10){ //magic number -.-
+    if(touch_state[i] > SEGMENT_COVER_THRESH){
       segments_covered++;
     }
   }
   if(segments_covered >= 6){
-    process_rotation();
+    process_rotation(); // <---!
     for(int i = 0; i < 7; i++){
       touch_state[i] = 1;
     }
-  }  
+  }
+
+  //check for "mood change touch"
+  if((touch_state[1] > 2*SEGMENT_COVER_THRESH) && (touch_state[2] > 2*SEGMENT_COVER_THRESH)){ //mood segment right
+    Serial.println("Mood right");
+    process_mood_change(1);
+  }
+  else if((touch_state[4] > 2*SEGMENT_COVER_THRESH) && (touch_state[5] > 2*SEGMENT_COVER_THRESH)){ //mood segment left
+    Serial.println("Mood left");
+    process_mood_change(-1);
+  }
+  
+  //check for hue change activation touch (middle segment)
+  if(touch_state[3] > 2*SEGMENT_COVER_THRESH){
+    Serial.println("Hue");
+    process_hue_change();
+  }
   delay(10);
 }
