@@ -61,7 +61,7 @@ AccelData gesture[SAMPLE_SIZE];
 SoftwareSerial bluetooth(BT_RX, BT_TX);
 const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, TOUCH_7};
 TouchSlider slider(7, TOUCH_PINS);
-int touch_state[7]; 
+int touch_state[7]; //contains information on how long a touch element has been pressed
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -179,6 +179,9 @@ void process_pulse(uint8_t register_data){
 void process_rotation(){
   float rotation[4]; //magic number!
   int i = 0;
+  int rotation_count = 0;
+  int shortest_hold = 0;
+  int debounce_onoff = 0;
   
   while(isCovered()){  
     AccelData data = get_acceleration_data();
@@ -189,23 +192,29 @@ void process_rotation(){
     //look for twist
     float delta = rotation[((i-1) % 4)] - rotation[i];
     if((delta > 0.5) && (rotation[i] < -30.0)){ //more light
-      Serial.print("<-- | ");/*
-      Serial.print(rotation[(i-1) % 4]);
-      Serial.print(" - ");*/
+      Serial.print("<-- | ");
       Serial.println(rotation[i]);
-      //Serial.print(" = ");*/
-      //Serial.println(delta);
+      rotation_count++;
+      //TODO dim
     }
     else if((delta < -0.5) && (rotation[i] > -10.0)){ //less light
-      Serial.print("--> | ");/*
-      Serial.print(rotation[(i-1) % 4]);
-      Serial.print(" - ");*/
+      Serial.print("--> | ");
       Serial.println(rotation[i]);
-/*      Serial.print(" = ");*/
-      //Serial.println(delta);
-    }   //TODO differentiate on/off
+      rotation_count++;
+      //TODO dim
+    }
     i = (i + 1) % 4;
-    //Serial.println(i);
+    shortest_hold = touch_state[0];
+    for(int k = 1; k < 7; k++){
+      if(touch_state[k] > shortest_hold){
+        shortest_hold = touch_state[k];
+      }
+    }
+    if((debounce_onoff == 0) && (shortest_hold > 75) && (rotation_count < 10)){ //magic numbers!
+      Serial.println("ON/OFF");
+      debounce_onoff = 1;
+      //TODO on/off
+    }
     delay(10);
   }
 }
@@ -308,20 +317,10 @@ void loop(){
   for(int i = 0; i < 7; i++){
     int val = slider.getValue(i);
     if(val > 200){
-      if(touch_state[i] == 0){
-        //Serial.print("Touch at ");
-        //Serial.println(i);
-      }
+      //touch at i
       touch_state[i]++;
     }
-    else if(touch_state[i] > 0){
-      /*
-      Serial.print("Release of ");
-      Serial.print(i);
-      Serial.print(" after ");
-      Serial.print(touch_state[i]);
-      Serial.println(" cycles");
-      */
+    else if(touch_state[i] > 0){ //touch released
       touch_state[i] = 0;
     }
   }
@@ -333,15 +332,10 @@ void loop(){
     }
   }
   if(segments_covered >= 6){
-    //Serial.println("Cover touch!");
     process_rotation();
-    //TODO: send on/off command
     for(int i = 0; i < 7; i++){
       touch_state[i] = 1;
     }
-    //TODO: differentiate dimming
-  }
-  //Serial.println("");
-  
+  }  
   delay(10);
 }
