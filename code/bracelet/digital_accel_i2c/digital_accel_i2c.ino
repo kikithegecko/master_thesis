@@ -184,6 +184,10 @@ int process_pulse(uint8_t register_data){
   }  
 }
 
+/* After a cover was detected, this function is called.
+ * It differentiates between the on/off hold and the dimming
+ * gesture.
+ */
 void process_rotation(){
   float rotation[4]; //magic number!
   int i = 0;
@@ -225,6 +229,7 @@ void process_rotation(){
   }
 }
 
+/* Checks if the whole touch surface is (still) covered */
 int isCovered(){
   tslider.read();
   for(int i = 0; i < 7; i++){
@@ -250,10 +255,26 @@ int isCovered(){
   }
 }
 
+/* changes the color mood to a given direction,
+ * param indicates the direction
+ */
 void process_mood_change(int param){
   //TODO change mood
 }
 
+/* This function handles the precise color change
+ * by tapping and sliding. Procedure is as follows:
+ * 1. touch and hold the middle segment to activate
+ *    this mode (implemented outside this function)
+ * 2. slide to change hue
+ * 3. tap on the electronics to change to the next
+ *    parameter
+ * 4. slide to set the saturation
+ * 5. tap to confirm
+ * 6. slide to set the value
+ * 7. tap to confirm and exit this mode.
+ * All changes are applied in real-time.
+ */
 void process_hue_change(){
   int pos = -1;
   int tap_detect = 0;
@@ -296,6 +317,9 @@ void process_hue_change(){
   Serial.println("Done!");
 }
 
+/* Takes HSV parameters, transforms them to RGB and sends the result
+ * to the associated lamp.
+ */
 void change_color_hsv(int hue, int sat, int val){
   //TODO convert to RGB and send to lamp
 }
@@ -312,7 +336,7 @@ void setup(){
   digitalWrite(BT_WAKE_HW, HIGH);
   Serial.begin(115200);
   Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
-  bluetooth.begin(115200);
+  bluetooth.begin(2400);
   
   //config stuff
   write_reg(CTRL_REG1, 0x00); //to clear previous config
@@ -343,19 +367,6 @@ void setup(){
 
 
 void loop(){
-  
-  /*
-  if(read_reg(STATUS_REG) & DATA_RDY){
-    struct AccelData data = get_acceleration_data();
-    Serial.print("x: ");
-    Serial.println(data.x / 1024.0);
-    Serial.print("y: ");
-    Serial.println(data.y / 1024.0);
-    Serial.print("z: ");
-    Serial.println(data.z / 1024.0);
-  }
-  */
-  
   //need to save this because data is reset after reading
   uint8_t pulse_data = read_reg(PULSE_SRC);
   
