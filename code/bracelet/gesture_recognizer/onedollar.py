@@ -66,6 +66,8 @@ def resample(points, n):
 	newpoints = [points[0]]
 	for i in range(1, len(points)):
 		dist = distance(points[i-1], points[i])
+		if dist == 0:
+			dist = 0.001
 		if(D + dist) > increment:
 			q = Point()
 			q.x = points[i-1].x + ((increment - D) / dist) * (points[i].x - points[i-1].x)
@@ -375,5 +377,6 @@ def distance_at_angle(points, template, alpha, beta, gamma):
 def path_distance(A, B):
 	d = 0
 	for i in range(len(A)):
-		d = d + distance(A[i], B[i])
+		if i < len(B): #TODO fix this dirty hack
+			d = d + distance(A[i], B[i])
 	return d / len(A)
