@@ -46,19 +46,32 @@ id_correct = [0, 0, 0]
 min_fp = [200, 200, 200]
 id_fp = [0, 0, 0]
 
-templates = [circle[0], circle[66], pigtail[0], pigtail[65], zorro[0], zorro[12]]
+#templates = [circle[0], circle[66], pigtail[0], pigtail[65], zorro[0], zorro[12]]
+templates = [circle[0], pigtail[0],  zorro[0]]
 for k in range(len(data)):
 	cur_list = data[k]
 	for j in range(len(cur_list)):
 		correct_matches = 0
 		false_positives = 0
-		templates[2*k] = cur_list[j]
-		for i in range(len(cur_list)):
-			result = onedollar.recognize(cur_list[i], templates, 100)
-			if (templates.index(result[0]) == 2*k) or (templates.index(result[0]) == 2*k + 1):
-				correct_matches += 1
+		tmpl_index = k * (len(templates) / len(data))
+		templates[tmpl_index] + cur_list[j]
+		for l in range(len(data)): #iterate through all gestures
+			if data[l] == cur_list:
+				is_own = True
 			else:
-				false_positives += 1
+				is_own = False
+			for i in range(len(data[l])):
+				result = onedollar.recognize(data[l][i], templates, 100)
+				if is_own:
+					if templates.index(result[0]) == tmpl_index:
+						correct_matches += 1
+					elif templates.index(result[0]) == tmpl_index + 1:
+						correct_matches += 1
+				else:
+					if templates.index(result[0]) == tmpl_index:
+						false_positives += 1
+					elif templates.index(result[0]) == tmpl_index + 1:
+						false_positives += 1
 		print(names[k] + "[" + str(j) + "]: correct " + str(correct_matches) + " false positives: " + str(false_positives))
 		if correct_matches > max_correct[k]:
 			max_correct[k] = correct_matches
@@ -75,12 +88,14 @@ for k in range(len(data)):
 	print("SUMMARY")
 	print("Best match: " + str(id_correct[k]) + " with " + str(float(max_correct[k])/len(cur_list)) + " (" + str(max_correct[k]) + "/" + str(len(cur_list)) + ") matches")
 	print("Least false positives: " + str(id_fp[k]) + " with " + str(float(min_fp[k])/(len(data[0]) + len(data[1]) + len(data[2]) - len(cur_list))) + " (" + str(min_fp[k]) + "/" + str((len(data[0]) + len(data[1]) + len(data[2]) - len(cur_list))) + ") false positives")
-	#templates[k] = cur_list[0] #reset for equal conditions
+	#templates[k] = cur_list[0] #reset for equal conditions?
+	print("")
 
 print("--------------------")
 print("DONE!")
 print("Best templates are: ")
 for i in range(3):
 	print(names[i] + " template " + str(id_correct[i]) + " with " + str(max_correct[i]) + "/" + str(len(data[i])) + " correct matches")
-print()
+	print(names[i] + " template " + str(id_fp[i]) + " with " + str(min_fp[i]) + "/" + str(len(data[(i+1)%3]) + len(data[(i+2)%3])) + " false positives")
+print("")
 print(":)")
