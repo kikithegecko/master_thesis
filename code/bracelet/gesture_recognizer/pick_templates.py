@@ -47,8 +47,8 @@ id_correct = [0, 0, 0]
 min_fp = [200, 200, 200]
 id_fp = [0, 0, 0]
 
-#templates = [circle[0], circle[66], pigtail[0], pigtail[65], zorro[0], zorro[12]]
-templates = [circle[0], pigtail[0],  zorro[0]]
+templates = [circle[0], circle[52], pigtail[0], pigtail[54], zorro[0], zorro[58]]
+#templates = [circle[0], pigtail[0],  zorro[0]]
 for k in range(len(data)):
 	cur_list = data[k]
 	for j in range(len(cur_list)): # pick new template and substitute
@@ -66,13 +66,13 @@ for k in range(len(data)):
 				if is_own:
 					if templates.index(result[0]) == tmpl_index:
 						correct_matches += 1
-					#elif templates.index(result[0]) == tmpl_index + 1:
-						#correct_matches += 1
+					elif templates.index(result[0]) == tmpl_index + 1:
+						correct_matches += 1
 				else:
 					if templates.index(result[0]) == tmpl_index:
 						false_positives += 1
-					#elif templates.index(result[0]) == tmpl_index + 1:
-						#false_positives += 1
+					elif templates.index(result[0]) == tmpl_index + 1:
+						false_positives += 1
 		print(names[k] + "[" + str(j) + "]: correct " + str(correct_matches) + " false positives: " + str(false_positives))
 		if correct_matches > max_correct[k]:
 			max_correct[k] = correct_matches
