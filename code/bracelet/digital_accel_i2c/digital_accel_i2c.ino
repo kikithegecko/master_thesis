@@ -65,7 +65,9 @@ SoftwareSerial bluetooth(BT_RX, BT_TX);
 const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, TOUCH_7};
 TouchSlider tslider(7, TOUCH_PINS);
 int touch_state[7]; //contains information on how long a touch element has been pressed
-
+int red;
+int green;
+int blue;
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -258,9 +260,55 @@ int isCovered(){
 
 /* changes the color mood to a given direction,
  * param indicates the direction
+ * if param < 0, mood becomes more relaxing/blue
+ * if param > 0, mood becomes more activating (orange/red)
  */
 void process_mood_change(int param){
   //TODO change mood
+  if(param < 0){ //increase blue, decrease red
+    blue++;
+    if(blue > 255){
+      blue = 255;
+    }
+    red--;
+    if(red < 0){
+      red = 0;
+    }
+  }
+  else if(param > 0){ //increase red, decrease blue
+    red++;
+    if(red > 255){
+      red = 255;
+    }
+    blue--;
+    if(blue < 0){
+      blue = 0;
+    }
+  }
+  
+  //TODO put this code in a seperate function!
+  Serial.print("LAMP: ");
+  if(red < 100){
+    if(red < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(red);
+  if(green < 100){
+    if(green < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(green);
+  if(blue < 100){
+    if(blue < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.println(blue);
 }
 
 /* This function handles the precise color change
@@ -280,9 +328,9 @@ void process_hue_change(){
   int pos = -1;
   int tap_detect = 0;
   int8_t pulse_data = 0;
-  int hue = 0; //0 to 360
-  int sat = 0; //0 to 1, so we do 0 to 100 
-  int lig = 0; //0 to 1, so we do 0 to 100
+  int hue = 0; //0 to 1
+  int sat = 255; //0 to 1
+  int lig = 128; //0 to 1
   int state = 0; //0 = hue, 1 = sat, 2 = lig
   
   Serial.println("Now slide for Hue!");
@@ -292,18 +340,36 @@ void process_hue_change(){
     if(pos != -1){
       pos -= 20; //get rid of offset
       if(state == 0){
-        hue = pos * (360 / (75-20));
-        Serial.println(hue);
+        hue = pos / 55.0 * 255;
+        if(hue < 0){
+          hue = 0;
+        }
+        if(hue > 255){
+          hue = 255;
+        }
+        //Serial.println(hue);
       }
       else if(state == 1){
-        sat = pos * (100 / (75-20));
-        Serial.println(sat);
+        sat = pos / 55.0 * 255;
+        if(sat < 0){
+          sat = 0;
+        }
+        if(sat > 255){
+          sat = 255;
+        }
+        //Serial.println(sat);
       }
       else{
-        lig = pos * (100 / (75-20));
-        Serial.println(lig);
+        lig = pos / 55.0 * 255;
+        if(lig < 0){
+          lig = 0;
+        }
+        if(lig > 255){
+          lig = 255;
+        }
+        //Serial.println(lig);
       }
-      change_color_hsv(hue, sat, lig);
+      change_color_hsl(hue, sat, lig);
       //change to sat/val by tap recognition
       pulse_data = read_reg(PULSE_SRC);
       if(pulse_data & 0x80){
@@ -324,44 +390,69 @@ void process_hue_change(){
  * to the associated lamp.
  */
 void change_color_hsl(int hue, int sat, int lig){
-  //TODO convert to RGB and send to lamp
-  //Given a color with hue H ∈ [0°, 360°), saturation SHSV ∈ [0, 1], 
-  //and value V ∈ [0, 1], we first find chroma:
-  int chroma = (100 - abs(2*lig-100)) * sat;
-  //Then we can, again, find a point (R1, G1, B1) along the bottom 
-  //three faces of the RGB cube, with the same hue and chroma as 
-  //our color (using the intermediate value X for the second largest 
-  //component of this color):
-  float h = hue / 60.0;
-  int x = int(chroma * (1 - abs(h % 2 - 1)));
-  int m = int(lig - 0.5*chroma);
-  int red = m;
-  int green = m;
-  int blue = m;
-  if(((h >= 0) && (h < 1)) || ((h >= 5) && (h < 6))){
-    red += chroma;
-  }
-  else if(((h >= 4) && (h < 5)) || ((h >= 1) && (h < 2))){
-    red += x;
-  }
-  if(((h >= 0) && (h < 1)) || ((h >= 3) && (h < 4))){
-    green += x;
-  }
-  else if((h >= 1) && (h < 3)){
-    green += chroma;
-  }
-  if(((h >= 2) && (h < 3)) || ((h >= 5) && (h < 6))){
-    blue += x;
-  }
-  else if((h >= 3) && (h < 5)){
-    blue += chroma;
-  }
+  Serial.print("HSL: ");
+  Serial.print(hue);
+  Serial.print(sat);
+  Serial.println(lig);
+  int r, g, b;
+  HSL_to_RGB(hue, sat, lig, &r, &g, &b);
+  
   //TODO check if in range 0-255
   //TODO make sure all values have 3 digits and pad if necessary.
   Serial.print("LAMP: ");
-  Serial.print(red);
-  Serial.print(green);
-  Serial.println(blue);
+  if(r < 100){
+    if(r < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(r);
+  if(g < 100){
+    if(g < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(g);
+  if(b < 100){
+    if(b < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.println(b);
+}
+
+/* taken from http://qscribble.blogspot.de/2008/06/integer-conversion-from-hsl-to-rgb.html */
+void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b)
+{
+    int v;
+
+    v = (lum < 128) ? (lum * (256 + sat)) >> 8 :
+          (((lum + sat) << 8) - lum * sat) >> 8;
+    if (v <= 0) {
+        *r = *g = *b = 0;
+    } else {
+        int m;
+        int sextant;
+        int fract, vsf, mid1, mid2;
+
+        m = lum + lum - v;
+        hue *= 6;
+        sextant = hue >> 8;
+        fract = hue - (sextant << 8);
+        vsf = v * fract * (v - m) / v >> 8;
+        mid1 = m + vsf;
+        mid2 = v - vsf;
+        switch (sextant) {
+           case 0: *r = v; *g = mid1; *b = m; break;
+           case 1: *r = mid2; *g = v; *b = m; break;
+           case 2: *r = m; *g = v; *b = mid1; break;
+           case 3: *r = m; *g = mid2; *b = v; break;
+           case 4: *r = mid1; *g = m; *b = v; break;
+           case 5: *r = v; *g = m; *b = mid2; break;
+        }
+    }
 }
 
 /* The usual setup stuff, setting pins, configuring the accelerometer
