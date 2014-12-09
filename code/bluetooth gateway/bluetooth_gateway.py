@@ -57,6 +57,8 @@ while True:
 		bracelet.write(match)
 	elif line.startswith("LAMP"): #lamp color change command
 		line = bracelet.readline().decode('ascii')
+		#the first 6 chars can be omitted, they are always "LAMP: "
+		line = line[6:]
 		line = line.replace('\r', '')
 		bt.write(line)
 		
