@@ -47,7 +47,8 @@ id_correct = [0, 0, 0]
 min_fp = [200, 200, 200]
 id_fp = [0, 0, 0]
 
-templates = [circle[0], circle[52], pigtail[0], pigtail[54], zorro[0], zorro[58]]
+templates = [circle[0], circle[45], pigtail[0], pigtail[43], zorro[0], zorro[6]]
+blacklist = [[45], [43], [6]]
 #templates = [circle[0], pigtail[0],  zorro[0]]
 for k in range(len(data)):
 	cur_list = data[k]
@@ -74,16 +75,17 @@ for k in range(len(data)):
 					elif templates.index(result[0]) == tmpl_index + 1:
 						false_positives += 1
 		print(names[k] + "[" + str(j) + "]: correct " + str(correct_matches) + " false positives: " + str(false_positives))
-		if correct_matches > max_correct[k]:
-			max_correct[k] = correct_matches
-			id_correct[k] = j
-			print("NEW best match: " + str(max_correct[k]))
-		if false_positives < min_fp[k]:
-			min_fp[k] = false_positives
-			id_fp[k] = j
-			print("NEW least error: " + str(min_fp[k]))
-		if false_positives == 0: #perfect match
-			break
+		if j not in blacklist[k]:
+			if correct_matches > max_correct[k]:
+				max_correct[k] = correct_matches
+				id_correct[k] = j
+				print("NEW best match: " + str(max_correct[k]))
+			if false_positives < min_fp[k]:
+				min_fp[k] = false_positives
+				id_fp[k] = j
+				print("NEW least error: " + str(min_fp[k]))
+			if false_positives == 0: #perfect match
+				break
 		print("--------------------")
 	
 	print("SUMMARY")
