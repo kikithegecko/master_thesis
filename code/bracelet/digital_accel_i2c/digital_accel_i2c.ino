@@ -66,6 +66,7 @@ const int TOUCH_PINS[] = {TOUCH_1, TOUCH_2, TOUCH_3, TOUCH_4, TOUCH_5, TOUCH_6, 
 TouchSlider tslider(7, TOUCH_PINS);
 int touch_state[7]; //contains information on how long a touch element has been pressed
 
+
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
   Wire.beginTransmission(ADDR);
@@ -271,7 +272,7 @@ void process_mood_change(int param){
  *    parameter
  * 4. slide to set the saturation
  * 5. tap to confirm
- * 6. slide to set the value
+ * 6. slide to set the lightness
  * 7. tap to confirm and exit this mode.
  * All changes are applied in real-time.
  */
@@ -279,28 +280,30 @@ void process_hue_change(){
   int pos = -1;
   int tap_detect = 0;
   int8_t pulse_data = 0;
-  int hue = 0;
-  int sat = 0;
-  int val = 0;
-  int state = 0; //0 = hue, 1 = sat, 2 = val
+  int hue = 0; //0 to 360
+  int sat = 0; //0 to 1, so we do 0 to 100 
+  int lig = 0; //0 to 1, so we do 0 to 100
+  int state = 0; //0 = hue, 1 = sat, 2 = lig
   
   Serial.println("Now slide for Hue!");
   while(state < 3){
     tslider.read();
     pos = tslider.getSliderPosition(); //ranges roughly from 22 to 75
     if(pos != -1){
-      pos = (pos - 20) * (255 / (75-20)); //map values to byte range
-      Serial.println(pos);
+      pos -= 20; //get rid of offset
       if(state == 0){
-        hue = pos;
+        hue = pos * (360 / (75-20));
+        Serial.println(hue);
       }
       else if(state == 1){
-        sat = pos;
+        sat = pos * (100 / (75-20));
+        Serial.println(sat);
       }
       else{
-        val = pos;
+        lig = pos * (100 / (75-20));
+        Serial.println(lig);
       }
-      change_color_hsv(hue, sat, val);
+      change_color_hsv(hue, sat, lig);
       //change to sat/val by tap recognition
       pulse_data = read_reg(PULSE_SRC);
       if(pulse_data & 0x80){
@@ -320,8 +323,45 @@ void process_hue_change(){
 /* Takes HSV parameters, transforms them to RGB and sends the result
  * to the associated lamp.
  */
-void change_color_hsv(int hue, int sat, int val){
+void change_color_hsl(int hue, int sat, int lig){
   //TODO convert to RGB and send to lamp
+  //Given a color with hue H ∈ [0°, 360°), saturation SHSV ∈ [0, 1], 
+  //and value V ∈ [0, 1], we first find chroma:
+  int chroma = (100 - abs(2*lig-100)) * sat;
+  //Then we can, again, find a point (R1, G1, B1) along the bottom 
+  //three faces of the RGB cube, with the same hue and chroma as 
+  //our color (using the intermediate value X for the second largest 
+  //component of this color):
+  float h = hue / 60.0;
+  int x = int(chroma * (1 - abs(h % 2 - 1)));
+  int m = int(lig - 0.5*chroma);
+  int red = m;
+  int green = m;
+  int blue = m;
+  if(((h >= 0) && (h < 1)) || ((h >= 5) && (h < 6))){
+    red += chroma;
+  }
+  else if(((h >= 4) && (h < 5)) || ((h >= 1) && (h < 2))){
+    red += x;
+  }
+  if(((h >= 0) && (h < 1)) || ((h >= 3) && (h < 4))){
+    green += x;
+  }
+  else if((h >= 1) && (h < 3)){
+    green += chroma;
+  }
+  if(((h >= 2) && (h < 3)) || ((h >= 5) && (h < 6))){
+    blue += x;
+  }
+  else if((h >= 3) && (h < 5)){
+    blue += chroma;
+  }
+  //TODO check if in range 0-255
+  //TODO make sure all values have 3 digits and pad if necessary.
+  Serial.print("LAMP: ");
+  Serial.print(red);
+  Serial.print(green);
+  Serial.println(blue);
 }
 
 /* The usual setup stuff, setting pins, configuring the accelerometer
