@@ -37,6 +37,7 @@ for i in range(1, 246):
 #print("zorro : " + str(len(zorro)))
 #print("circle: " + str(len(circle)))
 #print("pigtail: " + str(len(pigtail)))
+print("Data conversion successful!")
 
 data = [circle, pigtail, zorro]
 names = ["circle", "pigtail", "zorro"]
@@ -50,12 +51,12 @@ id_fp = [0, 0, 0]
 templates = [circle[0], pigtail[0],  zorro[0]]
 for k in range(len(data)):
 	cur_list = data[k]
-	for j in range(len(cur_list)):
+	for j in range(len(cur_list)): # pick new template and substitute
 		correct_matches = 0
 		false_positives = 0
-		tmpl_index = k * (len(templates) / len(data))
-		templates[tmpl_index] + cur_list[j]
-		for l in range(len(data)): #iterate through all gestures
+		tmpl_index = k * (int(len(templates) / len(data)))
+		templates[tmpl_index] = cur_list[j]
+		for l in range(len(data)): #iterate through all gestures and classify
 			if data[l] == cur_list:
 				is_own = True
 			else:
@@ -65,13 +66,13 @@ for k in range(len(data)):
 				if is_own:
 					if templates.index(result[0]) == tmpl_index:
 						correct_matches += 1
-					elif templates.index(result[0]) == tmpl_index + 1:
-						correct_matches += 1
+					#elif templates.index(result[0]) == tmpl_index + 1:
+						#correct_matches += 1
 				else:
 					if templates.index(result[0]) == tmpl_index:
 						false_positives += 1
-					elif templates.index(result[0]) == tmpl_index + 1:
-						false_positives += 1
+					#elif templates.index(result[0]) == tmpl_index + 1:
+						#false_positives += 1
 		print(names[k] + "[" + str(j) + "]: correct " + str(correct_matches) + " false positives: " + str(false_positives))
 		if correct_matches > max_correct[k]:
 			max_correct[k] = correct_matches
