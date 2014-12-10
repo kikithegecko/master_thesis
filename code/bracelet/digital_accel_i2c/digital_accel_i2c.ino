@@ -381,7 +381,7 @@ void process_hue_change(){
         tap_detect = 0;
       }
     }
-    delay(10);
+    delay(20);
   }
   Serial.println("Done!");
 }
@@ -465,7 +465,7 @@ void setup(){
   pinMode(BT_WAKE_HW, OUTPUT);
   
   digitalWrite(BT_WAKE_HW, HIGH);
-  Serial.begin(115200);
+  Serial.begin(9600);
   Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
   bluetooth.begin(2400);
   
