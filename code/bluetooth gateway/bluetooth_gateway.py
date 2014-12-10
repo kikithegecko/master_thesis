@@ -8,8 +8,10 @@ import serial
 import onedollar
 
 # CONFIG
-BRACELET_ADDR = '/dev/ttyACM0'
-BLUETOOTH_ADDR = '/dev/ttyACM1'
+#BRACELET_ADDR = '/dev/ttyACM0'
+BRACELET_ADDR = 'COM9'
+#BLUETOOTH_ADDR = '/dev/ttyACM1'
+BLUETOOTH_ADDR = 'COM4'
 
 # read gesture data from file
 # each line must contain x, y, z values
@@ -30,13 +32,14 @@ def file2gesture(fname):
 	f.close()
 	return gesture
 
-bracelet = serial.Serial(BRACELET_ADDR, 115200)
-bt = serial.Serial(BLUETOOTH_ADDR, 115200)
+bracelet = serial.Serial(BRACELET_ADDR, 9600)
+bt = serial.Serial(BLUETOOTH_ADDR, 9600)
 templates = []
 #TODO fill templates
 
 while True:
 	line = bracelet.readline().decode('ascii')
+	#print(line)
 	if line == "start recording\r\n": # gesture recognition
 		gesture = []
 		for i in range(150): #current sample size is 150
@@ -56,11 +59,10 @@ while True:
 		#TODO return the corresponding shape
 		bracelet.write(match)
 	elif line.startswith("LAMP"): #lamp color change command
-		line = bracelet.readline().decode('ascii')
 		#the first 6 chars can be omitted, they are always "LAMP: "
 		line = line[6:]
-		line = line.replace('\r', '')
-		bt.write(line)
+		#print(line)
+		bt.write(line.encode())
 		
 		
 		
