@@ -61,10 +61,8 @@ The most important characteristic for silicone in prototype production is the ha
 When dealing with silicone, the Shore A scale is sometimes too "hard" for soft rubbers. Another standard (ISO 7619????) therefore specifies twelve different Durometer types, where the OO scale is commonly used for soft silicones. Figure \ref{fig:shore} shows the three Shore hardness scales A, D, and OO, as well as some examples for everyday objects and their corresponding Shore values.
 
 \begin{figure}[bth]
-	\includegraphics[width=\linewidth]{gfx/durometer}
+	\includegraphics[width=\linewidth]{gfx/durometer_without_logo.pdf}
 	\caption[Shore hardness scales and everyday examples]{Shore types A, D, and OO in comparison with everyday examples of various hardnesses.\cite{smoothon-web}}\label{fig:shore}
-	%http://www.smooth-on.com/images/durometer_with_logo_small_580.jpg
-	%TODO use pdf instead of shitty jpg
 \end{figure}
 
 The silicone rubbers used for casting bracelet prototypes are both located on the Shore A scale. The softer Mold Star 15 Slow has a Shore A hardness of 15 that could be roughly compared to that of a rubber band according to figure \ref{fig:shore}, while the slightly harder Sorta-Clear 37 has a Shore A rating of 37, similar to that of a pencil eraser\cite{moldstar} \cite{sortaclear}.
@@ -172,7 +170,7 @@ The first one-piece bracelet designs included an electrophoretic display and fea
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256 32 bit ARM Cortex-M4 Processor running on 72 MHz clock speed \cite{teensy_web}. The Teensy can be programmed using the popular Arduino IDE and thus can profit from the great amount of existing libraries and code examples for the Arduino family.
 
-Like all Cortex processors, the Teensy's chip has direct capability to process capacitive touch input. It also features an \ac{I2C} module for communication with other components (see also section \ref{sec:accel}), several serial communication ports and an integrated programmer to enable flashing via \ac{USB}. However, the processor includes no floating point computation unit, which slows down calculations that feature floating point numbers. %TODO check facts
+Like all Cortex processors, the Teensy's chip has direct capability to process capacitive touch input. It also features an \ac{I$^2$C} module for communication with other components (see also section \ref{sec:accel}), several serial communication ports and an integrated programmer to enable flashing via \ac{USB}. However, the processor includes no floating point computation unit, which slows down calculations that feature floating point numbers. %TODO check facts
 
 \section{Touch Slider}
 The major input interface of the bracelet is a touch surface which consists of seven cut copper foil segments that are placed in a zigzag pattern. This capacitive strip can either be used as an array of seven individual buttons or as a single large surface that can detect swiping gestures or a primitive variant of multi-touch interaction.
@@ -190,9 +188,29 @@ A zigzagged pattern of the slider's electrodes supports microstepping, i.e. cons
 
 \section{3D Accelerometer}
 \label{sec:accel}
-Another interaction interface of the bracelet is a MMA8652FC three-axis digital accelerometer \cite{datasheet:mma8652}. In a micromachined device like the one used in this thesis, a seismic mass is attached to delicate "springs" in order to measure the acceleration. Both components are usually made of silicone. When an acceleration occurs, the electric capacitance between the seismic mass and the fixed frame changes and the occurring acceleration can be derived accordingly.
+Another interaction interface of the bracelet is a MMA8652FC three-axis digital accelerometer \cite{datasheet:mma8652}. In a micromachined device like the one used in this thesis, a seismic mass is attached to delicate "springs" in order to measure the acceleration. Both components are usually made of silicone. When an acceleration occurs, the electric capacitance between the seismic mass and the fixed frame changes and the occurring acceleration can be derived accordingly. Note that one such mechanism is only able to detect acceleration along a single axis. Since the MMA8652FC is a three-axis accelerometer, it contains on mass-spring-system for each of the three axis.
 %TODO find better source than (German) wikipedia
-%TODO I2C
+
+\begin{figure}[bth]
+	\myfloatalign
+	\includegraphics[width=\linewidth]{gfx/accel.pdf}
+	\label{fig:accel}
+	\caption{Block diagram of the MMA8652FC digital accelerometer. \cite{datasheet:mma8652}}
+\end{figure}
+
+In addition to this basic accelerometer functionality, the MMA8652 also features a range of embedded microprocessing functions, as the component's block diagram (fig. \ref{fig:accel}) depicts. Out of those functions, the "Single, Double \& Directional Tap Detection" was used intensively. This module can detect tap interactions, which can be visualized as spikes in the acceleration along one specific axis. The detection process can be configured in detail to adjust factors like the tap intensity or the duration between the two taps of a double tap. When tap detection is enabled, a single register's content indicates if such a tap has occurred. The detailed configuration used for single and double tap recognition in context of this thesis is discussed in section \ref{sec:config}.
+
+In order to communicate with the bracelet's processor, the accelerometer implements the \ac{I$^2$C} communication protocol which was developed in 1982 by Philips Semiconductor (now NXP Semiconductors) and became public domain in 2006 when the underlying patent expired. By using two lines for a clock signal (\textsc{SCL}) and data transmission (\textsc{SDA}) respectively, data can be interchanged in a master-slave system at varying bit rates. Figure \ref{fig:i2c} illustrates this process. To initiate communication, the Teensy incorporates the role of a master device and begins a transmission by changing the \textsc{SDA} value from high to low while \textsc{SCL} is on high. Now the bus is considered busy until the master sends the stop condition and the actual data request and transmission can take place.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\includegraphics[width=\linewidth]{gfx/i2c.pdf}
+	\label{fig:i2c}
+	\caption{Data transfer on the \ac{I$^2$C} bus. \cite{i2c}}
+\end{figure}
+
+To request register data from the accelerometer, the master writes the address of the desired register on \textsc{SDA}. Note that no further synchronization between master and slave device is needed, since the slave adapts the clock signal on \textsc{SCL} which is determined by the master device. After sending the register's address, the Teensy indicates the end of the transmission without sending a Stop signal. The accelerometer acknowledges the received data and proceeds to send the requested register's contents, and finishes by terminating the connection with a Stop command, which is generated by switching \textsc{SDA} from low to high while \textsc{SCL} is on high. Both lines now stay high due to connected pull-up resistors. If the next register's content is requested, the process starts again with a Start signal transmitted by the master \cite{i2c}.
+%TODO verify
 
 \section{Visual Feedback}
-To provide visual feedback to the user, an RGB \ac{LED} is incorporated in the bracelet. Since most changes are reflected by the light source with no perceptible delay, the \ac{LED} serves mainly as an indicator for the recognition of specific interactions like the double tap detection.
+To provide visual feedback to the user, an \textsc{RGB} \ac{LED} is incorporated in the bracelet. Since most changes are reflected by the light source with no perceptible delay, the \ac{LED} serves mainly as an indicator for the recognition of specific interactions like the double tap detection.
