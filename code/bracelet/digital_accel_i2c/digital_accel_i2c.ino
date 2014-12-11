@@ -68,6 +68,9 @@ int touch_state[7]; //contains information on how long a touch element has been 
 int red;
 int green;
 int blue;
+int last_red;
+int last_green;
+int last_blue;
 
 /* Wrapper Function for Reading the Contents of a Register */
 uint8_t read_reg(uint8_t addr){
@@ -211,12 +214,36 @@ void process_rotation(){
       Serial.println(rotation[i]);
       rotation_count++;
       //TODO dim
+      red = red - red / 10;
+      if(red < 0){
+        red = 0;
+      }
+      green = green - green / 10;
+      if(green < 0){
+        green = 0;
+      }
+      blue = blue - blue / 10;
+      if(blue < 0){
+        blue = 0;
+      }
     }
     else if((delta < -0.5) && (rotation[i] > -10.0)){ //less light
       Serial.print("--> | ");
       Serial.println(rotation[i]);
       rotation_count++;
       //TODO dim
+      red = red + red / 10;
+      if(red > 255){
+        red = 255;
+      }
+      green = green + green / 10;
+      if(green > 255){
+        green = 255;
+      }
+      blue = blue + blue / 10;
+      if(blue > 255){
+        blue = 255;
+      }
     }
     i = (i + 1) % 4;
     for(int k = 0; k < 7; k++){
@@ -226,7 +253,20 @@ void process_rotation(){
     if((debounce_onoff == 0) && (mean_hold > 150) && (rotation_count < 10)){ //magic numbers!
       Serial.println("ON/OFF");
       debounce_onoff = 1;
-      //TODO on/off
+      //on/off     
+      if((red != 0) && (blue != 0) && (green != 0){
+        last_red = red;
+        last_green = green;
+        last_blue = blue;
+        red = 0;
+        blue = 0;
+        green = 0;
+      }
+      else {
+        red = last_red;
+        green = last_green;
+        blue = last_blue;
+      }
     }
     delay(10);
   }
@@ -397,8 +437,7 @@ void change_color_hsl(int hue, int sat, int lig){
   int r, g, b;
   HSL_to_RGB(hue, sat, lig, &r, &g, &b);
   
-  //TODO check if in range 0-255
-  //TODO make sure all values have 3 digits and pad if necessary.
+  //make sure all values have 3 digits and pad if necessary.
   Serial.print("LAMP: ");
   if(r < 100){
     if(r < 10){
@@ -494,6 +533,10 @@ void setup(){
   for(int i = 0; i < 7; i++){
     touch_state[i] = 0;
   }
+  //start with white
+  red = 100;
+  green = 100;
+  blue = 100;
 }
 
 
