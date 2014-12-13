@@ -1,19 +1,44 @@
 \chapter{Interaction}
-%TODO explain the interaction concept again
-This chapter describes the various interaction levels with the bracelet in detail and illustrates the respective algorithms.
+The user should be able to interact with the bracelet in different ways, depending on the level of engagement she or she is willing to commit. Tasks that occur frequently should be able to complete in a very casual way, while rather infrequent tasks are allowed to occupy more of the user's attention and cognitive capacity.
+
+As introduced in section \ref{sec:scenario}, the user should be able to turn the lights on or off with a minimum of engagement. A similar amount or only slightly increased complexity in interaction should be required for dimming the lights, because this is also a frequently used function in daily life. More focus could be required for changing the color in a fuzzy way, according to the concept of \textit{mood} one a loose range from calming to stimulating. Changing the exact appearance of the light in terms of color, brightness and saturation however requires concentration and focus on the task, therefore the associated interaction with the bracelet can demand more of the user's engagement. Picking a certain template of presets in light color and setting is also a rather complex cognitive task that would happen infrequently, so associating it with a focused interaction seems appropriate.
+
+\begin{table}
+	\myfloatalign
+	%$\left \Downarrow 
+	\begin{tabularx}{.95\textwidth}{cc}
+		\toprule
+		\tableheadline{Task} & \tableheadline{Associated Interaction}\\ 
+		\midrule
+		switching on/off & covering touch area\\
+		adjusting brightness & covering touch area, twisting the wrist\\
+		fuzzy mood change & touch on two specific segments\\
+		precise color change & combination of touch, slide, tap\\
+		picking preset template & double tap and hand gesture\\
+		\bottomrule
+	\end{tabularx}
+	%\right \downarrow $
+	\caption[Tasks and associated interactions with the bracelet]{Tasks and associated interactions with the bracelet, in ascending complexity of the interaction and decreasing occurrence of the task}  \label{tab:interaction}
+\end{table}
+
+Table \ref{tab:interaction} shows how different interactions correspond to the described tasks. The focus in matching them lies on the required amount of attention needed to successfully complete the interaction as well as on the cognitive load a certain interaction entails. Since switching the lights on or off occurs rather frequently, a very simple action was associated with it. Covering the whole touch area of the bracelet for a few moments will trigger the on or off function of the device. When twisting the hand while covering said area, the light dims accordingly. More complex tasks have more difficult interactions associated with them, for changing the lighing \textit{mood} a precise touch on two neighboring segments is required. This demands either a precise knowledge of the bracelet's shape and the layout of its components, or a concentrated glance at the touch surface in order to choose the right segments. A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does. To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available. The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively.
+
+In the following sections, the various interaction levels with the bracelet and their underlying algorithms will be described in detail.
 
 \section{Pairing the Bracelet with a Light Source}
-The bracelet's Bluetooth device automatically searches for nearby devices and connects to a range of matching IDs without any interaction or confirmation by the user. This can pose a security risk to spoofing a lamp device, but since no sensitive data is handled by either participant, the impact would rather be an annoying disturbance than a serious threat to privacy.
+The bracelet's Bluetooth module automatically searches for nearby devices and connects to a range of matching IDs without any interaction or confirmation by the user. This can pose a security risk to spoofing a lamp device, but since no sensitive data is handled by either participant, the impact would rather be an annoying disturbance than a serious threat to privacy.
 
 \section{Switching the Light Source on and off}
-Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand and holding for a few seconds will result in switching the lights on or off, dependent on the current state.
+Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand and holding for approximately 1.5 seconds will result in switching the lights on or off, dependent on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
+
+While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
 
 \section{Adjusting the Light Source's Brightness}
 Apart from switching the lights on or off, a change in brightness is the second most desired interaction in the smart lighting scenario. For example, the incentive of watching TV in the living room benefits from a dimmed light setting. However, if the user fails to locate the remote control for the television, a quick dim interaction towards brighter light facilitates the search for the missing remote control. After the item is found, the brightness level of the room's lighting can easily be dimmed back to the desired setting.
 
 The dimming interaction is different from the other use cases, since there exists a physical solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
 
-The intention was to preserve this association to make the interaction with the bracelet more intuitively. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
+The intention was to preserve this association to make the interaction with the bracelet more intuitively. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness. Just as the on/off function, the brightness adjustment has a tolerance of one covered segment.
 
 %TODO source for mood http://www.amsciepub.com/doi/abs/10.2466/pms.1985.60.2.550?journalCode=pms
 %TODO source for mood http://www.jstor.org/stable/1419412?seq=6
@@ -24,33 +49,50 @@ In addition to the brightness, users should be able to change the \textit{mood} 
 \section{Precise Touch Input for Color Change}
 
 \section{Template picking by Gesture Recognition}
-%TODO explain one-dollar and three-dollar
-%TODO explain 3-dimensional GSS
-%TODO explain gesture recognition indication (double tap)
-The most casual form of interaction with the bracelet is by drawing gestures in the air to trigger basic operations, e.g. switching a light source on or off. These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
+The last form of interaction with the bracelet is by drawing gestures in the air to trigger preset color and brightness configurations. A "Z"-shaped gesture changes to a bright white light which is ideal for working, e.g. while preparing a meal in the kitchen or cleaning the house. The second gesture is a circle drawn in the air, which switches to a soft, warm-colored and slightly dimmed setting which is suitable for relaxing activities like reading or watching TV. The third gesture is a pigtail-like looping which triggers a colorful, dark purple, lounge-like setting. The gestures are depicted in \ref{fig:gestures} and the exact values for the red, green and blue channels of the lamp are listed in table \ref{tab:colors}.
 
-After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}). %TODOwe have fixed # of samples. is this necessary?
+\begin{table}
+	\myfloatalign
+	\begin{tabularx}{.8\textwidth}{ccccc}
+		\toprule
+		\tableheadline{Gesture} & \tableheadline{Association} & \tableheadline{Red} & \tableheadline{Green} & \tableheadline{Blue}\\ 
+		\midrule
+		Z & Work & $ 255 $ & $ 255 $ & $ 255 $\\
+		Circle & Relax & ??? & ??? & ???\\
+		Pigtail & Lounge & ??? & ??? & ???\\
+		\bottomrule
+	\end{tabularx}
+	\caption[Color presets for gesture activation]{Color presets and associations for gesture activation}  \label{tab:colors}
+\end{table}
 
-\begin{lstlisting}[label=lst:resample,language=python,frame=lt,caption=Resampling of a points path into N evenly spaced points]
-def resample(points, N):
-	I = path_length(points) / (N - 1)
-	D = 0
-	newpoints = points[:1]
-	for i in range(1, len(points)):
-		dist = distance(points[i-1], points[i])
-		if(D + dist) > I:
-			q = points[i-1] + ((I - D)/dist) * (points[i] - points[i-1])
-			newpoints.append(q)
-			D = distance(q, points[i])
-		else:
-			D = D + dist
-	if(D + dist) > increment: #append last point manually
-		q = newpoints[-1] + ((increment - D) / dist) * (points[i] - newpoints[-1])
-		newpoints.append(q)
-	return newpoints
-\end{lstlisting}
+These gestures are recorded by the bracelet's accelerometer and processed using the ``3\$ Gesture Recognizer'' \cite{Kratz2010}, an extension of the popular ``1\$ Recognizer'' by Wobbrock et. al \cite{Wobbrock2007}. The algorithm is explained in detail in the following paragraphs.
 
-In the next step, the gesture is prepared for matching against the templates by rotating it to a specific position. The so called \textit{indicative angle} $\theta$ between the gesture's centroid $C$ and its first point is calculated using the normalized scalar product of the centroid and the first point's position vectors. Afterwards the gesture is rotated so that $\theta$ is at $0\degree$. Wobbrock et. al. do this by using the inverse tangens function, however this is not possible in 3D space. Hence, \textit{Rodrigues' rotation formula} (named after French mathematician Olinde Rodrigues) was implemented instead. This efficient algorithm for rotating a vector in $\mathbb{R}^3$ takes the rotation angle $\theta$ as well as the axis unit vector $k$ as input, and calculates the following formula:
+Gesture recognition is triggered by double tapping on the bracelet's back side (for a more detailed specification of the tap recognition, see section \ref{sec:config}). This focused activation was chosen to prevent accidental triggering of the gesture recognition procedure while gesturing heavily, e.g. during a conversation. A little more effort in starting this rather rarely used feature is preferred over a higher false positive rate in gesture recognition triggering. After a double tap was detected, the \ac{LED} indicates with a red glow that acceleration data is recorded while the next $150$ samples are saved for the gesture recognition algorithm.
+
+Wobbrock as well as Kratz start their processing with a resampling step to compensate for different speeds in drawing the gesture. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. Therefore, the gesture is resampled to a sixed number of points before other processing takes place. Since the implementation in this thesis always records a fixed number of samples, this step is omitted. This can lead to cut off gestures when drawn too slowly or added noise at the end of a data set if the gesture was drawn too quickly. While recording test samples with various people, the record period however seemed appropriate for most gestures that were executed.
+
+%After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}). %TODOwe have fixed # of samples. is this necessary?
+
+%\begin{lstlisting}[label=lst:resample,language=python,frame=lt,caption=Resampling of a points path into N evenly spaced points]
+%def resample(points, N):
+%	I = path_length(points) / (N - 1)
+%	D = 0
+%	newpoints = points[:1]
+%	for i in range(1, len(points)):
+%		dist = distance(points[i-1], points[i])
+%		if(D + dist) > I:
+%			q = points[i-1] + ((I - D)/dist) * (points[i] - points[i-1])
+%			newpoints.append(q)
+%			D = distance(q, points[i])
+%		else:
+%			D = D + dist
+%	if(D + dist) > increment: #append last point manually
+%		q = newpoints[-1] + ((increment - D) / dist) * (points[i] - newpoints[-1])
+%		newpoints.append(q)
+%	return newpoints
+%\end{lstlisting}
+
+In the next step, the gesture is prepared for matching against the templates by rotating it to a specific position. The so called \textit{indicative angle} $\theta$ between the gesture's centroid $C$ and its first point of the data set is calculated using the normalized scalar product of the centroid and the first point's position vectors. Afterwards the gesture is rotated so that $\theta$ is at $0\degree$. Wobbrock et. al. do this by using the inverse tangents function, however this is not possible in 3D space. Hence, \textit{Rodrigues' rotation formula} (named after French mathematician Olinde Rodrigues) was implemented instead. This efficient algorithm for rotating a vector in $\mathbb{R}^3$ takes the rotation angle $\theta$ as well as the axis unit vector $k$ as input, and calculates the following formula:
 
 \begin{center}
 \(
@@ -68,7 +110,7 @@ def rotate_to_zero(points):
 	return newpoints
 \end{lstlisting}
 
-In order to harmonize gestures of different sizes, the points are scaled to a reference cube with edge length of $100$ units and translated so that the respective centroid $C$ is on the origin (cf. listing \ref{lst:scale+translate}).
+In order to harmonize gestures of different sizes which represent slow or quick movements, the points are scaled to a reference cube with edge length of $100$ units and translated so that the respective centroid $C$ is on the origin (cf. listing \ref{lst:scale+translate}).
 
 \begin{lstlisting}[label=lst:scale+translate,language=python,frame=lt,caption=Scaling to reference cube and translation to origin]
 def scale_and_translate(points, size): # size=100
@@ -105,11 +147,13 @@ The candidate is compared to all stored templates using the average \ac{MSE} as 
 The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953  and is conceptualized to find the minimum value $x^*$ of a unimodal function $f(x)$ in a given interval $[a,b]$ \cite{Kiefer1953}. Two function points $f(x_1)$ and $f(x_2)$ with 
 \[ x_1=a+(1-\phi)(b-a) \\
 x_2=a+\phi(b-a) \]
-are calculated and compared, where $\phi=2/(1+\sqrt{5})$ denotes the Golden Section constant. If $f(x_1) < f(x_2)$, the interval for the next iteration becomes $[a,x_1]$ and the new test points are calculated as described above with respect to the new interval borders. Note that the value $f(x_1)$ can be reused \cite{chang2009n}. If $f(x_1) > f(x_2)$, the interval for the next iteration step changes to $[x_2, b]$ respectively. If the function points differ not more than a given $x_\Delta$, the current minimum will be accepted as the algorithm's result.
+are calculated and compared, where 
+\[\phi=2/(1+\sqrt{5})\]
+denotes the Golden Section constant. If $f(x_1) < f(x_2)$, the interval for the next iteration becomes $[a,x_1]$ and the new test points are calculated as described above with respect to the new interval borders. Note that the value $f(x_1)$ can be reused \cite{chang2009n}. If $f(x_1) > f(x_2)$, the interval for the next iteration step changes to $[x_2, b]$ respectively. If the function points differ not more than a given $x_\Delta$, the current minimum will be accepted as the algorithm's result.
 
-In the context of the implemented gesture recognizer, the function to be minimized is the distance between a gesture candidate and a certain template at the best angle. Since the recognizer works with three-dimensional data, there is not a single angle for rotation, but one fir each coordinate axis. Hence, the \ac{GSS} needs to be adapted for three dimensions.
+In the context of the implemented gesture recognizer, the function to be minimized is the distance between a gesture candidate and a certain template at the best angle. Since the recognizer works with three-dimensional data, there is not a single angle for rotation, but one for each coordinate axis. Hence, the \ac{GSS} needs to be adapted for three dimensions.
 
-As listing \ref{lst:daba} illustrates, the three-dimensional approach is similar to the one-dimensional algorithm. Each of the variables $\alpha$, $ \beta $, $ \gamma $ has its own search interval and a pair of calculated values. This leads to eight function points to be evaluated in each iteration, denoted in the code by variables \texttt{f1} to \texttt{f8}. The minimum of these values is calculated and the intervals adjusted accordingly. Note that in every case one function value from the previous step can be carried over, for example when \texttt{f1} is the minimum, its value is used for the new \texttt{f8}.
+As listing \ref{lst:daba} illustrates, the three-dimensional approach is similar to the one-dimensional algorithm. Each of the variables $\alpha$, $\beta$, $\gamma$ has its own search interval and a pair of calculated values. This leads to eight function points to be evaluated in each iteration, denoted in the code by variables \texttt{f1} to \texttt{f8}. The minimum of these values is calculated and the intervals adjusted accordingly. Note that in every case one function value from the previous step can be carried over, for example when \texttt{f1} is the minimum, its value is used for the new \texttt{f8}.
 
 \begin{lstlisting}[label=lst:daba,language=python,frame=lt,caption=Three-dimensional Golden Section Search for finding the best angle between a candidate gesture and a template]
 def distance_at_best_angle(p, t, theta_min, theta_max, theta_delta):
@@ -160,8 +204,8 @@ def distance_at_best_angle(p, t, theta_min, theta_max, theta_delta):
 	return min(f1, f2, f3, f4, f5, f6, f7, f8)
 \end{lstlisting}
 
-To determine the distance between a gesture and a certain template at given angles $ \alpha $, $ \beta $, and $ \gamma $, the gesture is rotated using the Rodrigues rotation formula discussed in the context of the indicative angle above. The rotation formula needs an axis and an angle for executing the rotation, but the \ac{GSS} works with three angles. Therefore, the rotation matrix formed by the angles needs to be transformed into a Euler axis/angle pair for use in the implemented rotation formula. The authors of \cite{Kratz2010} state the following rotation matrix in their reference implementation \cite{repo:3dollar}:
-
+To determine the distance between a gesture and a certain template at given angles $\alpha$, $\beta$, and $\gamma$, the gesture is rotated using the Rodrigues rotation formula discussed in the context of the indicative angle above. The rotation formula needs an axis and an angle for executing the rotation, but the \ac{GSS} works with three angles. Therefore, the rotation matrix formed by the angles needs to be transformed into a Euler axis and angle pair for use in the implemented rotation formula. The authors of \cite{Kratz2010} state the following rotation matrix in their reference implementation \cite{repo:3dollar}:
+%TODO explain euler axis/angle?
 \[
 A = 
 \begin{pmatrix}
@@ -172,7 +216,7 @@ A =
 \]
 
 The Euler rotation angle $ \theta $ is composed by the matrix's diagonal elements.
-\begin{eqnarray*}
+\begin{eqnarray*} %TODO formatting
 \theta & = & \arccos(\frac{1}{2}(A_{11} + A_{22} + A_{33} - 1)) \\
        & = & \arccos(\frac{1}{2}(\cos\alpha\cos\beta+\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma+\cos\beta\cos\gamma-1))
 \end{eqnarray*}
