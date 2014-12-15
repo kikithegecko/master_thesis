@@ -32,9 +32,10 @@ The bracelet's Bluetooth module automatically searches for nearby devices and co
 \label{sec:onoff}
 Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand and holding for approximately $1.5$ seconds will result in switching the lights on or off, depending on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
 
-While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
+While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. See section \ref{sec:dimming} for a specification of the tolerated rotation when covering the touch area. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
 
 \section{Adjusting the Light Source's Brightness}
+\label{sec:dimming}
 Apart from switching the lights on or off, a change in brightness is the second most desired interaction in the smart lighting scenario. For example, the incentive of watching TV in the living room benefits from a dimmed light setting. However, if the user fails to locate the remote control for the television, a quick dim interaction towards brighter light facilitates the search for the missing remote control. After the item is found, the brightness level of the room's lighting can easily be dimmed back to the desired setting.
 
 The dimming interaction is different from the other use cases, since there exists a physical solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
@@ -46,17 +47,48 @@ The intention was to preserve this association to make the interaction with the 
 Note that the accelerometer data must not include a gravity offset. If the observed angle exceeds certain thresholds and the current angle is at least $0.5\degree$ different from the previously measured value, a dimming step is executed and the brightness of all three color channels is reduced or increased by XX percent. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
 
 \section{Changing the Lighting Mood}
-In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel while decreasing the red channel; a touch on the right pair of segments causes the opposite. Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
+In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel by XX percent while decreasing the red channel by YY percent; a touch on the right pair of segments causes the opposite. Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
 
 \section{Precise Touch Input for Color Change}
 %TODO explain rgb and hsl color ranges
-Since adjusting the light color in a rather fuzzy way as described in the previous section is sometimes too imprecise, an additional function for setting the exact light color has been implemented. The RGB color model used by the lamp (cf. chapter \ref{sec:lamp}) is not very intuitive to the average user, so the \ac{HSL} color model was used instead for this interaction.
+Since adjusting the light color in a rather fuzzy way as described in the previous section is sometimes too imprecise, an additional function for setting the exact light color has been implemented. The RGB color model used by the lamp (cf. chapter \ref{sec:lamp}) is not very intuitive to the average user in terms of expressing a specific color in fractions of red, green and blue light, respectively, so the \ac{HSL} color model was used instead for this interaction.
 
 %TODO picture here
 
 While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm listed in listing \ref{lst:hsl2rgb} had to be implemented.
 
-%TODO algorithm here
+%TODO improve readability, explain
+\begin{lstlisting}[label=lst:resample,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
+void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
+	int v;
+	
+	v = (lum < 128) ? (lum * (256 + sat)) >> 8 :
+	(((lum + sat) << 8) - lum * sat) >> 8;
+	if (v <= 0) {
+		*r = *g = *b = 0;
+	} else {
+		int m;
+		int sextant;
+		int fract, vsf, mid1, mid2;
+		
+		m = lum + lum - v;
+		hue *= 6;
+		sextant = hue >> 8;
+		fract = hue - (sextant << 8);
+		vsf = v * fract * (v - m) / v >> 8;
+		mid1 = m + vsf;
+		mid2 = v - vsf;
+		switch (sextant) {
+			case 0: *r = v; *g = mid1; *b = m; break;
+			case 1: *r = mid2; *g = v; *b = m; break;
+			case 2: *r = m; *g = v; *b = mid1; break;
+			case 3: *r = m; *g = mid2; *b = v; break;
+			case 4: *r = mid1; *g = m; *b = v; break;
+			case 5: *r = v; *g = m; *b = mid2; break;
+		}
+	}
+}
+\end{lstlisting}
 
 A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation. Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
 
