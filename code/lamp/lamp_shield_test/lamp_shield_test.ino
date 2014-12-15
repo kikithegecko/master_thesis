@@ -4,8 +4,8 @@
 #define txPin 4
 
 #define RPin 5
-#define GPin 6
-#define BPin 3
+#define GPin 3
+#define BPin 6
 
 int red = 0;
 int green = 0;
@@ -57,7 +57,7 @@ void fade(int newR, int newG, int newB){
     analogWrite(RPin, red);
     analogWrite(GPin, green);
     analogWrite(BPin, blue);
-    delay(10);
+    //delay(10);
   }
 
   red = newR;
@@ -77,17 +77,19 @@ void loop() {
       newGreen = (String(inputString[3]) + String(inputString[4]) + String(inputString[5])).toInt();
       newBlue = (String(inputString[6]) + String(inputString[7]) + String(inputString[8])).toInt();
       
-      //fade(newRed, newGreen, newBlue);
-      red = newRed;
-      green = newGreen;
-      blue = newBlue;
-        
+      fade(newRed, newGreen, newBlue);
+      //red = newRed;
+      //green = newGreen;
+      //blue = newBlue;
+      
+      /*  
       Serial.print("R: ");
       Serial.print(red);
       Serial.print(" G: ");
       Serial.print(green);
       Serial.print(" B: ");
       Serial.println(blue);
+      */
     }
     inputString = "";
     stringComplete = false;

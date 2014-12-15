@@ -39,7 +39,7 @@ templates = []
 
 while True:
 	line = bracelet.readline().decode('ascii')
-	#print(line)
+	print(line.encode())
 	if line == "start recording\r\n": # gesture recognition
 		gesture = []
 		for i in range(150): #current sample size is 150
@@ -61,7 +61,8 @@ while True:
 	elif line.startswith("LAMP"): #lamp color change command
 		#the first 6 chars can be omitted, they are always "LAMP: "
 		line = line[6:]
-		#print(line)
+		line = line.replace('\r','')
+		#print(line.encode())
 		bt.write(line.encode())
 		
 		

@@ -250,11 +250,11 @@ void process_rotation(){
       mean_hold += touch_state[i];
     }
     mean_hold /= 7;
-    if((debounce_onoff == 0) && (mean_hold > 150) && (rotation_count < 10)){ //magic numbers!
+    if((debounce_onoff == 0) && (mean_hold > 100) && (rotation_count < 10)){ //magic numbers!
       Serial.println("ON/OFF");
       debounce_onoff = 1;
       //on/off     
-      if((red != 0) && (blue != 0) && (green != 0){
+      if((red != 0) && (blue != 0) && (green != 0)){
         last_red = red;
         last_green = green;
         last_blue = blue;
@@ -268,6 +268,7 @@ void process_rotation(){
         blue = last_blue;
       }
     }
+    send_to_lamp();
     delay(10);
   }
 }
@@ -326,29 +327,7 @@ void process_mood_change(int param){
     }
   }
   
-  //TODO put this code in a seperate function!
-  Serial.print("LAMP: ");
-  if(red < 100){
-    if(red < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.print(red);
-  if(green < 100){
-    if(green < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.print(green);
-  if(blue < 100){
-    if(blue < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.println(blue);
+  send_to_lamp();
 }
 
 /* This function handles the precise color change
@@ -368,19 +347,29 @@ void process_hue_change(){
   int pos = -1;
   int tap_detect = 0;
   int8_t pulse_data = 0;
-  int hue = 0; //0 to 1
-  int sat = 255; //0 to 1
-  int lig = 128; //0 to 1
+  int hue = 0; //0 to 255
+  int sat = 255; //0 to 255
+  int lig = 128; //0 to 255
   int state = 0; //0 = hue, 1 = sat, 2 = lig
   
   Serial.println("Now slide for Hue!");
   while(state < 3){
+  //change to sat/val by tap recognition
+    pulse_data = read_reg(PULSE_SRC);
+    if(pulse_data & 0x80){
+      tap_detect = process_pulse(pulse_data);
+    }
+    if(tap_detect == 1){
+      Serial.println("Next");
+      state++;
+      tap_detect = 0;
+    }
     tslider.read();
-    pos = tslider.getSliderPosition(); //ranges roughly from 22 to 75
+    pos = tslider.getSliderPosition(); //ranges roughly from 22 to 70
     if(pos != -1){
-      pos -= 20; //get rid of offset
+      pos -= 22; //get rid of offset
       if(state == 0){
-        hue = pos / 55.0 * 255;
+        hue = pos / 52.0 * 255;
         if(hue < 0){
           hue = 0;
         }
@@ -390,7 +379,7 @@ void process_hue_change(){
         //Serial.println(hue);
       }
       else if(state == 1){
-        sat = pos / 55.0 * 255;
+        sat = pos / 52.0 * 255;
         if(sat < 0){
           sat = 0;
         }
@@ -400,7 +389,7 @@ void process_hue_change(){
         //Serial.println(sat);
       }
       else{
-        lig = pos / 55.0 * 255;
+        lig = pos / 52.0 * 255;
         if(lig < 0){
           lig = 0;
         }
@@ -410,16 +399,6 @@ void process_hue_change(){
         //Serial.println(lig);
       }
       change_color_hsl(hue, sat, lig);
-      //change to sat/val by tap recognition
-      pulse_data = read_reg(PULSE_SRC);
-      if(pulse_data & 0x80){
-        tap_detect = process_pulse(pulse_data);
-      }
-      if(tap_detect == 1){
-        Serial.println("Next");
-        state++;
-        tap_detect = 0;
-      }
     }
     delay(20);
   }
@@ -437,29 +416,10 @@ void change_color_hsl(int hue, int sat, int lig){
   int r, g, b;
   HSL_to_RGB(hue, sat, lig, &r, &g, &b);
   
-  //make sure all values have 3 digits and pad if necessary.
-  Serial.print("LAMP: ");
-  if(r < 100){
-    if(r < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.print(r);
-  if(g < 100){
-    if(g < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.print(g);
-  if(b < 100){
-    if(b < 10){
-      Serial.print("0");
-    }
-    Serial.print("0");
-  }
-  Serial.println(b);
+  red = r;
+  green = g;
+  blue = b;
+  send_to_lamp();
 }
 
 /* taken from http://qscribble.blogspot.de/2008/06/integer-conversion-from-hsl-to-rgb.html */
@@ -492,6 +452,32 @@ void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b)
            case 5: *r = v; *g = m; *b = mid2; break;
         }
     }
+}
+
+void send_to_lamp(){
+  //make sure all values have 3 digits and pad if necessary.
+  Serial.print("LAMP: ");
+  if(red < 100){
+    if(red < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(red);
+  if(green < 100){
+    if(green < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.print(green);
+  if(blue < 100){
+    if(blue < 10){
+      Serial.print("0");
+    }
+    Serial.print("0");
+  }
+  Serial.println(blue);
 }
 
 /* The usual setup stuff, setting pins, configuring the accelerometer
@@ -537,6 +523,10 @@ void setup(){
   red = 100;
   green = 100;
   blue = 100;
+  last_red = 100;
+  last_green = 100;
+  last_blue = 100;
+  send_to_lamp();
 }
 
 
@@ -596,7 +586,7 @@ void loop(){
   }
   
   //check for hue change activation touch (middle segment)
-  if(touch_state[3] > 2*SEGMENT_COVER_THRESH){
+  if((touch_state[3] > 2*SEGMENT_COVER_THRESH) && (touch_state[2] < SEGMENT_COVER_THRESH) && (touch_state[4] < SEGMENT_COVER_THRESH)){
     Serial.println("Hue");
     process_hue_change();
   }
