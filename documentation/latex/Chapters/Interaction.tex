@@ -53,7 +53,15 @@ In addition to changing the brightness, the user should be able to adjust the li
 %TODO explain rgb and hsl color ranges
 Since adjusting the light color in a rather fuzzy way as described in the previous section is sometimes too imprecise, an additional function for setting the exact light color has been implemented. The RGB color model used by the lamp (cf. chapter \ref{sec:lamp}) is not very intuitive to the average user in terms of expressing a specific color in fractions of red, green and blue light, respectively, so the \ac{HSL} color model was used instead for this interaction.
 
-%TODO picture here
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[The RGB color model, represented as a cube]
+	{\includegraphics[width=.45\linewidth]{gfx/rgbcube.png}} \quad
+	\subfloat[The \ac{HSL} color model, represented as a cylinder]
+	{\label{fig:bracelet01}%
+		\includegraphics[width=.45\linewidth]{gfx/hslmodel.png}}
+	\caption{Comparison of the RGB and \ac{HSL} color models} %TODO attribution: CC-BY-SA Wikimedia Commons/SharkD
+\end{figure}
 
 While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm listed in listing \ref{lst:hsl2rgb} had to be implemented.
 
