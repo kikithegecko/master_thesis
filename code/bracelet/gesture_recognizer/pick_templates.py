@@ -46,10 +46,13 @@ max_correct = [0, 0, 0]
 id_correct = [0, 0, 0]
 min_fp = [200, 200, 200]
 id_fp = [0, 0, 0]
+best_ratio = [0, 0, 0]
+id_ratio = [0, 0, 0]
 
-templates = [circle[0], circle[45], pigtail[0], pigtail[43], zorro[0], zorro[6]]
-blacklist = [[45], [43], [6]]
-#templates = [circle[0], pigtail[0],  zorro[0]]
+#templates = [circle[0], circle[45], pigtail[0], pigtail[43], zorro[0], zorro[6]]
+#blacklist = [[45], [43], [6]]
+templates = [circle[0], pigtail[0],  zorro[0]]
+blacklist = []
 for k in range(len(data)):
 	cur_list = data[k]
 	for j in range(len(cur_list)): # pick new template and substitute
@@ -75,7 +78,8 @@ for k in range(len(data)):
 					elif templates.index(result[0]) == tmpl_index + 1:
 						false_positives += 1
 		print(names[k] + "[" + str(j) + "]: correct " + str(correct_matches) + " false positives: " + str(false_positives))
-		if j not in blacklist[k]:
+		#if j not in blacklist[k]:
+		if True:
 			if correct_matches > max_correct[k]:
 				max_correct[k] = correct_matches
 				id_correct[k] = j
@@ -84,13 +88,20 @@ for k in range(len(data)):
 				min_fp[k] = false_positives
 				id_fp[k] = j
 				print("NEW least error: " + str(min_fp[k]))
+			if (false_positives != 0) and (correct_matches / false_positives > best_ratio[k]):
+				best_ratio[k] = correct_matches / false_positives
+				id_ratio[k] = j
+				print("NEW best ratio: " + str(best_ratio[k]))
 			if false_positives == 0: #perfect match
+				best_ratio[k] = 1
+				id_ratio[k] = j
 				break
 		print("--------------------")
 	
 	print("SUMMARY")
 	print("Best match: " + str(id_correct[k]) + " with " + str(float(max_correct[k])/len(cur_list)) + " (" + str(max_correct[k]) + "/" + str(len(cur_list)) + ") matches")
 	print("Least false positives: " + str(id_fp[k]) + " with " + str(float(min_fp[k])/(len(data[0]) + len(data[1]) + len(data[2]) - len(cur_list))) + " (" + str(min_fp[k]) + "/" + str((len(data[0]) + len(data[1]) + len(data[2]) - len(cur_list))) + ") false positives")
+	print("Best ratio: " + str(id_ratio[k]) + " with " + str(best_ratio[k]))
 	#templates[k] = cur_list[0] #reset for equal conditions?
 	print("")
 
