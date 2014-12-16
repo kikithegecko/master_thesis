@@ -402,6 +402,18 @@ void process_hue_change(){
     }
     delay(20);
   }
+  analogWrite(LED_G, 255);
+  analogWrite(LED_R, 255);
+  analogWrite(LED_B, 0);
+  delay(100);
+  analogWrite(LED_R, 0);
+  analogWrite(LED_G, 0);
+  delay(50);
+  analogWrite(LED_G, 255);
+  analogWrite(LED_R, 255);
+  delay(100);
+  analogWrite(LED_R, 0);
+  analogWrite(LED_G, 0);
   Serial.println("Done!");
 }
 
@@ -576,11 +588,11 @@ void loop(){
   }
 
   //check for "mood change touch"
-  if((touch_state[1] > 2*SEGMENT_COVER_THRESH) && (touch_state[2] > 2*SEGMENT_COVER_THRESH)){ //mood segment right
+  if((touch_state[1] > 2*SEGMENT_COVER_THRESH) && (touch_state[2] > 2*SEGMENT_COVER_THRESH) && (touch_state[0] < SEGMENT_COVER_THRESH) && (touch_state[3] < SEGMENT_COVER_THRESH)){ //mood segment right
     Serial.println("Mood right");
     process_mood_change(1);
   }
-  else if((touch_state[4] > 2*SEGMENT_COVER_THRESH) && (touch_state[5] > 2*SEGMENT_COVER_THRESH)){ //mood segment left
+  else if((touch_state[4] > 2*SEGMENT_COVER_THRESH) && (touch_state[5] > 2*SEGMENT_COVER_THRESH) && (touch_state[3] < SEGMENT_COVER_THRESH) && (touch_state[6] < SEGMENT_COVER_THRESH)){ //mood segment left
     Serial.println("Mood left");
     process_mood_change(-1);
   }
