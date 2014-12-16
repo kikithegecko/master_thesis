@@ -1,4 +1,4 @@
-\chapter{Interaction} %TODO
+\chapter{Interaction}
 In order to satisfactorily interact with the device, depending on physical, mental or social distractions, the user should be able to use the bracelet in different ways. Tasks that occur frequently should be completed in a very casual way, because tasks with low cognitive requirements are most likely still possible to execute successfully while the user is distracted. Rather infrequent tasks are allowed to demand more of the user's attention and cognitive capacity. If they occur rarely, the dissatisfaction of a failed task because of insufficient focus is not as grave as it would be if the task was a frequent one and if it would thus fail often.
 
 As introduced in section \ref{sec:scenario}, the user should be able to turn the lights on or off with a minimum of engagement, so the task would still be possible while for example physical encumbrance hinders the user from performing more complex interactions. Also, the action should not require more effort than moving to the wall switch and pressing it. 
@@ -55,8 +55,8 @@ Apart from switching the lights on or off, a change in brightness is the second 
 The dimming interaction is different from the other use cases, since there exists a physical solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
 
 The intention was to preserve this association to make the interaction with the bracelet more intuitive. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. The cover check routine is the same as described in section \ref{sec:onoff}, so covering six of the seven segments suffices to activate this function. While the touch surface is covered, the angle of the wrist rotation is constantly measured. From the way the accelerometer is mounted on the bracelet, the relevant axis for rotation is the Y-axis in the accelerometer's coordinate system. The following formula derives an angle $\alpha$ from the acceleration data \cite{Abayarjoo2013}:
-\[ %TODO formatting
-\alpha = tan^{-1}(\frac{y}{\sqrt{x^2 + z^2}}).
+\[ 
+\alpha = tan^{-1}\left(\frac{y}{\sqrt{x^2 + z^2}}\right).
 \]
 Note that the accelerometer data must not include a gravity offset. If the observed angle exceeds certain thresholds and the current angle is at least $0.5\degree$ different from the previously measured value, a dimming step is executed and the brightness of all three color channels is reduced or increased by XX percent. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
 
@@ -115,7 +115,6 @@ void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
 A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation. Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
 
 \section{Template picking by Gesture Recognition}
-%TODO write about template finding
 The last form of interaction with the bracelet is by drawing gestures in the air to trigger preset color and brightness configurations. A "Z"-shaped gesture changes to a bright white light which is ideal for working, e.g. while preparing a meal in the kitchen or cleaning the house. The second gesture is a circle drawn in the air, which switches to a soft, warm-colored and slightly dimmed setting which is suitable for relaxing activities like reading or watching TV. The third gesture is a pigtail-like looping which triggers a colorful, dark purple, lounge-like setting. The gestures are depicted in \ref{fig:gestures} and the exact values for the red, green and blue channels of the lamp are listed in table \ref{tab:colors}.
 
 \begin{table}
@@ -211,12 +210,12 @@ def recognize(points, templates, rescale_size):
 
 The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms od computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
 
-The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953  and is conceptualized to find the minimum value $x^*$ of a unimodal function $f(x)$ in a given interval $[a,b]$ \cite{Kiefer1953}. Two function points $f(x_1)$ and $f(x_2)$ with 
-\[ x_1=a+(1-\phi)(b-a) \\
-x_2=a+\phi(b-a) \]
+The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953  and is conceptualized to find the minimum value $x^*$ of a unimodal function $f\left(x\right)$ in a given interval $\left[a,b\right]$ \cite{Kiefer1953}. Two function points $f(x_1)$ and $f(x_2)$ with 
+\[ x_1=a+\left(1-\phi\right)\left(b-a\right) \\
+x_2=a+\phi\left(b-a\right) \]
 are calculated and compared, where 
-\[\phi=2/(1+\sqrt{5})\]
-denotes the Golden Section constant. If $f(x_1) < f(x_2)$, the interval for the next iteration becomes $[a,x_1]$ and the new test points are calculated as described above with respect to the new interval borders. Note that the value $f(x_1)$ can be reused \cite{chang2009n}. If $f(x_1) > f(x_2)$, the interval for the next iteration step changes to $[x_2, b]$ respectively. If the function points differ not more than a given $x_\Delta$, the current minimum will be accepted as the algorithm's result.
+\[\phi=\frac{2}{\left(1+\sqrt{5}\right)}\]
+denotes the Golden Section constant. If $f\left(x_1\right) < f\left(x_2\right)$, the interval for the next iteration becomes $\left[a,x_1\right]$ and the new test points are calculated as described above with respect to the new interval borders. Note that the value $f\left(x_1\right)$ can be reused \cite{chang2009n}. If $f\left(x_1\right) > f\left(x_2\right)$, the interval for the next iteration step changes to $\left[x_2, b\right]$ respectively. If the function points differ not more than a given $x_\Delta$, the current minimum will be accepted as the algorithm's result.
 
 In the context of the implemented gesture recognizer, the function to be minimized is the distance between a gesture candidate and a certain template at the best angle. Since the recognizer works with three-dimensional data, there is not a single angle for rotation, but one for each coordinate axis. Hence, the \ac{GSS} needs to be adapted for three dimensions.
 
@@ -283,9 +282,9 @@ A =
 \]
 
 The Euler rotation angle $ \theta $ is composed by the matrix's diagonal elements.
-\begin{eqnarray*} %TODO formatting
-\theta & = & \arccos(\frac{1}{2}(A_{11} + A_{22} + A_{33} - 1)) \\
-       & = & \arccos(\frac{1}{2}(\cos\alpha\cos\beta+\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma+\cos\beta\cos\gamma-1))
+\begin{eqnarray*}
+\theta & = & \arccos\left(\frac{1}{2}\left(A_{11} + A_{22} + A_{33} - 1\right)\right) \\
+       & = & \arccos\left(\frac{1}{2}\left(\cos\alpha\cos\beta+\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma+\cos\beta\cos\gamma-1\right)\right)
 \end{eqnarray*}
 The rotation axis vector $ e $ can be derived from $ A $ and $ \theta $ as follows:
 \begin{eqnarray*}
@@ -308,7 +307,7 @@ Gesture recording and recognition is triggered by a gentle double tap on the bra
 
 In order to be recognized as a tap interaction, the initial impulse needs to be at least XX g in intensity. When calibrated like this, jerky movements like suddenly raising the hand at a high speed are correctly not recognized as a tap. However since the threshold is that high, the activation tap needs to be executed directly on the hardware which is located on the inner wrist.
 
-The PULSE\_TMLT register configures the maximum time interval between the  impulse exceeding the threshold on the Z axis and falling back under said threshold. If the mentioned interval lasts at most $6.25 ms$, the interaction is considered as a tap.
+The \texttt{PULSE\_TMLT} register configures the maximum time interval between the  impulse exceeding the threshold on the Z axis and falling back under said threshold. If the mentioned interval lasts at most $6.25 ms$, the interaction is considered as a tap.
 
 After a tap is detected, all impulses in the following $25ms$ are ignored by the detection mechanism. This prevents bouncing effects and detecting multiple taps in a singe tap movement.
 
@@ -319,10 +318,10 @@ The MMA8652FC accelerometer is able to distinguish between single and double tap
 	\begin{tabularx}{\textwidth}{lll} \toprule
 		\tableheadline{Register Name} & \tableheadline{Parameter} & \tableheadline{Value}\\ 
 		\midrule
-		PULSE\_THSZ & Tap Detection Threshold & $100 g$\\ %TODO on +/-8g scale @.063g/LSB
-		PULSE\_TMLT & Interval between Start and End Pulse & $6.25 ms$\\
-		PULSE\_LTCY & Ignore Interval after Detection & $25 ms$\\
-		PULSE\_WIND & Maximum Double Tap Interval & $500ms$ \\
+		\texttt{PULSE\_THSZ} & Tap Detection Threshold & $100 g$\\ %TODO on +/-8g scale @.063g/LSB
+		\texttt{PULSE\_TMLT }& Interval between Start and End Pulse & $6.25 ms$\\
+		\texttt{PULSE\_LTCY} & Ignore Interval after Detection & $25 ms$\\
+		\texttt{PULSE\_WIND} & Maximum Double Tap Interval & $500ms$ \\
 		\bottomrule
 	\end{tabularx}
 	\caption[Tap detection configuration]{Single- and double tap detection configuration for the MMA8652FC digital accelerometer}  \label{tab:tapconf}
