@@ -1,7 +1,13 @@
 \chapter{Interaction} %TODO
-In order to The user should be able to interact with the bracelet in different ways, depending on the level of engagement he or she desires. Tasks that occur frequently should be completed in a very casual way, while rather infrequent tasks are allowed to demand more of the user's attention and cognitive capacity.
+In order to satisfactorily interact with the device, depending on physical, mental or social distractions, the user should be able to use the bracelet in different ways. Tasks that occur frequently should be completed in a very casual way, because tasks with low cognitive requirements are most likely still possible to execute successfully while the user is distracted. Rather infrequent tasks are allowed to demand more of the user's attention and cognitive capacity. If they occur rarely, the dissatisfaction of a failed task because of insufficient focus is not as grave as it would be if the task was a frequent one and if it would thus fail often.
 
-As introduced in section \ref{sec:scenario}, the user should be able to turn the lights on or off with a minimum of engagement. A similar amount of or only slightly increased complexity in interaction should be required for dimming the lights, because this is also a frequently used function in daily life. More focus could be required for changing the color in a fuzzy way, according to the concept of \textit{mood} on a loose range from calming to stimulating. Changing the exact appearance of the light in terms of color, brightness and saturation however requires concentration and focus on the task, therefore the associated interaction with the bracelet can demand more of the user's engagement. Picking a certain template of presets in light color and setting is also a rather complex cognitive task that would happen infrequently, so associating it with a focused interaction seems appropriate.
+As introduced in section \ref{sec:scenario}, the user should be able to turn the lights on or off with a minimum of engagement, so the task would still be possible while for example physical encumbrance hinders the user from performing more complex interactions. Also, the action should not require more effort than moving to the wall switch and pressing it. 
+
+A similar amount of or only slightly increased complexity in interaction should be required for dimming the lights, because this is also a frequently used function in daily life. The analogy of turning a dimmer knob makes this interaction easy to associate with its function. Dimming should be performable while under some degree of distraction, for example while participating in a conversation. Since both hands and a focused rotational movement are needed, acceptable physical distractions quickly reach a tolerance limit.
+
+More focus could be required for changing the color in a fuzzy way, according to the concept of \textit{mood} derived from color psychology, on a loose range from calming to stimulating. Since this function would probably not used very often, an interaction which requires a glance on the device to locate the proper spot for touching is considered reasonable. 
+
+Changing the exact appearance of the light in terms of color, brightness and saturation however requires concentration and focus on the task, therefore the associated interaction with the bracelet can demand more of the user's engagement. Picking a certain template of presets in light color and setting is also a rather complex cognitive task that would happen infrequently, so associating it with a focused interaction seems appropriate.
 
 \begin{table}
 	\myfloatalign
@@ -21,7 +27,15 @@ As introduced in section \ref{sec:scenario}, the user should be able to turn the
 	\caption[Tasks and associated interactions with the bracelet]{Tasks and associated interactions with the bracelet, in ascending complexity of the interaction and decreasing occurrence of the task}  \label{tab:interaction}
 \end{table}
 
-Table \ref{tab:interaction} shows how different interactions correspond to the described tasks. The focus in matching them lies on the required amount of attention needed to successfully complete the interaction as well as on the cognitive load a certain interaction entails. Since switching the lights on or off occurs rather frequently, a very simple action was associated with it. Covering the whole touch area of the bracelet for a few moments will trigger the on or off function of the device. When twisting the hand while covering said area, the light dims accordingly. More complex tasks have more intricate interactions associated with them, for changing the lighting \textit{mood} a precise touch on two neighboring segments of the touch surface is required. This demands either a precise knowledge of the bracelet's shape and the layout of its components, or a concentrated glance at the touch surface in order to choose the right segments. A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does. To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available. The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively.
+Table \ref{tab:interaction} shows how different interactions correspond to the described tasks. The focus in matching them lies on the required amount of attention needed to successfully complete the interaction as well as on the cognitive load a certain interaction entails. 
+
+Since switching the lights on or off occurs rather frequently, a very simple action was associated with it. Covering the whole touch area of the bracelet for a few moments will trigger the on or off function of the device. When twisting the hand while covering said area, the light dims accordingly (cf. figures \ref{fig:onoff}, \ref{fig:dim}). 
+
+More complex tasks have more intricate interactions associated with them, for changing the lighting \textit{mood} a precise touch on two neighboring segments of the touch surface is required. This demands either a precise knowledge of the bracelet's shape and the layout of its components, or a concentrated glance at the touch surface in order to choose the right segments. Figure \ref{fig:mood} depicts this interaction.
+
+A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does (cf. figure \ref{fig:colorchange}). To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available.
+
+The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively. Gesture recognition is triggered with a tap on the bracelet's back, as illustrated in figure \ref{fig:gesturing}.
 
 In the following sections, the various interaction levels with the bracelet and their underlying algorithms will be described in detail.
 
@@ -40,7 +54,7 @@ Apart from switching the lights on or off, a change in brightness is the second 
 
 The dimming interaction is different from the other use cases, since there exists a physical solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
 
-The intention was to preserve this association to make the interaction with the bracelet more intuitively. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. The cover check routine is the same as described in section \ref{sec:onoff}, so covering six of the seven segments suffices to activate this function. While the touch surface is covered, the angle of the wrist rotation is constantly measured. From the way the accelerometer is mounted on the bracelet, the relevant axis for rotation is the Y-axis in the accelerometer's coordinate system. The following formula derives an angle $\alpha$ from the acceleration data \cite{Abayarjoo2013}:
+The intention was to preserve this association to make the interaction with the bracelet more intuitive. The dimming interaction is a combination of twisting the wrist while covering the bracelet's touch surface, imitating the interaction with the wall dimmer. The cover check routine is the same as described in section \ref{sec:onoff}, so covering six of the seven segments suffices to activate this function. While the touch surface is covered, the angle of the wrist rotation is constantly measured. From the way the accelerometer is mounted on the bracelet, the relevant axis for rotation is the Y-axis in the accelerometer's coordinate system. The following formula derives an angle $\alpha$ from the acceleration data \cite{Abayarjoo2013}:
 \[ %TODO formatting
 \alpha = tan^{-1}(\frac{y}{\sqrt{x^2 + z^2}}).
 \]
@@ -60,13 +74,13 @@ Since adjusting the light color in a rather fuzzy way as described in the previo
 	\subfloat[The \ac{HSL} color model, represented as a cylinder]
 	{\label{fig:bracelet01}%
 		\includegraphics[width=.45\linewidth]{gfx/hslmodel.png}}
-	\caption{Comparison of the RGB and \ac{HSL} color models} %TODO attribution: CC-BY-SA Wikimedia Commons/SharkD
+	\caption{Comparison of the RGB and \ac{HSL} color models, CC-BY-SA Michael Horvath}
 \end{figure}
 
-While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm listed in listing \ref{lst:hsl2rgb} had to be implemented.
+While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm listed in listing \ref{lst:hsl2rgb} had to be implemented (\cite{qwertie}, derived from \cite{graphicsgems}).
 
 %TODO improve readability, explain
-\begin{lstlisting}[label=lst:resample,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
+\begin{lstlisting}[label=lst:hsl2rgb,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
 void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
 	int v;
 	
@@ -313,3 +327,11 @@ The MMA8652FC accelerometer is able to distinguish between single and double tap
 	\end{tabularx}
 	\caption[Tap detection configuration]{Single- and double tap detection configuration for the MMA8652FC digital accelerometer}  \label{tab:tapconf}
 \end{table}
+
+Apart from accelerometer calibration, the gesture recognition algorithms needs template gestures, against which the interactively recorded data is matched. Wobbrock et. al. as well as Kratzand Rohs most likely use artificially constructed templates, though neither of them explicitly states this in their work \cite{Wobbrock2007} \cite{Kratz2010}. Constructing artificial templates for 2D stylus-based input is very easy, since the stylus produces a series of lines, rather independently from the used speed or size. When working with accelerometer data however, the recorded data is more heterogeneous, since quickly drawn gestures result in higher amplitudes in the raw data. Since it is very difficult to find the right speed and size to artificially construct template gestures, an empirical approach was used.
+
+Ten gesture executions of each type (Z, circle, and pigtail) were recorded by eight people. Then, one gesture after another was probed as a template and statistics for correct matches as well as false positive matches were recorded. Since gestures with the least false positive rate also share very low matching rates, a ratio of
+\[
+\frac{\text{\# correct matches}}{\text{\# false positives}}
+\]
+was calculated to determine the most representative gestures. The best N gestures according to said metric were chosen as templates for the live gesture detection.
