@@ -10,7 +10,6 @@ In this section, the various methods and tools used for designing and manufactur
 
 \subsection{Computer Aided Design}
 %TODO: references
-%TODO: Illustration
 % http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
 In the beginning of a design iteration, a model of the desired object is drafted with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
@@ -18,7 +17,21 @@ A bracelet's model is based on a circumference sketch. As the human wrist does n
 
 In the next step one or more profile cuts are added to various points along the circumference. They define the thickness and shape of the bracelet at said points. For increased comfort, the bracelet should be as slim as possible, especially on the "backside" below the palm. In more complicated designs, an alternative to complex sketches for the profiles is the creation of multiple, overlaid sketches as a preparation for a subtraction operation in the later process. All profiles need to be fully constrained as well.
 
-After the circumference as well as one or more profiles are added to the design, a first solid is created by sweeping the profile(s) around the circumference curve. This operation creates a basic shape that can be refined further on, typically by chamfering or filleting the edges with respect to increased wearing comfort. If a complex shape is desired, multiple sweeps can be generated and used in boolean operations such as union or subtraction. This is the usual approach for most bracelet designs.
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[Fully constrained inner circumference]
+	{\includegraphics[width=.45\linewidth]{gfx/cad01.png}} \quad
+	\subfloat[Added profile for sweeping around the circumference]
+	{\includegraphics[width=.45\linewidth]{gfx/cad02.png}} \\
+	\subfloat[Result after sweeping]
+	{\includegraphics[width=.45\linewidth]{gfx/cad03.png}} \quad
+	\subfloat[\ac{CAD} model after using a boolean subtraction operation]
+	{\includegraphics[width=.45\linewidth]{gfx/cad04.png}}
+	\caption{Steps in designing a bracelet prototype in FreeCAD.}
+	\label{fig:cad}
+\end{figure}
+
+After the circumference as well as one or more profiles are added to the design, a first solid is created by sweeping the profile(s) around the circumference curve. This operation creates a basic shape that can be refined further on, typically by chamfering or filleting the edges with respect to increased wearing comfort. If a complex shape is desired, multiple sweeps can be generated and used in boolean operations such as union or subtraction. This is the usual approach for most bracelet designs. Figure \ref{fig:cad} illustrates these steps.
 
 The last step in the design process is usually the finishing of the \ac{CAD} model. In the bracelet case, this translates to edge smoothing with chamfer or fillet tools. Smoothed edges increase the overall wearing comfort of a bracelet, so they are very desired on edges that contact with the skin.
 
@@ -84,7 +97,7 @@ To summarize, the uniform thickness made the bracelet feel uncomfortable on the 
 	{\includegraphics[width=.45\linewidth]{gfx/bracelet01-cad.png}} \quad
 	\subfloat[Printed bracelet]
 	{\label{fig:bracelet01}%
-		\includegraphics[width=.45\linewidth]{gfx/bracelet01-print-small.png}}
+	\includegraphics[width=.45\linewidth]{gfx/bracelet01-print-small.png}}
 	\caption{First rigid design with uniform thickness}
 \end{figure}
 
@@ -97,9 +110,13 @@ All in all, a tapered shape felt more comfortable, but the downsides of the mate
 	\subfloat[\ac{CAD} view]
 	{\includegraphics[width=.45\linewidth]{gfx/bracelet02-cad.png}} \quad
 	\subfloat[Printed bracelet]
-	{\label{fig:bracelet02}%
-		\includegraphics[width=.45\linewidth]{gfx/bracelet02-print-small.png}}
+	{\includegraphics[width=.45\linewidth]{gfx/bracelet02-print-small.png}} \\
+	\subfloat[Top view]
+	{\includegraphics[width=.45\linewidth]{gfx/bracelet02-top.png}} \quad
+	\subfloat[End detail]
+	{\includegraphics[width=.45\linewidth]{gfx/bracelet02-detail.png}}
 	\caption{Second design featuring a tapered shape}
+	\label{fig:bracelet02}
 \end{figure}
 
 A modified design of the aforementioned prototype featured a removable lid since the tapered shape made it hard to access the inside space of the bracelet. The lid design was inspired by battery case covers commonly found in remote controls or small electronic devices. It features two rabbets on the one side that support the lid in its place and another, smaller rabbet with a cavity in the material right next to it, so the rabbet can snap just inside the lid gap when it closes.
@@ -139,7 +156,6 @@ Since the manufacturing possibilities at the \ac{HCI} group don't allow for slow
 When an electrophoretic display was considered to be part of the bracelet, the segmented approach became undesired, since in addition to aforementioned difficulties in designing and manufacturing, the usable surface space was relatively small when it came to hosting a single big component like a display. This issue led to further research into various other manufacturing techniques and potential materials for bracelet prototypes, and eventually led to cast silicone.
 
 \subsection{Silicone Bracelet}
-%TODO pictures
 
 After some consideration on a flexible e-ink display, a prototype bracelet made of silicone was considered. The molds used in the casting process were designed and printed just as the bracelets presented in the previous sections. However, designing a mold was significantly more difficult.
 
@@ -151,20 +167,66 @@ Another important aspect of mold design is planning the casting process. Some ty
 
 The first silicone design was a simple strap with an open pocket for the long electrophoretic display which was considered as a feature of the bracelet at that time in the design process. The closing mechanism relied on molded neodymium magnets for which some cavities were featured in the bracelet design.
 
-Mold design turned out a little tricky but finally succeeded. A two-piece mold was printed which needed a little post-processing to fit properly together. To ensure a proper fit when closed, small tongues and grooves were added too the mold parts. The mold's inside was coated with black spray paint to make it a little smoother, but this didn't work as intended so the painting was omitted in future mold making processes. The filling holes featured for the silicone were too small, and the mixture was more viscous than expected, so the first cast failed and resulted in two small end pieces and nothing in between.
+Mold design turned out a little tricky but finally succeeded. A two-piece mold was printed which needed a little post-processing to fit properly together. To ensure a proper fit when closed, small tongues and grooves were added too the mold parts. The mold's inside was coated with black spray paint to make it a little smoother, but this didn't work as intended so the painting was omitted in future mold making processes. The filling holes featured for the silicone were too small, and the mixture was more viscous than expected, so the first cast failed and resulted in two small end pieces and nothing in between. Figure \ref{fig:silicone01} (a)-(c) illustrates some steps in this process.
 
-For following casts, one part of the mold was filled with silicone and closed afterwards; this turned out significantly better. The orientation in which the mold is placed during the dry period is also relevant, as air bubbles would float towards the ``top'' of the mold, leading to instabilities when oriented inappropriately. After the liquid silicone's cure period, getting the cast out of its mold was no problem.
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[Unpainted molds]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-molds.png}} \quad
+	\subfloat[Closed molds with filling holes]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-closed.png}} \\
+	\subfloat[Result after first cast through filling holes]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-broken.png}} \quad
+	\subfloat[Result after second cast by filling the mold directly]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-success.png}} \\
+	\subfloat[Successfully cast bracelet]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-finished.png}} \quad
+	\subfloat[Bracelet with attached magnets]
+	{\includegraphics[width=.45\linewidth]{gfx/silicone01-magnets.png}}
+	\caption{Manufacturing of a silicone bracelet using a two-piece mold}
+	\label{fig:silicone01}
+\end{figure}
 
-This first rubber bracelet design involved a magnet clasp, but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to each other in the design. Apart from that, the silicone felt much more appealing on the skin and was perceived less obstructive while worn on the wrist. The possibility to attach components by placing them in pockets or cavities resulted in thinner bracelets in general.
+For following casts, one part of the mold was filled with silicone and closed afterwards; this turned out significantly better (cf. \ref{fig:silicone01} (d)-(e)). The orientation in which the mold is placed during the dry period is also relevant, as air bubbles would float towards the ``top'' of the mold, leading to instabilities when oriented inappropriately. After the liquid silicone's cure period, getting the cast out of its mold was no problem.
+
+This first rubber bracelet design involved a magnet clasp (see fig. \ref{fig:silicone01} (f)), but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to each other in the design. Apart from that, the silicone felt much more appealing on the skin and was perceived less obstructive while worn on the wrist. The possibility to attach components by placing them in pockets or cavities resulted in thinner bracelets in general.
 
 Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a repulsive color. In addition, the cavity rims were too short, so the display would jump out of place almost instantly when bending the bracelet. With this experience and the positive impressions of the material itself, more silicone designs were produced and manufactured.
 
 \subsection{One-Piece Silicone Bracelet}
-The next design was a ring-like silicone bracelet in one piece, so the issue with closing mechanisms was no concern. The mold for this prototype consisted of three pieces, an outer and an inner ring as well as a bottom plate to properly align those rings. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed in order to retrieve the bracelet. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive assembly and the casting process. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used in some models, especially for the display area to hide cables or bulky connectors.
+The next design was a ring-like silicone bracelet in one piece, so the issue with closing mechanisms was no concern. The mold for this prototype consisted of three pieces, an outer and an inner ring as well as a bottom plate to properly align those rings. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed in order to retrieve the bracelet. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive assembly and the casting process. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used in some models, especially for the display area to hide cables or bulky connectors. Figure \ref{fig:bracelethistory} gives an overview on the various design iterations.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[The first design featured a large cavity for a flexible electrophoretic display]
+	{\includegraphics[width=.45\linewidth]{gfx/history01.png}} \quad
+	\subfloat[The second design introduced a small tunnel]
+	{\includegraphics[width=.45\linewidth]{gfx/history02.png}} \\
+	\subfloat[The third design replaced the display by a touch strip and featured a cavity for the Teensy]
+	{\includegraphics[width=.45\linewidth]{gfx/history03.png}} \quad
+	\subfloat[The final design with varying thickness and a big cavity for the Teensy]
+	{\includegraphics[width=.45\linewidth]{gfx/history04.png}}
+	\caption{History of the one-piece bracelet prototyped manufactured for this thesis}
+	\label{fig:bracelethistory}
+\end{figure}
 
 Those molds were harder to fill with material than the previous one. Especially the Sorta-Clear silicone was too viscous to fill the complete mold, resulting in broken casts. The green MoldStar silicone turned out to work quite well, but sometimes it would leak through little gaps between the rings and the base plate, so a thorough assembly was desired more than ever. Remaining gaps were closed with hot glue in later iterations. In addition, a simple self-made vibrating plate helped filling all parts of the mold and reduced the number of air bubbles in the cast. 
 
 The first one-piece bracelet designs included an electrophoretic display and featured wide cavity rims to hold said display in place. First wearing tests resulted in success. When the display was omitted later on, the cavities stayed to hold a capacitive touch surface in place. After the final hardware configuration took form, another cavity for the electronics was added to the design. Since the hardware was thicker than the bracelet, the spot to house it needed to be enlarged in thickness. The board was eventually placed on the inner wrist and connects to the touch element with a short flat wire cable along the bracelet's surface. It is powered by a micro USB cable attached to a port on the lower rim of the bracelet. A status \ac{LED} is visible through the silicone on the upper rim above the electronics.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[Front view]
+	{\includegraphics[width=.45\linewidth]{gfx/final-front.png}} \quad
+	\subfloat[Back view]
+	{\includegraphics[width=.45\linewidth]{gfx/final-back.png}} \\
+	\subfloat[Top view]
+	{\includegraphics[width=.45\linewidth]{gfx/final-top.png}} \quad
+	\subfloat[Incorporated electronics]
+	{\includegraphics[width=.45\linewidth]{gfx/final-electronics.png}}
+	\caption{The final bracelet prototype}
+	\label{fig:siliconefinal}
+\end{figure}
 
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256 32 bit ARM Cortex-M4 Processor running on 72 MHz clock speed \cite{teensy_web}. The Teensy can be programmed using the popular Arduino IDE and thus can profit from the great amount of existing libraries and code examples for the Arduino family.
@@ -181,9 +243,13 @@ Capacitive touch is based on the concept of a parallel plate capacitor. The copp
 Where $A$ represents the area of the plates, $\epsilon$ is a material constant of the dielectric between the plates and $d$ is the distance between the plates. This shows that the capacitance changes more when the finger is close to the sensor and less when it's farther away.
 
 Touch sliders can be compared to a potentiometer and return an analog value for the finger's position on the slider \cite{Camacho2010}. The usual layout of a touch slider features several neighboring electrodes, in the context of this thesis, a slider with seven electrodes was designed and built, since the Teensy has a restricted number of capacitive sensing enables pins from which some were already in use for other components, since almost all pins of the chip serve multiple functions.
+%TODO center
+\begin{figure}[bth]
+	\includegraphics[width=.7\linewidth]{gfx/touchstrip.png}
+	\caption{The capacitive touch strip used in the final bracelet prototype.}\label{fig:touch}
+\end{figure}
 
-A zigzagged pattern of the slider's electrodes supports microstepping, i.e. considering the logical combinations of multiple electrodes pressed at the same time to achieve a higher resolution in position detection \cite{Camacho2010}.
-%TODO picture
+A zigzagged pattern of the slider's electrodes supports microstepping, i.e. considering the logical combinations of multiple electrodes pressed at the same time to achieve a higher resolution in position detection \cite{Camacho2010}. The touch slider used in this thesis was made using an electronic vinyl cutter with copper tape. The slider is depicted in figure \ref{fig:touch}.
 
 \section{3D Accelerometer}
 \label{sec:accel}

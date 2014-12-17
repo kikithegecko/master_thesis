@@ -44,7 +44,14 @@ The bracelet's Bluetooth module automatically searches for nearby devices and co
 
 \section{Switching the Light Source on and off}
 \label{sec:onoff}
-Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand and holding for approximately $1.5$ seconds will result in switching the lights on or off, depending on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
+Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand (cf. fig. \ref{fig:onoff}) and holding for approximately $1.5$ seconds will result in switching the lights on or off, depending on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
+
+\begin{figure}[bth]
+	\myfloatalign
+	{\label{fig:onoff}%
+		\includegraphics[width=.45\linewidth]{gfx/cover_touch.png}}
+	\caption{Covering and holding the bracelet's touch surface for on/off switching or dimming}
+\end{figure}
 
 While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. See section \ref{sec:dimming} for a specification of the tolerated rotation when covering the touch area. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
 
@@ -61,7 +68,17 @@ The intention was to preserve this association to make the interaction with the 
 Note that the accelerometer data must not include a gravity offset. If the observed angle exceeds certain thresholds and the current angle is at least $0.5\degree$ different from the previously measured value, a dimming step is executed and the brightness of all three color channels is reduced or increased by XX percent. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
 
 \section{Changing the Lighting Mood}
-In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel by XX percent while decreasing the red channel by YY percent; a touch on the right pair of segments causes the opposite. Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
+In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel by XX percent while decreasing the red channel by YY percent; a touch on the right pair of segments causes the opposite (cf. fig. \ref{fig:mood}). Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[Coodling down the light \textit{mood} by increasing the blue channel]
+	{\includegraphics[width=.45\linewidth]{gfx/mood_left.png}} \quad
+	\subfloat[Warming up the light \textit{mood} by increasing the red channel]
+	{\includegraphics[width=.45\linewidth]{gfx/mood_right.png}}
+	\caption{Touch interaction for \textit{mood} change}
+	\label{fig:mood}
+\end{figure}
 
 \section{Precise Touch Input for Color Change}
 %TODO explain rgb and hsl color ranges
@@ -112,7 +129,17 @@ void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
 }
 \end{lstlisting}
 
-A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation. Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
+A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation (cf. fig. \ref{fig:hslinteraction}). Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\subfloat[Activation of the color choosing mode by touching the middle segment]
+	{\includegraphics[width=.45\linewidth]{gfx/hsl_activation.png}} \quad
+	\subfloat[Tapping on the bracelet's back side to switch to the next parameter]
+	{\includegraphics[width=.45\linewidth]{gfx/tap.png}}
+	\label{fig:hslinteraction}
+	\caption{Interaction with the bracelet to precisely set the color}
+\end{figure}
 
 \section{Template picking by Gesture Recognition}
 The last form of interaction with the bracelet is by drawing gestures in the air to trigger preset color and brightness configurations. A "Z"-shaped gesture changes to a bright white light which is ideal for working, e.g. while preparing a meal in the kitchen or cleaning the house. The second gesture is a circle drawn in the air, which switches to a soft, warm-colored and slightly dimmed setting which is suitable for relaxing activities like reading or watching TV. The third gesture is a pigtail-like looping which triggers a colorful, dark purple, lounge-like setting. The gestures are depicted in \ref{fig:gestures} and the exact values for the red, green and blue channels of the lamp are listed in table \ref{tab:colors}.
