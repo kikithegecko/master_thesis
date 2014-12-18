@@ -94,40 +94,63 @@ Since adjusting the light color in a rather fuzzy way as described in the previo
 	\caption{Comparison of the RGB and \ac{HSL} color models, CC-BY-SA Michael Horvath}
 \end{figure}
 
-While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm listed in listing \ref{lst:hsl2rgb} had to be implemented (\cite{qwertie}, derived from \cite{graphicsgems}).
+While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm had to be implemented (\cite{qwertie}, derived from \cite{graphicsgems}). For given hue $H\in \left[ 0\degree , 360\degree \right]$, saturation $S\in \left[ 0, 1\right]$ and lightness $L\in \left[ 0, 1\right]$, the chroma value $C$ is calculated first:
+\[
+C = \left( 1 - \left| 2L-1\right| \right) \times S
+\]
+An intermediate value $X$ is calculated, and, depending on the value of $H$, the values for red, green and blue can be determined.
+\[
+X = C\left( 1 - \frac{H}{60\degree} \mod{2} - 1\right)
+\]
+\[
+\left(R, G, B\right) = \left(m, m, m\right) + 
+\begin{cases}
+(0, 0, 0) &\mbox{if } H \mbox{ is undefined} \\
+(C, X, 0) &\mbox{if } 0 \leq \frac{H}{60\degree} < 1 \\
+(X, C, 0) &\mbox{if } 1 \leq \frac{H}{60\degree} < 2 \\
+(0, C, X) &\mbox{if } 2 \leq \frac{H}{60\degree} < 3 \\
+(0, X, C) &\mbox{if } 3 \leq \frac{H}{60\degree} < 4 \\
+(X, 0, C) &\mbox{if } 4 \leq \frac{H}{60\degree} < 5 \\
+(C, 0, X) &\mbox{if } 5 \leq \frac{H}{60\degree} < 6
+\end{cases}
+\]
+Where $m$ denotes a lightness offset to the color:
+\[
+m = L - \frac{C}{2}
+\]
 
 %TODO improve readability, explain
-\begin{lstlisting}[label=lst:hsl2rgb,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
-void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
-	int v;
-	
-	v = (lum < 128) ? (lum * (256 + sat)) >> 8 :
-	(((lum + sat) << 8) - lum * sat) >> 8;
-	if (v <= 0) {
-		*r = *g = *b = 0;
-	} else {
-		int m;
-		int sextant;
-		int fract, vsf, mid1, mid2;
-		
-		m = lum + lum - v;
-		hue *= 6;
-		sextant = hue >> 8;
-		fract = hue - (sextant << 8);
-		vsf = v * fract * (v - m) / v >> 8;
-		mid1 = m + vsf;
-		mid2 = v - vsf;
-		switch (sextant) {
-			case 0: *r = v; *g = mid1; *b = m; break;
-			case 1: *r = mid2; *g = v; *b = m; break;
-			case 2: *r = m; *g = v; *b = mid1; break;
-			case 3: *r = m; *g = mid2; *b = v; break;
-			case 4: *r = mid1; *g = m; *b = v; break;
-			case 5: *r = v; *g = m; *b = mid2; break;
-		}
-	}
-}
-\end{lstlisting}
+%\begin{lstlisting}[label=lst:hsl2rgb,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
+%void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
+%	int v;
+%	
+%	v = (lum < 128) ? (lum * (256 + sat)) >> 8 :
+%	(((lum + sat) << 8) - lum * sat) >> 8;
+%	if (v <= 0) {
+%		*r = *g = *b = 0;
+%	} else {
+%		int m;
+%		int sextant;
+%		int fract, vsf, mid1, mid2;
+%		
+%		m = lum + lum - v;
+%		hue *= 6;
+%		sextant = hue >> 8;
+%		fract = hue - (sextant << 8);
+%		vsf = v * fract * (v - m) / v >> 8;
+%		mid1 = m + vsf;
+%		mid2 = v - vsf;
+%		switch (sextant) {
+%			case 0: *r = v; *g = mid1; *b = m; break;
+%			case 1: *r = mid2; *g = v; *b = m; break;
+%			case 2: *r = m; *g = v; *b = mid1; break;
+%			case 3: *r = m; *g = mid2; *b = v; break;
+%			case 4: *r = mid1; *g = m; *b = v; break;
+%			case 5: *r = v; *g = m; *b = mid2; break;
+%		}
+%	}
+%}
+%\end{lstlisting}
 
 A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation (cf. fig. \ref{fig:hslinteraction}). Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
 
