@@ -1,21 +1,25 @@
 \chapter{The Bracelet}
 \label{chap:bracelet}
-The interactive bracelet consists of several touch sensors, a motion sensor, a status \ac{LED} and a Bluetooth communication module, all powered by an ARM microcontroller. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
+As presented in the introduction, this thesis aims to design and implement a wrist-worn wearable. Users should interact with it in a casual way, meaning that the interactions are not interrupting the users' current tasks in contrast to typical smartphone interactions that require focus on the display and input. Instead, the frequently used functions for controlling the ambient light should be executed without needing to look at the device, so that additional cognitive and physical load by either social, mental or physical encumbrance does not prevent the user from interacting with the bracelet.
+
+In terms of hardware design, the device should be comfortable to wear, even for a longer period of time. To increase acceptance of potential users, the bracelet should not feel more clumsy than a wristwatch and the material should be skin-friendly. Regarding the interaction design, gestured input as well as a touch sensor that enables sliding interaction need to be included. Although direct feedback of interaction is given by the controlled light source, a minimal form of visual feedback can help the user when in doubt about correctly triggering specific features. In order to communicate with the ambient light, the bracelet needs some form of wireless communication. The device's processor needs to be fast enough to analyze in-air gestures without perceptible delay.
+
+Regarding those constraints, the interactive bracelet consists of several touch sensors, a motion sensor, a status \ac{LED} and a Bluetooth communication module, all powered by an ARM microcontroller. The bracelet's design focuses on wearing comfort, low weight and small error of unintended activation.
 
 \section{Manufacturing Techniques}
 
-All bracelets produced for this thesis were designed using a 3D \ac{CAD} modeler. The first prototypes were 3D printed rigid bodies to wear as armcuffs, but those designs turned out to be too inflexible and uncomfortable to wear. A different material for the bracelets was needed, so a transition from printing to casting with liquid silicone took place. The molds are printed, assembled, filled with silicone and usually destroyed while retrieving the finished cast.
+All bracelets produced for this thesis were designed using a 3D \ac{CAD} modeler. The first prototypes were 3D printed rigid bodies to wear as armcuffs, but those designs turned out to be too inflexible and uncomfortable to wear. The need for a different material for the bracelets arose, so a transition from printing to casting with liquid silicone took place. The molds are printed, assembled, filled with silicone and usually destroyed while retrieving the finished cast.
 
-In this section, the various methods and tools used for designing and manufacturing the bracelet prototypes will be explained in detail.
+This section will explain the various methods and tools used for designing and manufacturing the bracelet prototypes in detail.
 
 \subsection{Computer Aided Design}
 %TODO: references
 % http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
-In the beginning of a design iteration, a model of the desired object is drafted with a 3D \ac{CAD} program. For all designs in the context of this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
+In the beginning of a design iteration, a model of the desired object is created with a 3D \ac{CAD} program. For all designs in this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
-A bracelet's model is based on a circumference sketch. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints until no degrees of freedom are left and thus the model is fully constrained. Only fully constrained models can be successfully exported for printing.
+A bracelet's model is based on a sketch defining the inner circumference of the future bracelet. As the human wrist does not follow a circular shape, all designs made for this thesis are based on an oval circumference. In FreeCAD, this is realized by a composition of arcs and straight lines. It is important to constraint the sketch with radii, lengths and angles as well as symmetries or perpendicular constraints until no degrees of freedom are left and thus the model is fully constrained. If the model is missing some constraints, the export process or the printing of the model can raise errors or alter the design in an unintended way.
 
-In the next step one or more profile cuts are added to various points along the circumference. They define the thickness and shape of the bracelet at said points. For increased comfort, the bracelet should be as slim as possible, especially on the "backside" below the palm. In more complicated designs, an alternative to complex sketches for the profiles is the creation of multiple, overlaid sketches as a preparation for a subtraction operation in the later process. All profiles need to be fully constrained as well.
+In the next step one or more cross sections are added to various points along the circumference. They define the thickness and shape of the bracelet at said points. For increased comfort, the bracelet should be as slim as possible, especially on the ``backside'' below the palm. In more complicated designs, an alternative to complex sketches for the profiles is the creation of multiple, overlaid sketches as a preparation for a subtraction operation in the later process. All profiles need to be fully constrained as well.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -31,24 +35,21 @@ In the next step one or more profile cuts are added to various points along the 
 	\label{fig:cad}
 \end{figure}
 
-After the circumference as well as one or more profiles are added to the design, a first solid is created by sweeping the profile(s) around the circumference curve. This operation creates a basic shape that can be refined further on, typically by chamfering or filleting the edges with respect to increased wearing comfort. If a complex shape is desired, multiple sweeps can be generated and used in boolean operations such as union or subtraction. This is the usual approach for most bracelet designs. Figure \ref{fig:cad} illustrates these steps.
+After the circumference as well as one or more profiles are added to the design, a first solid is created by sweeping the profile(s) around the circumference curve. This operation creates a basic shape that can be refined further on, typically by chamfering or filleting the edges to increase wearing comfort. If a complex shape is desired, multiple sweeps can be generated and used in boolean operations such as union or subtraction. This is the usual approach for most bracelet designs. Figure \ref{fig:cad} illustrates these steps.
 
-The last step in the design process is usually the finishing of the \ac{CAD} model. In the bracelet case, this translates to edge smoothing with chamfer or fillet tools. Smoothed edges increase the overall wearing comfort of a bracelet, so they are very desired on edges that contact with the skin.
+The last step in the design process is usually the finishing of the \ac{CAD} model. In case of the bracelet, this translates to edge smoothing with chamfer or fillet tools. Smoothed edges increase the overall wearing comfort of a bracelet, so they are very desired on edges that contact with the skin.
 
 The finished designs are then exported as mesh files (usually in \ac{STL} format) for printing.
 
 \subsection{3D Printing}
-All prints were manufactured using a ProJet360 3D printer\cite{printer}. When printing an object, the print bed is filled first with a base layer of powder. The powder used by the printer is called VisiJet PXL, a plaster-like substance. After filling the bed, a standard inkjet printhead is cleaned and prepared for the printing process. Immediately after this setup is complete, the additive manufacturing process starts.
-
-The model is created by printing the binder fluid onto the plaster. After each printed layer, a new thin layer of powder is added to the print bed. The ProJet360 allows for a layer thickness of 0.1 mm\cite{datasheet_printer}. This allows even delicate structures without any additional supports, since the printed object is surrounded and therefore supported by plaster powder during the production process. The only drawback of this printing process is that it doesn't support closed, hollow objects since there is no possibility of removing the enclosed excess powder after the process has finished. When designing models for 3D printing, this constraint has to be kept in mind.
+All prints were manufactured using a ProJet360 3D printer\cite{printer}. The model is created by printing the binder fluid onto a plaster-like powder bed in the build area. After each printed layer, a new thin layer of powder is added to the print bed. The ProJet360 allows for a layer thickness of 0.1 mm\cite{datasheet_printer}. This allows even delicate structures without any additional supports, since the printed object is surrounded and therefore supported by plaster powder during the production process. The only drawback of this printing process is that it doesn't support closed, hollow objects since there is no possibility of removing the enclosed excess powder after the process has finished. When designing models for 3D printing, this constraint has to be kept in mind.
 
 The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. The printer offers a cleaning chamber with a pressurized air pistol and a vacuuming system to assist in that task. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid after they were thoroughly cleaned. Prints produced by the ProJet 360 can be infiltrated with one of three different substances with varying characteristics: The ColorBond "instant-cure infiltrant", the two-part StrengthMax infiltrant "ideal for functional models", and the Salt Water Cure "eco-friendly and hazard-free infiltrant"\cite{datasheet_printer}. All prints produced for this thesis were infiltrated with ColorBond.
 
-The infiltration step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load might break them easily. Wall strengths of 1.5 mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the object geometry.
+The infiltration step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load breaks them easily. Wall strengths of $1.5$ mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the object geometry.
 
 \subsection{Silicone Casting}
 %TODO mold making
-%TODO are those the right silicone names?
 % http://www.npl.co.uk/science-technology/mass-and-force/hardness/rubber-hardness
 % https://www.google.com/patents/US1770045
 % http://www.calce.umd.edu/TSFA/Hardness_ad_.htm#3.5
@@ -67,17 +68,17 @@ The most important characteristic for silicone in prototype production is the ha
 		OO & $1.2$ mm in spherical radius & $2.4$ mm & $1.11$ N \\
 		\bottomrule
 	\end{tabularx}
-	\caption[Test setups for Shore hardness types]{Test setups for Shore hardness types A, D, and OO\cite{ASTM2240}}  \label{tab:shore}
+	\caption[Test setups for Shore hardness types]{Test setups for Shore hardness types A, D, and OO \cite{ASTM2240}}  \label{tab:shore}
 \end{table}
 
-When dealing with silicone, the Shore A scale is sometimes too "hard" for soft rubbers. Another standard (ISO 7619????) therefore specifies twelve different Durometer types, where the OO scale is commonly used for soft silicones. Figure \ref{fig:shore} shows the three Shore hardness scales A, D, and OO, as well as some examples for everyday objects and their corresponding Shore values.
+When dealing with silicone, the Shore A scale is sometimes too "hard" for soft rubbers. Another standard therefore specifies twelve different Durometer types, where the OO scale is commonly used for soft silicones \cite{ISO7619}. Figure \ref{fig:shore} shows the three Shore hardness scales A, D, and OO, as well as some examples for everyday objects and their corresponding Shore values.
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/durometer_without_logo.pdf}
-	\caption[Shore hardness scales and everyday examples]{Shore types A, D, and OO in comparison with everyday examples of various hardnesses.\cite{smoothon-web}}\label{fig:shore}
+	\caption[Shore hardness scales and everyday examples]{Shore types A, D, and OO in comparison with everyday examples of various hardnesses. \cite{smoothon-web}}\label{fig:shore}
 \end{figure}
 
-The silicone rubbers used for casting bracelet prototypes are both located on the Shore A scale. The softer Mold Star 15 Slow has a Shore A hardness of 15 that could be roughly compared to that of a rubber band according to figure \ref{fig:shore}, while the slightly harder Sorta-Clear 37 has a Shore A rating of 37, similar to that of a pencil eraser\cite{moldstar} \cite{sortaclear}.
+The silicone rubbers used for casting bracelet prototypes are both located on the Shore A scale. The softer Mold Star 15 Slow has a Shore A hardness of 15 that could be roughly compared to that of a rubber band according to figure \ref{fig:shore}, while the slightly harder Sorta-Clear 37 has a Shore A rating of 37, similar to that of a pencil eraser \cite{moldstar} \cite{sortaclear}.
 
 Both silicone products consist of two compounds that have to be added up and stirred before casting. While the Mold Star silicone has a rather low viscosity, casting the Sorta-Clear requires careful mold design, since it does not distribute well and is rather viscous. A vibrating table can help in filling the mold completely, but nonetheless were casts with the Sorta-Clear silicone much less fruitful, especially for the detailed molds of the one-piece designs (cf. section \ref{sec:silicone-prototypes}).
 
