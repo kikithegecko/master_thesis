@@ -13,7 +13,6 @@ All bracelets produced for this thesis were designed using a 3D \ac{CAD} modeler
 This section will explain the various methods and tools used for designing and manufacturing the bracelet prototypes in detail.
 
 \subsection{Computer Aided Design}
-%TODO: references
 % http://www3.ul.ie/~rynnet/parametricmodellingbasics-solidworks.php
 In the beginning of a design iteration, a model of the desired object is created with a 3D \ac{CAD} program. For all designs in this thesis, the open source \ac{CAD} modeler FreeCAD\cite{freecad} was used. This program classifies itself as a general purpose 3D parametric modeler. A typical work-flow when designing a bracelet is as follows:
 
@@ -44,12 +43,11 @@ The finished designs are then exported as mesh files (usually in \ac{STL} format
 \subsection{3D Printing}
 All prints were manufactured using a ProJet360 3D printer\cite{printer}. The model is created by printing the binder fluid onto a plaster-like powder bed in the build area. After each printed layer, a new thin layer of powder is added to the print bed. The ProJet360 allows for a layer thickness of 0.1 mm\cite{datasheet_printer}. This allows even delicate structures without any additional supports, since the printed object is surrounded and therefore supported by plaster powder during the production process. The only drawback of this printing process is that it doesn't support closed, hollow objects since there is no possibility of removing the enclosed excess powder after the process has finished. When designing models for 3D printing, this constraint has to be kept in mind.
 
-The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. The printer offers a cleaning chamber with a pressurized air pistol and a vacuuming system to assist in that task. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid after they were thoroughly cleaned. Prints produced by the ProJet 360 can be infiltrated with one of three different substances with varying characteristics: The ColorBond "instant-cure infiltrant", the two-part StrengthMax infiltrant "ideal for functional models", and the Salt Water Cure "eco-friendly and hazard-free infiltrant"\cite{datasheet_printer}. All prints produced for this thesis were infiltrated with ColorBond.
+The finished object is then carefully removed from the build bed and any excess powder is gently brushed or blown off. The printer offers a cleaning chamber with a pressurized air pistol and a vacuuming system to assist in that task. Without further hardening, the objects are very fragile and easy to break, even with the pressurized air pistol included in the printer. In order to drastically increase the strength of the prints, they are infiltrated with a fluid after they were thoroughly cleaned. Prints produced by the ProJet 360 can be infiltrated with one of three different substances with varying characteristics: The ColorBond ``instant-cure infiltrant'', the two-part StrengthMax infiltrant ``ideal for functional models'', and the Salt Water Cure ``eco-friendly and hazard-free infiltrant'' \cite{datasheet_printer}. All prints produced for this thesis were infiltrated with ColorBond.
 
 The infiltration step adds strength and hardens the material, resulting in a sturdy printed object. However, the objects created with this technique are very rigid and any bending load breaks them easily. Wall strengths of $1.5$ mm and up have been proven sturdy enough for a bracelet shape, although this also depends on the object geometry.
 
 \subsection{Silicone Casting}
-%TODO mold making
 % http://www.npl.co.uk/science-technology/mass-and-force/hardness/rubber-hardness
 % https://www.google.com/patents/US1770045
 % http://www.calce.umd.edu/TSFA/Hardness_ad_.htm#3.5
@@ -84,7 +82,7 @@ Both silicone products consist of two compounds that have to be added up and sti
 
 \section{Design Process and Prototype Manufacturing}
 
-The design process for the interactive bracelet presented in this thesis went through different stages. At first, a 3D printed casing for the electronics was favored, but turned out to be too inflexible, too fragile and even hindering while worn on the wrist. Later on, a cast silicone bracelet turned out to be more comfortable for the user. The different prototypes are explained in detail in the following sections.
+The design process for the interactive bracelet presented in this thesis went through different stages. At first, a 3D printed casing for the electronics was favored, but turned out to be too rigid, too fragile and even hindering while worn on the wrist. Later on, a cast silicone bracelet turned out to be more comfortable for the user. The different prototypes are explained in detail in the following sections.
 
 \subsection{Rigid Designs}
 
@@ -102,7 +100,7 @@ To summarize, the uniform thickness made the bracelet feel uncomfortable on the 
 	\caption{First rigid design with uniform thickness}
 \end{figure}
 
-In the following iteration, a bracelet of varying thickness was designed to make wearing the prototype more comfortable. The part on top of the wrist was designed to have the highest thickness, since this spot is only rarely disturbing in typical wrist movements and users are likely accustomed to some extra mass on this spot from wearing wristwatches. As the bracelet leads along the arm, its thickness decreases and shrinks to a minimum at the cuff gap. Decreasing the thickness from XX cm to YY cm made the look more appealing and wearing a little less encumbering. At the same time, the wall strength was decreased from X.Y mm to 0.7 mm, which made it very fragile in fabrication and usage, both prints broke during post-processing. Additionally, the possibility of storing electronic components inside the bracelet decreased, since smaller ends featured smaller entrances to the hollow inside. Wearing the cuff while working on a PC felt only slightly uncomfortable, but twisting the hand was still encumbered by the tight-fitting bracelet. 
+In the following iteration, a bracelet of varying thickness was designed to make wearing the prototype more comfortable. The part on top of the wrist was designed to have the highest thickness, since this spot is only rarely disturbing in typical wrist movements and users are likely accustomed to some extra mass on this spot from wearing wristwatches. As the bracelet bends around the arm, its thickness decreases and shrinks to a minimum at the cuff gap. Decreasing the thickness from $10$ mm to $3$ mm made the look more appealing and wearing a little less encumbering. At the same time, the wall strength was decreased from $1$ mm to $0.7$ mm, which made it very fragile in fabrication and usage: Both prints broke during post-processing. Additionally, the possibility of storing electronic components inside the bracelet decreased, since smaller ends featured smaller entrances to the hollow inside. Wearing the cuff while working on a PC felt only slightly uncomfortable, but twisting the hand was still encumbered by the tight-fitting bracelet. 
 
 All in all, a tapered shape felt more comfortable, but the downsides of the material were still present and the improved shape led to less practicability from the engineering point of view. A design goal for future prototypes derived from this prototype was adding more space between the arm and the bracelet to ensure better comfort while wearing it.
 
@@ -132,7 +130,7 @@ A modified design of the aforementioned prototype featured a removable lid since
 	\caption{Third design with removable lid}
 \end{figure}
 
-It turned out that the lid features were designed too fine, especially the flexible part was too thin to work as intended. The lid had to be opened and closed very cautiously and overall, the construction seemed not reliable for daily use. In addition, the rigid shape still lead to clumsiness in wearing the bracelet, so the whole concept of rigid bracelets was left behind.
+It turned out that the lid features were designed too fine, especially the flexible part was too thin to work as intended. The lid had to be opened and closed very cautiously and overall, the construction seemed not reliable for daily use. In addition, the rigid shape still lead to clumsiness in wearing the bracelet, so the whole concept of rigid bracelets was abandoned.
 
 \subsection{Segmented Designs}
 
@@ -154,13 +152,12 @@ The bracelet segments are hollow and open on the side that lays to the wrist. Th
 
 Since the manufacturing possibilities at the \ac{HCI} group don't allow for slow hinges (as the inspiration by Muschke suggests), a different solution for keeping the bracelet closed while worn on the wrist needed to be considered. A magnet clasp with small neodymium magnets was tested, but attaching them turned out to be more difficult than expected. When attached to the inside of the segment tips, the magnetic force was too weak for reliably keeping the bracelet together. Mounting the magnets on the outside of the segments resulted in mounting difficulties, since the magnetic force of neodymium magnets is very strong and frequently resulted in torn glue layers.
 
-When an electrophoretic display was considered to be part of the bracelet, the segmented approach became undesired, since in addition to aforementioned difficulties in designing and manufacturing, the usable surface space was relatively small when it came to hosting a single big component like a display. This issue led to further research into various other manufacturing techniques and potential materials for bracelet prototypes, and eventually led to cast silicone.
+When an electrophoretic display was considered to be part of the bracelet, the segmented approach became undesirable, since in addition to aforementioned difficulties in designing and manufacturing, the usable surface space was relatively small when it came to hosting a single big component like a display. This issue led to further research into various other manufacturing techniques and potential materials for bracelet prototypes, and eventually led to cast silicone.
 
 \subsection{Silicone Bracelet}
+After some consideration on a flexible e-ink display, a prototype brace\-let made of silicone was considered. The molds used in the casting process were designed and printed just as the bracelets presented in the previous sections. However, designing a mold was significantly more difficult.
 
-After some consideration on a flexible e-ink display, a prototype bracelet made of silicone was considered. The molds used in the casting process were designed and printed just as the bracelets presented in the previous sections. However, designing a mold was significantly more difficult.
-
-As with the previous 3d printed prototypes, the bracelet positive was designed first. The flexibility of silicone allows for some features that weren't practical when implemented in rigid material, for example cavities for electronic components. This resulted in overall more complex bracelet concepts. In addition, closing mechanisms like magnets had to be considered in this design stage.
+As with the previous 3D printed prototypes, the bracelet positive was designed first. The flexibility of silicone allows for some features that weren't practical when implemented in rigid material, for example cavities for electronic components. This resulted in overall more complex bracelet concepts. In addition, closing mechanisms like magnets had to be considered in this design stage.
 
 When the \ac{CAD} process for the positive is finished, the mold is designed by adding surrounding geometries to the model and applying boolean difference operations. If reusability is desired for individual mold components or the whole mold, the geometry and constellation of the mold parts needs to be considered and the characteristics of the printed material have to be taken into consideration. For example, tunnels in the resulting silicone bracelet are not possible if the mold should be usable more than once.
 
@@ -188,14 +185,15 @@ Mold design turned out a little tricky but finally succeeded. A two-piece mold w
 	\label{fig:silicone01}
 \end{figure}
 
-For following casts, one part of the mold was filled with silicone and closed afterwards; this turned out significantly better (cf. \ref{fig:silicone01} (d)-(e)). The orientation in which the mold is placed during the dry period is also relevant, as air bubbles would float towards the ``top'' of the mold, leading to instabilities when oriented inappropriately. After the liquid silicone's cure period, getting the cast out of its mold was no problem.
+For following casts, one part of the mold was filled with silicone and closed afterwards; those casts turned out significantly better (cf. \ref{fig:silicone01} (d)-(e)). The orientation in which the mold is placed during the dry period is also relevant, as air bubbles would float towards the ``top'' of the mold, leading to instabilities when oriented inappropriately. After the liquid silicone's cure period, getting the cast out of its mold was no problem.
 
-This first rubber bracelet design involved a magnet clasp (see fig. \ref{fig:silicone01} (f)), but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to each other in the design. Apart from that, the silicone felt much more appealing on the skin and was perceived less obstructive while worn on the wrist. The possibility to attach components by placing them in pockets or cavities resulted in thinner bracelets in general.
+This first rubber bracelet design involved a magnet clasp (see fig. \ref{fig:silicone01} (f)), but it was infeasible to reliably attach magnets to silicone with anything but silicone itself and they would likely jump out of place and snap together if placed too close to each other in the design. Apart from that, the silicone felt much more comfortable on the skin and was perceived less obstructive while worn on the wrist. The possibility of attaching components by placing them in pockets or cavities resulted in thinner bracelets in general.
 
-Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and had a repulsive color. In addition, the cavity rims were too short, so the display would jump out of place almost instantly when bending the bracelet. With this experience and the positive impressions of the material itself, more silicone designs were produced and manufactured.
+Two casts were made, one with each of the available silicone mixtures. The softer one was slightly too soft and in addition, the rims were too short, so the display would jump out of place almost instantly when bending the bracelet. With this knowledge and the positive impressions of the material itself, more silicone designs were produced and manufactured.
 
 \subsection{One-Piece Silicone Bracelet}
-The next design was a ring-like silicone bracelet in one piece, so the issue with closing mechanisms was no concern. The mold for this prototype consisted of three pieces, an outer and an inner ring as well as a bottom plate to properly align those rings. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed in order to retrieve the bracelet. In order to prevent unnecessary waste of material, the wall strength was reduced to 2.5 mm which turned out to be strong enough to survive assembly and the casting process. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used in some models, especially for the display area to hide cables or bulky connectors. Figure \ref{fig:bracelethistory} gives an overview on the various design iterations.
+\label{sec:silicone-prototypes}
+The next design was a ring-like silicone bracelet in one piece, so the issue with closing mechanisms was no concern. The mold for this prototype consisted of three pieces, an outer and an inner ring as well as a bottom plate to properly align those rings. Due to the very rigid characteristic of the printed material, the molds could not be recovered after the cast and had to be destroyed in order to retrieve the bracelet. To prevent unnecessary waste of material, the wall strength was reduced to $2.5$ mm which turned out to be strong enough to survive assembly and the casting process. The advantage of using one-time molds was the possibility to add tunnels to the design. This was used in some models, especially for the display area to hide cables or bulky connectors. Figure \ref{fig:bracelethistory} gives an overview on the various design iterations.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -213,7 +211,7 @@ The next design was a ring-like silicone bracelet in one piece, so the issue wit
 
 Those molds were harder to fill with material than the previous one. Especially the Sorta-Clear silicone was too viscous to fill the complete mold, resulting in broken casts. The green MoldStar silicone turned out to work quite well, but sometimes it would leak through little gaps between the rings and the base plate, so a thorough assembly was desired more than ever. Remaining gaps were closed with hot glue in later iterations. In addition, a simple self-made vibrating plate helped filling all parts of the mold and reduced the number of air bubbles in the cast. 
 
-The first one-piece bracelet designs included an electrophoretic display and featured wide cavity rims to hold said display in place. First wearing tests resulted in success. When the display was omitted later on, the cavities stayed to hold a capacitive touch surface in place. After the final hardware configuration took form, another cavity for the electronics was added to the design. Since the hardware was thicker than the bracelet, the spot to house it needed to be enlarged in thickness. The board was eventually placed on the inner wrist and connects to the touch element with a short flat wire cable along the bracelet's surface. It is powered by a micro USB cable attached to a port on the lower rim of the bracelet. A status \ac{LED} is visible through the silicone on the upper rim above the electronics.
+The first one-piece bracelet designs included an electrophoretic display and featured wide cavity rims to hold said display in place. First wearing tests were successful. When the display was omitted later on, the cavities stayed to hold a capacitive touch surface in place. After the final hardware configuration took form, another cavity for the electronics was added to the design. Since the hardware was thicker than the bracelet, the spot to house it needed to be enlarged in thickness. The board was eventually placed on the inner wrist and connects to the touch element with a short flat wire cable along the bracelet's surface. It is powered by a micro USB cable attached to a port on the lower rim of the bracelet. A status \ac{LED} is visible through the silicone on the upper rim above the electronics.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -224,6 +222,8 @@ The first one-piece bracelet designs included an electrophoretic display and fea
 	\subfloat[Top view]
 	{\includegraphics[width=.45\linewidth]{gfx/final-top.png}} \quad
 	\subfloat[Incorporated electronics]
+	{\includegraphics[width=.45\linewidth]{gfx/final-allelectronics.png}} \\
+	\subfloat[Teensy with custom shield]
 	{\includegraphics[width=.45\linewidth]{gfx/final-electronics.png}}
 	\caption{The final bracelet prototype}
 	\label{fig:siliconefinal}
@@ -232,19 +232,28 @@ The first one-piece bracelet designs included an electrophoretic display and fea
 \section{Teensy Development Board}
 The core part of the bracelet's electronics is the Teensy USB development board, which is built around a MK20DX256 32 bit ARM Cortex-M4 Processor running on 72 MHz clock speed \cite{teensy_web}. The Teensy can be programmed using the popular Arduino IDE and thus can profit from the great amount of existing libraries and code examples for the Arduino family.
 
-Like all Cortex processors, the Teensy's chip has direct capability to process capacitive touch input. It also features an \ac{I$^2$C} module for communication with other components (see also section \ref{sec:accel}), several serial communication ports and an integrated programmer to enable flashing via \ac{USB}. However, the processor includes no floating point computation unit, which slows down calculations that feature floating point numbers. %TODO check facts
+Like many Cortex processors, the Teensy's chip has direct capability to process capacitive touch input. It also features the \ac{I$^2$C} protocol for communication with other components (see also section \ref{sec:accel}), several serial communication ports and an integrated programmer to enable flashing via \ac{USB}. However, the processor includes no floating point computation unit, which slows down calculations that feature floating point numbers.
 
 \section{Touch Slider}
-The major input interface of the bracelet is a touch surface which consists of seven cut copper foil segments that are placed in a zigzag pattern. This capacitive strip can either be used as an array of seven individual buttons or as a single large surface that can detect swiping gestures or a primitive variant of multi-touch interaction.
+The major input interface of the bracelet is a touch surface which consists of seven cut copper foil segments that are placed in a zigzag pattern (cf. figure \ref{fig:sketch-touch}). This capacitive strip can either be used as an array of seven individual buttons or as a single large surface that can detect swiping gestures or a primitive variant of multi-touch interaction.
+
+\begin{figure}[bth]
+	\myfloatalign
+	\begin{center}
+	\includegraphics[width=.45\linewidth]{gfx/touch_slider.png}
+	\end{center}
+	\caption{Sketch for the capacitive touch slider}
+	\label{fig:sketch-touch}
+\end{figure}
 
 Capacitive touch is based on the concept of a parallel plate capacitor. The copper foil segments act as a capacitor's plate, the human hand touching it represents the other plate. Since the capacitance is proportional to the area of the plates, larger segments lead to increased sensitivity. The definition of a plate capacitor's capacitance $C$ is defined as follows:
 \[
 	C = \frac{A\epsilon}{d}
 \]
-Where $A$ represents the area of the plates, $\epsilon$ is a material constant of the dielectric between the plates and $d$ is the distance between the plates. This shows that the capacitance changes more when the finger is close to the sensor and less when it's farther away.
+Where $A$ represents the area of the plates, $\epsilon$ is a material constant of the dielectric between the plates and $d$ is the distance between the plates. This shows that the capacitance changes more when the finger is close to the sensor and less when it's farther away \cite{Camacho2010}.
 
 Touch sliders can be compared to a potentiometer and return an analog value for the finger's position on the slider \cite{Camacho2010}. The usual layout of a touch slider features several neighboring electrodes, in the context of this thesis, a slider with seven electrodes was designed and built, since the Teensy has a restricted number of capacitive sensing enables pins from which some were already in use for other components, since almost all pins of the chip serve multiple functions.
-%TODO center
+
 \begin{figure}[bth]
 	\begin{center}
 	\includegraphics[width=.5\linewidth]{gfx/touchstrip.png}
@@ -256,29 +265,25 @@ A zigzagged pattern of the slider's electrodes supports microstepping, i.e. cons
 
 \section{3D Accelerometer}
 \label{sec:accel}
-Another interaction interface of the bracelet is a MMA8652FC three-axis digital accelerometer \cite{datasheet:mma8652}. In a micromachined device like the one used in this thesis, a seismic mass is attached to delicate "springs" in order to measure the acceleration. Both components are usually made of silicone. When an acceleration occurs, the electric capacitance between the seismic mass and the fixed frame changes and the occurring acceleration can be derived accordingly. Note that one such mechanism is only able to detect acceleration along a single axis. Since the MMA8652FC is a three-axis accelerometer, it contains on mass-spring-system for each of the three axis.
-%TODO find better source than (German) wikipedia
+Another interaction interface of the bracelet is a MMA8652FC three-axis digital accelerometer \cite{datasheet:mma8652}. In a micromachined device like the one used in this thesis, a seismic mass is attached to delicate ``springs'' in order to measure the acceleration. Both components are usually made of silicon. When an acceleration occurs, the electric capacitance between the seismic mass and the fixed frame changes and the occurring acceleration can be derived accordingly. Note that one such mechanism is only able to detect acceleration along a single axis. Since the MMA8652FC is a three-axis accelerometer, it contains on mass-spring-system for each of the three axis.
 
 \begin{figure}[bth]
 	\myfloatalign
 	\includegraphics[width=\linewidth]{gfx/accel.pdf}
-	\label{fig:accel}
-	\caption{Block diagram of the MMA8652FC digital accelerometer. \cite{datasheet:mma8652}}
+	\caption[Block diagram of the MMA8652FC digital accelerometer]{Block diagram of the MMA8652FC digital accelerometer. \cite{datasheet:mma8652}} \label{fig:accel}
 \end{figure}
 
-In addition to this basic accelerometer functionality, the MMA8652 also features a range of embedded microprocessing functions, as the component's block diagram (fig. \ref{fig:accel}) depicts. Out of those functions, the "Single, Double \& Directional Tap Detection" was used intensively. This module can detect tap interactions, which can be visualized as spikes in the acceleration along one specific axis. The detection process can be configured in detail to adjust factors like the tap intensity or the duration between the two taps of a double tap. When tap detection is enabled, a single register's content indicates if such a tap has occurred. The detailed configuration used for single and double tap recognition in context of this thesis is discussed in section \ref{sec:config}.
+In addition to this basic accelerometer functionality, the MMA8652FC also features a range of embedded microprocessing functions, as the component's block diagram (fig. \ref{fig:accel}) depicts. Out of those functions, the ``Single, Double \& Directional Tap Detection'' was used intensively. This module can detect tap interactions, which can be visualized as spikes in the acceleration along one specific axis. The detection process can be configured in detail to adjust factors like the tap intensity or the duration between the two taps of a double tap. When tap detection is enabled, a single register's content indicates if such a tap has occurred. The detailed configuration used for single and double tap recognition in context of this thesis is discussed in section \ref{sec:config}.
 
 In order to communicate with the bracelet's processor, the accelerometer implements the \ac{I$^2$C} communication protocol which was developed in 1982 by Philips Semiconductor (now NXP Semiconductors) and became public domain in 2006 when the underlying patent expired. By using two lines for a clock signal (\textsc{SCL}) and data transmission (\textsc{SDA}) respectively, data can be interchanged in a master-slave system at varying bit rates. Figure \ref{fig:i2c} illustrates this process. To initiate communication, the Teensy incorporates the role of a master device and begins a transmission by changing the \textsc{SDA} value from high to low while \textsc{SCL} is on high. Now the bus is considered busy until the master sends the stop condition and the actual data request and transmission can take place.
 
 \begin{figure}[bth]
 	\myfloatalign
 	\includegraphics[width=\linewidth]{gfx/i2c.pdf}
-	\label{fig:i2c}
-	\caption{Data transfer on the \ac{I$^2$C} bus. \cite{i2c}}
+	\caption{Data transfer on the \ac{I$^2$C} bus. \cite{i2c}} \label{fig:i2c}
 \end{figure}
 
 To request register data from the accelerometer, the master writes the address of the desired register on \textsc{SDA}. Note that no further synchronization between master and slave device is needed, since the slave adapts the clock signal on \textsc{SCL} which is determined by the master device. After sending the register's address, the Teensy indicates the end of the transmission without sending a Stop signal. The accelerometer acknowledges the received data and proceeds to send the requested register's contents, and finishes by terminating the connection with a Stop command, which is generated by switching \textsc{SDA} from low to high while \textsc{SCL} is on high. Both lines now stay high due to connected pull-up resistors. If the next register's content is requested, the process starts again with a Start signal transmitted by the master \cite{i2c}.
-%TODO verify
 
 \section{Visual Feedback}
 To provide visual feedback to the user, an \textsc{RGB} \ac{LED} is incorporated in the bracelet. Since most changes are reflected by the connected light source with no perceptible delay, the \ac{LED} serves mainly as an indicator for the recognition single and double taps in the context of precise color changes and gesture recognition.

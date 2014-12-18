@@ -2,11 +2,11 @@
 \label{sec:interaction}
 In order to satisfactorily interact with the device, depending on physical, mental or social distractions, the user should be able to use the bracelet in different ways. Tasks that occur frequently should be completed in a very casual way, because tasks with low cognitive requirements are most likely still possible to execute successfully while the user is distracted. Rather infrequent tasks are allowed to demand more of the user's attention and cognitive capacity. If they occur rarely, the dissatisfaction of a failed task because of insufficient focus is not as grave as it would be if the task was a frequent one and if it would thus fail often.
 
-As introduced in section \ref{sec:scenario}, the user should be able to turn the lights on or off with a minimum of engagement, so the task would still be possible while for example physical encumbrance hinders the user from performing more complex interactions. Also, the action should not require more effort than moving to the wall switch and pressing it. 
+As introduced in section \ref{sec:intro}, the user should be able to turn the lights on or off with a minimum of engagement, so the task would still be possible while, for example, physical encumbrance hinders the user from performing more complex interactions. Also, the action should not require more effort than moving to the wall switch and pressing it. 
 
 A similar amount of or only slightly increased complexity in interaction should be required for dimming the lights, because this is also a frequently used function in daily life. The analogy of turning a dimmer knob makes this interaction easy to associate with its function. Dimming should be performable while under some degree of distraction, for example while participating in a conversation. Since both hands and a focused rotational movement are needed, acceptable physical distractions quickly reach a tolerance limit.
 
-More focus could be required for changing the color in a fuzzy way, according to the concept of \textit{mood} derived from color psychology, on a loose range from calming to stimulating. Since this function would probably not used very often, an interaction which requires a glance on the device to locate the proper spot for touching is considered reasonable. 
+More focus could be required for changing the color in a fuzzy way, according to the concept of \textit{mood} derived from color psychology, on a loose range from calming to stimulating. Since this function would probably not be used very often, an interaction which requires a glance on the device to locate the proper spot for touching is considered reasonable. 
 
 Changing the exact appearance of the light in terms of color, brightness and saturation however requires concentration and focus on the task, therefore the associated interaction with the bracelet can demand more of the user's engagement. Picking a certain template of presets in light color and setting is also a rather complex cognitive task that would happen infrequently, so associating it with a focused interaction seems appropriate.
 
@@ -30,13 +30,13 @@ Changing the exact appearance of the light in terms of color, brightness and sat
 
 Table \ref{tab:interaction} shows how different interactions correspond to the described tasks. The focus in matching them lies on the required amount of attention needed to successfully complete the interaction as well as on the cognitive load a certain interaction entails. 
 
-Since switching the lights on or off occurs rather frequently, a very simple action was associated with it. Covering the whole touch area of the bracelet for a few moments will trigger the on or off function of the device. When twisting the hand while covering said area, the light dims accordingly (cf. figures \ref{fig:onoff}, \ref{fig:dim}). 
+Since switching the lights on or off occurs rather frequently, a very simple action was associated with it. Covering the whole touch area of the bracelet for a few moments will trigger the on or off function of the device. When twisting the hand while covering said area, the light dims accordingly (cf. figure \ref{fig:onoff}). 
 
 More complex tasks have more intricate interactions associated with them, for changing the lighting \textit{mood} a precise touch on two neighboring segments of the touch surface is required. This demands either a precise knowledge of the bracelet's shape and the layout of its components, or a concentrated glance at the touch surface in order to choose the right segments. Figure \ref{fig:mood} depicts this interaction.
 
-A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does (cf. figure \ref{fig:colorchange}). To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available.
+A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does (cf. figure \ref{fig:hslinteraction}). To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available.
 
-The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively. Gesture recognition is triggered with a tap on the bracelet's back, as illustrated in figure \ref{fig:gesturing}.
+The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively. Gesture recognition is triggered with a tap on the bracelet's back, as illustrated in figure \ref{fig:hslinteraction}.
 
 In the following sections, the various interaction levels with the bracelet and their underlying algorithms will be described in detail.
 
@@ -49,9 +49,8 @@ Since turning the lights in a specific room on or off is a frequently used inter
 
 \begin{figure}[bth]
 	\myfloatalign
-	{\label{fig:onoff}%
-		\includegraphics[width=.45\linewidth]{gfx/cover_touch.png}}
-	\caption{Covering and holding the bracelet's touch surface for on/off switching or dimming}
+		\includegraphics[width=.45\linewidth]{gfx/cover_touch.png}
+	\caption{Covering and holding the bracelet's touch surface for on/off switching or dimming} \label{fig:onoff}
 \end{figure}
 
 While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. See section \ref{sec:dimming} for a specification of the tolerated rotation when covering the touch area. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
@@ -77,8 +76,7 @@ In addition to changing the brightness, the user should be able to adjust the li
 	{\includegraphics[width=.45\linewidth]{gfx/mood_left.png}} \quad
 	\subfloat[Warming up the light \textit{mood} by increasing the red channel]
 	{\includegraphics[width=.45\linewidth]{gfx/mood_right.png}}
-	\caption{Touch interaction for \textit{mood} change}
-	\label{fig:mood}
+	\caption{Touch interaction for \textit{mood} change} \label{fig:mood}
 \end{figure}
 
 \section{Precise Touch Input for Color Change}
@@ -161,8 +159,7 @@ A contact on the middle segment of the capacitive touch strip, held for approxim
 	{\includegraphics[width=.45\linewidth]{gfx/hsl_activation.png}} \quad
 	\subfloat[Tapping on the bracelet's back side to switch to the next parameter]
 	{\includegraphics[width=.45\linewidth]{gfx/tap.png}}
-	\label{fig:hslinteraction}
-	\caption{Interaction with the bracelet to precisely set the color}
+	\caption{Interaction with the bracelet to precisely set the color} \label{fig:hslinteraction}
 \end{figure}
 
 \section{Template picking by Gesture Recognition}
