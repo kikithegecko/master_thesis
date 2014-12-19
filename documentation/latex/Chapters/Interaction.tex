@@ -34,9 +34,9 @@ Since switching the lights on or off occurs rather frequently, a very simple act
 
 More complex tasks have more intricate interactions associated with them, for changing the lighting \textit{mood} a precise touch on two neighboring segments of the touch surface is required. This demands either a precise knowledge of the bracelet's shape and the layout of its components, or a concentrated glance at the touch surface in order to choose the right segments. Figure \ref{fig:mood} depicts this interaction.
 
-A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does (cf. figure \ref{fig:hslinteraction}). To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its "standard mode" in which all described functions are available.
+A precise adjustment of the light in terms of hue, saturation and brightness requires even more focus on the task, since not only the function itself requires some concentration, but also the execution of the associated action does (cf. figure \ref{fig:hslinteraction}). To activate this settings mode, a single segment needs to be pressed, then the three attributes are set by sliding along the touch surface and switching to the next one with a tap on the bracelet's back side. After the last tap, the device returns to its ``standard mode'' in which all described functions are available.
 
-The interaction of drawing a gesture in the air to pick a preset template for the lights has been rated the most complex, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively. Gesture recognition is triggered with a tap on the bracelet's back, as illustrated in figure \ref{fig:hslinteraction}.
+The interaction of drawing a gesture in the air to pick a preset template for the lights was ranked the most complex in table \ref{tab:interaction}, although the physical requirements are not as high as in the previously described task of changing the color. In this case, the cognitive requirement of correctly remembering a movement pattern's association to a certain light configuration is higher than the physical requirement to execute the gesture correctly. There are three preset gesture actions for setting a bright work atmosphere, a dimmed and warm-colored relaxing environment and a colorful lounge mood, respectively. Gesture recognition is triggered with a tap on the bracelet's back, as illustrated in figure \ref{fig:hslinteraction}.
 
 In the following sections, the various interaction levels with the bracelet and their underlying algorithms will be described in detail.
 
@@ -45,7 +45,7 @@ The bracelet's Bluetooth module automatically searches for nearby devices and co
 
 \section{Switching the Light Source on and off}
 \label{sec:onoff}
-Since turning the lights in a specific room on or off is a frequently used interaction, it should require few complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is much desired. For those reasons, simply covering the touch surface with the whole hand (cf. fig. \ref{fig:onoff}) and holding for approximately $1.5$ seconds will result in switching the lights on or off, depending on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
+Since turning the lights in a specific room on or off is a frequently used interaction, it should require little complexity in terms of cognitive as well as physical workload, i.e. a simple, easily memorable way of interaction is desired. For those reasons, simply covering the touch surface with the whole hand (cf. fig. \ref{fig:onoff}) and holding for approximately $1.5$ seconds will result in switching the lights on or off, depending on the current state. Within this constraint, there is a tolerance of one segment when checking if the whole touch surface is covered, so that covering six out of seven capacitive segments would still trigger this function.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -53,11 +53,11 @@ Since turning the lights in a specific room on or off is a frequently used inter
 	\caption{Covering and holding the bracelet's touch surface for on/off switching or dimming} \label{fig:onoff}
 \end{figure}
 
-While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. See section \ref{sec:dimming} for a specification of the tolerated rotation when covering the touch area. If the light is switched off, the current color would be saved by the bracelet and restored on the next "on" command.
+While the touch slider is covered, the hand must be held fairly steady in terms of rotation to correctly trigger the on/off function, because otherwise the dimming algorithm would trigger instead. See section \ref{sec:dimming} for a specification of the tolerated rotation when covering the touch area. If the light is switched off, the current color would be saved by the bracelet and restored on the next ``on'' command.
 
 \section{Adjusting the Light Source's Brightness}
 \label{sec:dimming}
-Apart from switching the lights on or off, a change in brightness is the second most desired interaction in the smart lighting scenario. For example, the incentive of watching TV in the living room benefits from a dimmed light setting. However, if the user fails to locate the remote control for the television, a quick dim interaction towards brighter light facilitates the search for the missing remote control. After the item is found, the brightness level of the room's lighting can easily be dimmed back to the desired setting.
+Apart from switching the lights on or off, a change in brightness is the second most desired interaction in the smart lighting scenario. For example, the desire of watching TV in the living room benefits from a dimmed light setting. However, if the user fails to locate the remote control for the television, a quick dim interaction towards brighter light facilitates the search for the missing remote control. After the item is found, the brightness level of the room's lighting can easily be dimmed back to the desired setting.
 
 The dimming interaction is different from the other use cases, since there exists a physical solution for this task in form of dim knobs for wall outlets. Usually, those wall dimmers are rotary knobs connected to a potentiometer which dims the light source by increasing the electric resistance. Hence, the interaction of turning a knob for dimming the light level is an association for many people.
 
@@ -65,10 +65,10 @@ The intention was to preserve this association to make the interaction with the 
 \[ 
 \alpha = tan^{-1}\left(\frac{y}{\sqrt{x^2 + z^2}}\right).
 \]
-Note that the accelerometer data must not include a gravity offset. If the observed angle exceeds certain thresholds and the current angle is at least $0.5\degree$ different from the previously measured value, a dimming step is executed and the brightness of all three color channels is reduced or increased by XX percent. A counterclockwise movement reduces the brightness, while a clockwise twist increases the brightness.
+Note that the accelerometer data must not include a gravity offset. If the observed angle exceeds certain thresholds and the current angle is at least $0.5\degree$ different from the previously measured value, a dimming step is executed and the brightness of all three color channels is reduced or increased by 10 percent. A counterclockwise movement (from the user's point of view) reduces the brightness, while a clockwise twist increases the brightness.
 
 \section{Changing the Lighting Mood}
-In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel by XX percent while decreasing the red channel by YY percent; a touch on the right pair of segments causes the opposite (cf. fig. \ref{fig:mood}). Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
+In addition to changing the brightness, the user should be able to adjust the light's color in a casual way and without thinking too much about the desired color in detail. Hence, the user is able to change the \textit{mood} of the light by touching two neighboring segments of the bracelet's touch element. Activating the left pair of segments increases the blue channel by one percent every $10$ ms while decreasing the red channel by one percent every $10$ ms; a touch on the right pair of segments causes the opposite (cf. fig. \ref{fig:mood}). Since blue colors are perceived as calming and relaxing while reds and oranges have an activating and stimulating effect \cite{Rosenstein1985}, this function can actually affect the user's mood by utilizing insights of color psychology.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -80,7 +80,6 @@ In addition to changing the brightness, the user should be able to adjust the li
 \end{figure}
 
 \section{Precise Touch Input for Color Change}
-%TODO explain rgb and hsl color ranges
 Since adjusting the light color in a rather fuzzy way as described in the previous section is sometimes too imprecise, an additional function for setting the exact light color has been implemented. The RGB color model used by the lamp (cf. chapter \ref{sec:lamp}) is not very intuitive to the average user in terms of expressing a specific color in fractions of red, green and blue light, respectively, so the \ac{HSL} color model was used instead for this interaction.
 
 \begin{figure}[bth]
@@ -88,12 +87,11 @@ Since adjusting the light color in a rather fuzzy way as described in the previo
 	\subfloat[The RGB color model, represented as a cube]
 	{\includegraphics[width=.45\linewidth]{gfx/rgbcube.png}} \quad
 	\subfloat[The \ac{HSL} color model, represented as a cylinder]
-	{\label{fig:bracelet01}%
-		\includegraphics[width=.45\linewidth]{gfx/hslmodel.png}}
-	\caption{Comparison of the RGB and \ac{HSL} color models, CC-BY-SA Michael Horvath}
+	{\includegraphics[width=.45\linewidth]{gfx/hslmodel.png}}
+	\caption[Comparison of the RGB and \ac{HSL} color models]{Comparison of the RGB and \ac{HSL} color models, CC-BY-SA Michael Horvath} \label{fig:color}
 \end{figure}
 
-While the RGB color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm had to be implemented (\cite{qwertie}, derived from \cite{graphicsgems}). For given hue $H\in \left[ 0\degree , 360\degree \right]$, saturation $S\in \left[ 0, 1\right]$ and lightness $L\in \left[ 0, 1\right]$, the chroma value $C$ is calculated first:
+While the \ac{RGB} color space forms a cube with red, green and blue channel on each axis, the \ac{HSL} color space forms a cylinder. Hue represents the angle, while saturation stands for the diameter and lightness for the cylinder's height. Figure \ref{fig:color} illustrates that difference. Since the conversion from \ac{HSL} to RGB color space is not trivial, a conversion algorithm had to be implemented (\cite{qwertie}, derived from \cite{graphicsgems}). For given hue $H\in \left[ 0\degree , 360\degree \right]$, saturation $S\in \left[ 0, 1\right]$ and lightness $L\in \left[ 0, 1\right]$, the chroma value $C$ is calculated first:
 \[
 C = \left( 1 - \left| 2L-1\right| \right) \times S
 \]
@@ -118,40 +116,7 @@ Where $m$ denotes a lightness offset to the color:
 m = L - \frac{C}{2}
 \]
 
-%TODO improve readability, explain
-%\begin{lstlisting}[label=lst:hsl2rgb,language=c,frame=lt,caption=Converting from the RGB color space to the \ac{HSL} color space]
-%void HSL_to_RGB(int hue, int sat, int lum, int* r, int* g, int* b){
-%	int v;
-%	
-%	v = (lum < 128) ? (lum * (256 + sat)) >> 8 :
-%	(((lum + sat) << 8) - lum * sat) >> 8;
-%	if (v <= 0) {
-%		*r = *g = *b = 0;
-%	} else {
-%		int m;
-%		int sextant;
-%		int fract, vsf, mid1, mid2;
-%		
-%		m = lum + lum - v;
-%		hue *= 6;
-%		sextant = hue >> 8;
-%		fract = hue - (sextant << 8);
-%		vsf = v * fract * (v - m) / v >> 8;
-%		mid1 = m + vsf;
-%		mid2 = v - vsf;
-%		switch (sextant) {
-%			case 0: *r = v; *g = mid1; *b = m; break;
-%			case 1: *r = mid2; *g = v; *b = m; break;
-%			case 2: *r = m; *g = v; *b = mid1; break;
-%			case 3: *r = m; *g = mid2; *b = v; break;
-%			case 4: *r = mid1; *g = m; *b = v; break;
-%			case 5: *r = v; *g = m; *b = mid2; break;
-%		}
-%	}
-%}
-%\end{lstlisting}
-
-A contact on the middle segment of the capacitive touch strip, held for approximately XX milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation (cf. fig. \ref{fig:hslinteraction}). Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
+A contact on the middle segment of the capacitive touch strip, held for approximately $100$ milliseconds activates this mode. The touch strip becomes a touch slider for changing the hue, while the saturation value is preset to its maximum value and lightness is set to half the maximum value. This makes the hue bright and saturated, so the user can focus on choosing the desired color. When the hue is set, a tap on the bracelet's back switches to the next component setting, namely saturation (cf. fig. \ref{fig:hslinteraction}). Tapping instead of touching somewhere on the touch surface ensures that the chosen color would not be offset by any accidental contact while trying to confirm the current selection. The bracelet's \ac{LED} acknowledges a tap with a green blink and the next parameter can be set. After setting the lightness, a tap on the backside brings the bracelet back into its standard mode, where all commands listed in this chapter are available again. During the precise color change command, the action cannot be aborted. Instead, the user needs to quickly cycle through the settings in order to leave this mode.
 
 \begin{figure}[bth]
 	\myfloatalign
@@ -163,17 +128,18 @@ A contact on the middle segment of the capacitive touch strip, held for approxim
 \end{figure}
 
 \section{Template picking by Gesture Recognition}
-The last form of interaction with the bracelet is by drawing gestures in the air to trigger preset color and brightness configurations. A "Z"-shaped gesture changes to a bright white light which is ideal for working, e.g. while preparing a meal in the kitchen or cleaning the house. The second gesture is a circle drawn in the air, which switches to a soft, warm-colored and slightly dimmed setting which is suitable for relaxing activities like reading or watching TV. The third gesture is a pigtail-like looping which triggers a colorful, dark purple, lounge-like setting. The gestures are depicted in \ref{fig:gestures} and the exact values for the red, green and blue channels of the lamp are listed in table \ref{tab:colors}.
+The last form of interaction with the bracelet is by drawing gestures in the air to trigger preset color and brightness configurations. A ``Z''-shaped gesture changes the light color to a bright white which is ideal for working, e.g. while preparing a meal in the kitchen or cleaning the house. The second gesture is a circle drawn in the air, which switches to a soft, warm-colored and slightly dimmed setting which is suitable for relaxing activities like reading or watching TV. The third gesture is a pigtail-like looping which triggers a colorful, dark purple, lounge-like setting. The gestures are depicted in table \ref{tab:colors}, where also the exact values for the red, green and blue channels of the lamp are listed.
 
 \begin{table}
+	%\newcolumntype{C}{>{\centering\arraybackslash}c}
 	\myfloatalign
-	\begin{tabularx}{.8\textwidth}{ccccc}
+	\begin{tabularx}{0.9\textwidth}{cccccc}%{CCCCCC}
 		\toprule
-		\tableheadline{Gesture} & \tableheadline{Association} & \tableheadline{Red} & \tableheadline{Green} & \tableheadline{Blue}\\ 
+		\tableheadline{Gesture} & \tableheadline{Name} & \tableheadline{Association} & \tableheadline{Red} & \tableheadline{Green} & \tableheadline{Blue}\\ 
 		\midrule
-		Z & Work & $ 255 $ & $ 255 $ & $ 255 $\\
-		Circle & Relax & ??? & ??? & ???\\
-		Pigtail & Lounge & ??? & ??? & ???\\
+		\includegraphics[width=20px]{gfx/z.png} & Z & Work & $ 255 $ & $ 255 $ & $ 255 $\\
+		\includegraphics[width=20px]{gfx/circle.png} & Circle & Relax & $255$ & $50$ & $0$\\
+		\includegraphics[width=30px]{gfx/pigtail.png} & Pigtail & Lounge & $150$ & $0$ & $50$\\
 		\bottomrule
 	\end{tabularx}
 	\caption[Color presets for gesture activation]{Color presets and associations for gesture activation}  \label{tab:colors}
@@ -183,28 +149,7 @@ These gestures are recorded by the bracelet's accelerometer and processed using 
 
 Gesture recognition is triggered by double tapping on the bracelet's back side (for a more detailed specification of the tap recognition, see section \ref{sec:config}). This focused activation was chosen to prevent accidental triggering of the gesture recognition procedure while gesturing heavily, e.g. during a conversation. A little more effort in starting this rather rarely used feature is preferred over a higher false positive rate in gesture recognition triggering. After a double tap was detected, the \ac{LED} indicates with a red glow that acceleration data is recorded while the next $150$ samples are saved for the gesture recognition algorithm.
 
-Wobbrock as well as Kratz start their processing with a resampling step to compensate for different speeds in drawing the gesture. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. Therefore, the gesture is resampled to a sixed number of points before other processing takes place. Since the implementation in this thesis always records a fixed number of samples, this step is omitted. This can lead to cut off gestures when drawn too slowly or added noise at the end of a data set if the gesture was drawn too quickly. While recording test samples with various people, the record period however seemed appropriate for most gestures that were executed.
-
-%After a gesture is recorded, it is resampled to a fixed number of points. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. The length of the gesture path $M$ is calculated and an increment size $I$ derived by dividing $M$ by $(N/1)$, where $N$ is the desired number of samples. The gesture path is stepped trough and after each distance $I$, a new point is inserted using linear interpolation (cf. listing \ref{lst:resample}). %TODOwe have fixed # of samples. is this necessary?
-
-%\begin{lstlisting}[label=lst:resample,language=python,frame=lt,caption=Resampling of a points path into N evenly spaced points]
-%def resample(points, N):
-%	I = path_length(points) / (N - 1)
-%	D = 0
-%	newpoints = points[:1]
-%	for i in range(1, len(points)):
-%		dist = distance(points[i-1], points[i])
-%		if(D + dist) > I:
-%			q = points[i-1] + ((I - D)/dist) * (points[i] - points[i-1])
-%			newpoints.append(q)
-%			D = distance(q, points[i])
-%		else:
-%			D = D + dist
-%	if(D + dist) > increment: #append last point manually
-%		q = newpoints[-1] + ((increment - D) / dist) * (points[i] - newpoints[-1])
-%		newpoints.append(q)
-%	return newpoints
-%\end{lstlisting}
+Wobbrock as well as Kratz start their processing with a resampling step to compensate for different speeds in drawing the gesture. If the gesture was drawn quickly, it would have less samples and thus less points compared to a slowly drawn gesture. In order to be able to compare these two gestures, a resampling is performed before further processing. Therefore, the gesture is resampled to a fixed number of points before other processing takes place. Since the implementation in this thesis always records a fixed number of samples, this step is omitted. This can lead to cut off gestures when drawn too slowly or added noise at the end of a data set if the gesture was drawn too quickly. While recording test samples with various people, the record period however seemed appropriate for most gestures that were executed.
 
 In the next step, the gesture is prepared for matching against the templates by rotating it to a specific position. The so called \textit{indicative angle} $\theta$ between the gesture's centroid $C$ and its first point of the data set is calculated using the normalized scalar product of the centroid and the first point's position vectors. Afterwards the gesture is rotated so that $\theta$ is at $0\degree$. Wobbrock et. al. do this by using the inverse tangents function, however this is not possible in 3D space. Hence, \textit{Rodrigues' rotation formula} (named after French mathematician Olinde Rodrigues) was implemented instead. This efficient algorithm for rotating a vector in $\mathbb{R}^3$ takes the rotation angle $\theta$ as well as the axis unit vector $k$ as input, and calculates the following formula:
 
@@ -256,7 +201,7 @@ def recognize(points, templates, rescale_size):
 	return t_best
 \end{lstlisting}
 
-The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms od computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
+The candidate is compared to all stored templates using the average \ac{MSE} as a scoring metric. The optimal position between the candidate gesture and a stored template is possibly offset by a certain rotation, so the optimal combination of angles between the two gestures needs to be determined. Since rotations are costly in terms of computation time, the candidate gesture should be aligned to the template in as few tries as possible. Hence, as proposed by \cite{Kratz2010}, a \ac{GSS} is used to find the optimal angles $\alpha$, $\beta$, and $\gamma$ for rotation around the three axis of the coordinate system.
 
 The \ac{GSS} algorithm was invented by US-American statistician Jack Kiefer in 1953  and is conceptualized to find the minimum value $x^*$ of a unimodal function $f\left(x\right)$ in a given interval $\left[a,b\right]$ \cite{Kiefer1953}. Two function points $f(x_1)$ and $f(x_2)$ with 
 \[ x_1=a+\left(1-\phi\right)\left(b-a\right) \\
@@ -353,7 +298,7 @@ Once the best template for a candidate gesture is found, the corresponding index
 \label{sec:config}
 Gesture recording and recognition is triggered by a gentle double tap on the bracelet. This small but focused activation reduces unwanted triggering of the gesture recognition process, e.g. while gesturing heavily, and thus reducing false positives. The tap detection functionality is a built-in feature of the bracelet's accelerometer, configuration parameters for this process are listed in table \ref{tab:tapconf}.
 
-In order to be recognized as a tap interaction, the initial impulse needs to be at least XX g in intensity. When calibrated like this, jerky movements like suddenly raising the hand at a high speed are correctly not recognized as a tap. However since the threshold is that high, the activation tap needs to be executed directly on the hardware which is located on the inner wrist.
+In order to be recognized as a tap interaction, the initial impulse needs to be at least $6.3$ g in intensity. When calibrated like this, jerky movements like suddenly raising the hand at a high speed are correctly not recognized as a tap. However since the threshold is that high, the activation tap needs to be executed directly on the hardware which is located on the inner wrist.
 
 The \texttt{PULSE\_TMLT} register configures the maximum time interval between the  impulse exceeding the threshold on the Z axis and falling back under said threshold. If the mentioned interval lasts at most $6.25 ms$, the interaction is considered as a tap.
 
@@ -366,10 +311,10 @@ The MMA8652FC accelerometer is able to distinguish between single and double tap
 	\begin{tabularx}{\textwidth}{lll} \toprule
 		\tableheadline{Register Name} & \tableheadline{Parameter} & \tableheadline{Value}\\ 
 		\midrule
-		\texttt{PULSE\_THSZ} & Tap Detection Threshold & $100 g$\\ %TODO on +/-8g scale @.063g/LSB
-		\texttt{PULSE\_TMLT }& Interval between Start and End Pulse & $6.25 ms$\\
-		\texttt{PULSE\_LTCY} & Ignore Interval after Detection & $25 ms$\\
-		\texttt{PULSE\_WIND} & Maximum Double Tap Interval & $500ms$ \\
+		\texttt{PULSE\_THSZ} & Tap Detection Threshold & $6.3$ g\\ 
+		\texttt{PULSE\_TMLT }& Interval between Start and End Pulse & $6.25$ ms\\
+		\texttt{PULSE\_LTCY} & Ignore Interval after Detection & $25$ ms\\
+		\texttt{PULSE\_WIND} & Maximum Double Tap Interval & $500$ ms \\
 		\bottomrule
 	\end{tabularx}
 	\caption[Tap detection configuration]{Single- and double tap detection configuration for the MMA8652FC digital accelerometer}  \label{tab:tapconf}
@@ -377,7 +322,7 @@ The MMA8652FC accelerometer is able to distinguish between single and double tap
 
 Apart from accelerometer calibration, the gesture recognition algorithms needs template gestures, against which the interactively recorded data is matched. Wobbrock et. al. as well as Kratzand Rohs most likely use artificially constructed templates, though neither of them explicitly states this in their work \cite{Wobbrock2007} \cite{Kratz2010}. Constructing artificial templates for 2D stylus-based input is very easy, since the stylus produces a series of lines, rather independently from the used speed or size. When working with accelerometer data however, the recorded data is more heterogeneous, since quickly drawn gestures result in higher amplitudes in the raw data. Since it is very difficult to find the right speed and size to artificially construct template gestures, an empirical approach was used.
 
-Ten gesture executions of each type (Z, circle, and pigtail) were recorded by eight people. Then, one gesture after another was probed as a template and statistics for correct matches as well as false positive matches were recorded. Since gestures with the least false positive rate also share very low matching rates, a ratio of
+Ten gesture executions of each type (Z, circle, and pigtail) were performed by eight people. Then, one gesture after another was examined as a template and statistics for correct matches as well as false positive matches were recorded. Since gestures with the least false positive rate also share very low matching rates, a ratio of
 \[
 \frac{\text{\# correct matches}}{\text{\# false positives}}
 \]
