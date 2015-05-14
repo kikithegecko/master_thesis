@@ -122,3 +122,9 @@ eagle.epf
 # Autorouting files
 *.job
 *.pro
+
+# Texstudio session
+*.txss
+
+# Compiled Python
+*.pyc
